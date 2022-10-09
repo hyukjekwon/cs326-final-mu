@@ -1,8 +1,5 @@
-# Team Name: 
-## Team Mu (µ)
-# Application Name:
-## Sequencer Loop
-# Team Overview:
+# Team Mu (µ): Sequencer Loop Project
+## Team Overview:
 ### Hyuk-Je Kwon
 - Username: hyukjekwon
 ### Austin Bushey
