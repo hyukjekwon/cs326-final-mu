@@ -1,0 +1,70 @@
+.websiteheader {
+    height: 40px;
+}
+
+.WebsiteTitle {
+    color:lightblue;
+    font-size: x-large;
+}
+
+.background {
+    background-color: #4d4d4d;
+    color:lightblue;
+}
+
+.body {
+    border: 1px solid white;
+}
+.forumpage {
+    background-color: dimgray;
+    color:lightblue;
+    text-align: center;
+    vertical-align: middle;
+}
+.divrow{
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+}
+
+.headerbuttons {
+    text-align: center;
+    font-size:small;
+    margin: 10px auto;
+}
+
+.subtitlebuttons {
+    width: 100%;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.searchbar {
+    
+    font-size:small;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width:70%;
+    height: 50%;
+    vertical-align: middle;
+}
+
+.searchbutton {
+    text-align: center;
+    font-size:small;
+    margin: 10px;
+}
+.smalltext {
+    text-align: center;
+    font-size:8pt;
+    margin: 10px;
+}
+.likebutton {
+    text-align: center;
+    font-size:small;
+    margin: 10px;
+}
+.post {
+    margin: 10px;
+    text-align: center;
+    vertical-align: middle;
+}
