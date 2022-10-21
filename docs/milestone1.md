@@ -4,5 +4,7 @@ Our project aims to create 1. A simple web application that allows users of any 
 Forum wireframe:
 ![forum-wireframe](forum-wireframe.jpeg)
 # Screenshots
+![forum-picture](Forum.PNG)
 # Division of Labor
 Guy: Create forum wireframe
+Austin: Create forum HTML and CSS template
