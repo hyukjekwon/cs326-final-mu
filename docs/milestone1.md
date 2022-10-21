@@ -6,5 +6,5 @@ Forum wireframe:
 # Screenshots
 ![forum-picture](Forum.PNG)
 # Division of Labor
-Guy: Create forum wireframe
+Guy: Create forum wireframe <br/>
 Austin: Create forum HTML and CSS template
