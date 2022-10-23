@@ -3,6 +3,10 @@ html, body{
     margin: 0;
 }
 
+a {
+    text-decoration: none;
+}
+
 .websiteheader {
     height: 40px;
 }
@@ -13,15 +17,31 @@ html, body{
 }
 
 .background {
-    background-color: #4d4d4d;
+    background-color: #303633;
     color:lightblue;
 }
 
 .forumpage {
-    background-color: rgb(64, 61, 61);
+    background-color: dimgray;
     color:lightblue;
     text-align: left;
-    vertical-align: middle;
+    margin: auto 0;
+}
+
+.panel {
+    margin: 10px;
+    border-radius: 15px 50px 30px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+}
+
+.panel-label {
+    /* border: outset; */
+    /* padding: 10px; */
+    background-color:rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
 #main-title {
@@ -30,24 +50,30 @@ html, body{
 }
 
 #main {
-    background-color: darkred;
-    /* display: flex;
-    flex-direction: column;
-    height: 100%; */
+    overflow: hidden;
+    color: white;
+    font-family: sans-serif;
+    padding: 0px;
 }
 
-#main-control {
+#layer-master {
     flex-grow: 1;
+    margin: 0;
+}
+
+#note-control-container {
+    flex-grow: 0.4;
+    margin: 0;
 }
 
 #note-control {
-    flex-grow: 0.4;
+    background-color: #7EA2AA;
 }
 
 #layers {
-    background-color: green;
+    background-color: #9C7A97;
 }
 
 #master {
-    background-color: blue;
+    background-color: #888DA7;
 }

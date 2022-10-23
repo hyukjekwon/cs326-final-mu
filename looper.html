@@ -10,15 +10,21 @@
         
         <div class="container-fluid d-flex flex-column h-100" id="main">
             <div class="row websiteheader forumpage">
-                <a class="col-8 WebsiteTitle" href="#">WebLooper: Loop Edit Mode</a>
-                <a class="col nav-item" href="#">Forum</a>
+                <a class="col WebsiteTitle" href="#">WebLooper: Edit Mode</a>
+                <a class="col-2 forumpage" href="#">Forum</a>
             </div>
-            <div class="row" id="main-control">
-                <div class="col" id="layers">layers</div>
-                <div class="col-3" id="master">master</div>
+            <div class="row" id="layer-master">
+                <div class="col panel" id="layers">
+                    <div class="panel-label p-1">Layers</div>
+                </div>
+                <div class="col-3 panel" id="master">
+                    <div class="panel-label p-1">Master</div>
+                </div>
             </div>
-            <div class="row-2" id="note-control">
-                <div class="col">layer control</div>
+            <div class="row" id="note-control-container">
+                <div class="col panel" id="note-control">
+                    <div class="panel-label p-1">Note control</div>
+                </div>
             </div>
         </div>
     </body>
