@@ -1,4 +1,53 @@
+html, body{
+    height: 100%;
+    margin: 0;
+}
+
+.websiteheader {
+    height: 40px;
+}
+
+.WebsiteTitle {
+    color:lightblue;
+    font-size: x-large;
+}
+
 .background {
     background-color: #4d4d4d;
     color:lightblue;
+}
+
+.forumpage {
+    background-color: rgb(64, 61, 61);
+    color:lightblue;
+    text-align: left;
+    vertical-align: middle;
+}
+
+#main-title {
+    background-color: dimgray;
+    font-size: x-large;
+}
+
+#main {
+    background-color: darkred;
+    /* display: flex;
+    flex-direction: column;
+    height: 100%; */
+}
+
+#main-control {
+    flex-grow: 1;
+}
+
+#note-control {
+    flex-grow: 0.4;
+}
+
+#layers {
+    background-color: green;
+}
+
+#master {
+    background-color: blue;
 }
