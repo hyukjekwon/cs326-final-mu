@@ -21,4 +21,4 @@ function basicServer(req, res) {
 }
  
 // Start the server                                                                                                                
-http.createServer(basicServer).listen(80); //the server object listens on port 80
+http.createServer(basicServer).listen(process.env.PORT | 80); //the server object listens on port 80
