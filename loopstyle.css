@@ -1,0 +1,159 @@
+html, body{
+    height: 100%;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+input[type="range"] {
+    pointer-events: auto;
+    flex-grow: 1;
+}
+
+.websiteheader {
+    height: 40px;
+}
+
+.WebsiteTitle {
+    color:lightblue;
+    font-size: x-large;
+}
+
+.background {
+    background-color: #303633;
+    color:lightblue;
+}
+
+.forumpage {
+    background-color: dimgray;
+    color:lightblue;
+    text-align: left;
+    margin: auto 0;
+}
+
+.panel {
+    margin: 10px;
+    border-radius: 15px 50px 25px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+}
+
+.panel-label {
+    background-color:rgba(0, 0, 0, 0.2);
+    color: white;
+    mix-blend-mode: overlay;
+    text-align: center;
+    font-size: large;
+    width: 100%;
+}
+
+.layer {
+    flex-basis: 0;
+    flex-grow: 1;
+    border-bottom: solid;
+    border-width: 1px;
+    border-color: black;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+}
+
+.inactive {
+    background-color: rgb(162, 162, 162);
+    max-height: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.layer-info {
+    flex-basis: 0;
+    flex-grow: 0.2;
+    background-color: rgba(255, 255, 255, 0.34);
+    mix-blend-mode: overlay;
+    align-items: center;
+    pointer-events: none;
+    color: black;
+}
+
+.layer-label {
+    background-color: rgb(84, 84, 84);
+    color: white;
+    margin: 10px;
+    padding: 0px 10px;
+    border-radius: 15px;
+}
+
+.dropdown {
+    position: 'absolute';
+    pointer-events: auto;
+}
+
+.sequence {
+    flex-basis: 0;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+.interval {
+    flex-grow: 1;
+    border-left: solid;
+    border-color: black;
+    border-width: 1px;
+}
+
+#master-vol, #bpm, #play {
+    margin: 10px 0;
+}
+
+#main-title {
+    background-color: dimgray;
+    font-size: x-large;
+}
+
+#main {
+    color: white;
+    overflow: hidden;
+    font-family: sans-serif;
+    padding: 0px;
+}
+
+#layer-master {
+    flex-grow: 1;
+    margin: 0;
+}
+
+#note-control-container {
+    max-height: 30%;
+    flex-grow: 1;
+    margin: 0;
+}
+
+#note-control {
+    margin-top: 0;
+    background-color: #7EA2AA;
+}
+
+#layer-panel {
+    background-color: #9C7A97;
+}
+
+#master-panel {
+    margin-left: 0;
+    background-color: #888DA7;
+    align-items: center;
+}
+
+#master-vol {
+    width: 80%;
+}
+
+#save-post {
+    align-self: auto;
+    margin: 30px;
+}
