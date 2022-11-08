@@ -16,6 +16,8 @@ function init_master_buttons() {
 
 function play_pause() {
     console.log("play/pause");
+    const sample = new Tone.Player("./samples/Snare-707.wav").toDestination();
+    sample.autostart = true;
 }
 
 function init_sequences() {
@@ -30,8 +32,6 @@ function init_sequences() {
     }
 }
 
-function init_all() {
-    init_key_presses();
-    init_sequences();
-    init_master_buttons();
-}
+init_key_presses();
+init_sequences();
+init_master_buttons();
