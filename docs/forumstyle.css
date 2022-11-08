@@ -37,6 +37,8 @@
     display: block;
     margin-top: 10px;
     margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
 }
 .searchbar {
     
@@ -64,6 +66,7 @@
     margin: 10px;
 }
 .post {
+    background-color: dimgray;
     margin: 10px;
     text-align: center;
     vertical-align: middle;
