@@ -6,7 +6,7 @@ function basicServer(req, res) {
     res.write('Hello World!<BR>'); //write a response to the client                                                                
     const requestedURL = req.url;
     console.log('helooooooooooooooooooooooooooooooooooooooooooooooooooooooo ' + requestedURL);
-    res.write(`URL is <B>${requestedURL+"foo"}</B><BR>`); // template string (backquote)                                                 
+    res.write(`URL is <B>${requestedURL}</B><BR>`); // template string (backquote)                                                 
     const parsedURL = url.parse(requestedURL, true);
     const query = parsedURL.query;
     const pathname = parsedURL.pathname;
