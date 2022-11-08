@@ -16,7 +16,11 @@ function init_master_buttons() {
 
 function play_pause() {
     console.log("play/pause");
-    const sample = new Tone.Player("./samples/Snare-707.wav").toDestination();
+    play_sample("./samples/Hihat.wav")
+}
+
+function play_sample(sample_name) {
+    const sample = new Tone.Player(sample_name).toDestination();
     sample.autostart = true;
 }
 
