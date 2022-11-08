@@ -1,12 +1,13 @@
-const http = require('http');
-const url = require('url');
+import { createServer } from 'http';
+import { parse } from 'url';
  
 function basicServer(req, res) {
     res.writeHead(200, {'Content-Type': 'text/html'}); // we're sending HTML                                                       
     res.write('Hello World!<BR>'); //write a response to the client                                                                
     const requestedURL = req.url;
+    console.log('helooooooooooooooooooooooooooooooooooooooooooooooooooooooo ' + requestedURL);
     res.write(`URL is <B>${requestedURL+"foo"}</B><BR>`); // template string (backquote)                                                 
-    const parsedURL = url.parse(requestedURL, true);
+    const parsedURL = parse(requestedURL, true);
     const query = parsedURL.query;
     const pathname = parsedURL.pathname;
     res.write(`path is <B>${JSON.stringify(pathname)}</B><BR>`);
@@ -20,4 +21,4 @@ function basicServer(req, res) {
 }
  
 // Start the server                                                                                                                
-http.createServer(basicServer).listen(80); //the server object listens on port 80
+createServer(basicServer).listen(80); //the server object listens on port 80
