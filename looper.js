@@ -3,8 +3,6 @@ let l;
 
 class Looper {
     constructor() {
-        // each sequence will contain the type of the sample along with a map for which notes are active
-        // types of samples will just be the name of the file
         this.layers = [new Layer("kick.wav")];
         this.bpm = 120;
         this.master_volume = 75;
@@ -29,8 +27,13 @@ class Looper {
                 const sample = new Tone.Player("/samples/" + layer.sample).toDestination();
                 sample.autostart = true;
             }
+            for (const dom of document.getElementsByClassName("itvl-" + time)) {
+                dom.classList.add("itvl-cursor");
+            }
+            for (const dom of document.getElementsByClassName("itvl-" + (time+15)%16)) {
+                dom.classList.remove("itvl-cursor");
+            }
         });
-        console.log(time)
         cursor["time"] = (time + 1) % 16;
     }
     play_pause() {
@@ -39,6 +42,9 @@ class Looper {
             clearInterval(this.interval);
             this.playing = false;
             this.cursor = {"time": 0};
+            for (const dom of document.getElementsByClassName("itvl")) {
+                dom.classList.remove("itvl-cursor");
+            }
         } else {
             console.log("play");
             this.interval = setInterval(this.play_interval, Math.floor(this.bpm * 2.0833), this.layers, this.cursor);
@@ -55,10 +61,14 @@ function init_key_presses(l) {
     })
 }
 
-function init_master_buttons(l) {
+function init_buttons(l) {
     const play = document.getElementById("play");
     play.addEventListener("mouseup", (e) => {
         l.play_pause();
+    })
+    const add_layer = document.getElementById("add-button");
+    add_layer.addEventListener("click", (e) => {
+        l.add_layer("kick.wav");
     })
 }
 
@@ -66,12 +76,12 @@ function init_layers(l) {
     let active_layers = l.layers.length;
     for (let i = 0; i < 4; i++) {
         const layer = document.getElementById("layer" + (i + 1));
-        layer.classList.add("layer")
+        layer.classList.add("layer");
         if (active_layers < 1) {
             if (active_layers === 0) {
-                layer.innerHTML = '<button class="btn btn-secondary" type="submit">Add Layer</button>';
+                layer.innerHTML = '<button class="btn btn-secondary" type="submit" id="add-button">Add Layer</button>';
             }
-            layer.classList.add("inactive")
+            layer.classList.add("inactive");
         } else {
             layer.innerHTML = '<div class="layer-info d-flex flex-column"><div class="layer-label">Layer '+i+'</div><div class="dropdown" id="drop'+i+'"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sample</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton"><a class="dropdown-item" href="#">Kick</a><a class="dropdown-item" href="#">Hi-Hat</a><a class="dropdown-item" href="#">Snare</a><a class="dropdown-item" href="#">Synth</a></div><button class="btn btn-secondary btn-sm" type="submit" id="rem'+i+'">Remove</button></div>L/R<input type="range" class="form-control-range" id="lr'+i+'">Volume<input type="range" class="form-control-range" id="volume'+i+'"></div><div class="sequence" id="seq'+i+'"></div>'
         }
@@ -85,7 +95,14 @@ function render_sequences() {
     for (let sequence of sequences) {
         for (let i = 0; i < 16; i++) {
             const interval = document.createElement("div");
-            interval.classList.add("interval");
+            interval.classList.add("itvl");
+            interval.classList.add("itvl-" + i);
+            interval.addEventListener("mouseover", (e) => {
+                interval.classList.add("itvl-hover");
+            });
+            interval.addEventListener("mouseleave", (e) => {
+                interval.classList.remove("itvl-hover");
+            });
             sequence.appendChild(interval);
         }
     }
@@ -95,12 +112,10 @@ function init_all() {
     Tone.start();
     l = new Looper()
     l.add_layer("hihat.wav")
-    l.add_layer("hihat.wav")
-    l.add_layer("hihat.wav")
     console.log(l)
-    init_key_presses(l);
-    init_master_buttons();
     init_layers(l);
+    init_key_presses(l);
+    init_buttons(l);
     render_sequences();
 }
 
