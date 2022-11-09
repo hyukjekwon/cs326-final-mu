@@ -65,16 +65,30 @@ async function createPost(){
         + currentdate.getMinutes() + ":" 
         + currentdate.getSeconds();
         
-        const newPost = 
-        {Username:"NewUsername", Time:date, Title:postTitle.value, Body:postBody.value, 
-        Likes:0, Dislikes:0, Replies:[],AudioFile:uploadedFile.files[0]};
-        const response = await fetch('/createPost', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newPost)
-        }).then((res) => console.log(res));
+        function getBase64(file) {
+            return new Promise(function(resolve, reject) {
+                var reader = new FileReader();
+                reader.onload = function() { resolve(reader.result); };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+        var promise = getBase64(uploadedFile.files[0]);
+        promise.then(function(result) {
+            console.log("Uploading to server");
+            const newPost = 
+            {Username:"NewUsername", "Time":date, "Title":postTitle.value, "Body":postBody.value, 
+            "Likes":0, "Dislikes":0, "Replies":[],"AudioFile":result};
+            const response = fetch('/createPost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newPost)
+            }).then((res) => console.log(res));
+        });
+
+        
     }
     //CRUD create operation
 }
