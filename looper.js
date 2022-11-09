@@ -74,6 +74,8 @@ function init_key_presses(l) {
     });
 }
 
+
+/* INITIALIZES ALL BUTTON EVENT LISTENERS */
 function init_buttons(l) {
     document.getElementById("play").addEventListener("mouseup", () => {
         l.play_pause();
@@ -85,7 +87,7 @@ function init_buttons(l) {
     const remove_buttons = document.getElementsByClassName("rem");
     for (const dom of remove_buttons) {
         dom.addEventListener("click", () => {
-            l.remove_layer(dom.id.split('.')[1])
+            l.remove_layer(dom.id.split('-')[1])
             render_layers(l);
         });
     }
@@ -115,14 +117,14 @@ function init_active_layer(i, l) {
     html += '<div class="dropdown" id="drop'+i+'"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdown-menu-'+i+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
     html += l.layers[i].sample.split('.')[0] + '</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">'
     html += '<a class="dropdown-item" href="#" id="kick-'+i+'">kick</a><a class="dropdown-item" href="#" id="hihat-'+i+'">hihat</a><a class="dropdown-item" href="#" id="snare-'+i+'">snare</a><a class="dropdown-item" href="#" id="synth-'+i+'">synth</a></div></div>'
-    html += '<button class="rem btn btn-secondary btn-sm" type="submit" id="rem'+i+'">Remove</button>Volume<input type="range" class="form-control-range" id="volume'+i+'"></div><div class="sequence" id="seq'+i+'"></div>'
+    html += '<button class="rem btn btn-secondary btn-sm" type="submit" id="rem-'+i+'">Remove</button>Volume<input type="range" class="form-control-range" id="volume'+i+'"></div><div class="sequence" id="seq'+i+'"></div>'
     return html;
 }
 
 function init_layers(l) {
     let active_layers = l.layers.length;
     for (let i = 0; i < 4; i++) {
-        const layer = document.getElementById("layer" + (i + 1));
+        const layer = document.getElementById("layer-" + (i + 1));
         layer.classList.add("layer");
         if (active_layers < 1) {
             if (active_layers === 0) {
@@ -201,9 +203,9 @@ function render_layers(l) {
             if (layer.classList.contains("inactive")) { // new active layer is made
                 layer.classList.remove("inactive");
                 layer.innerHTML = init_active_layer(i, l);
-                const remove_button = document.getElementById("rem"+i);
+                const remove_button = document.getElementById("rem-"+i);
                 remove_button.addEventListener("click", (e) => {
-                    l.remove_layer("rem"+i);
+                    l.remove_layer(i);
                     render_layers(l);
                 });
                 for (const sample of ["kick", "snare", "hihat", "synth"]) {
