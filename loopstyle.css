@@ -83,9 +83,9 @@ input[type="range"] {
     mix-blend-mode: overlay;
     pointer-events: auto;
     color: black;
-    /* justify-content: center; */
     position: relative;
     padding-top: 15px;
+    pointer-events: none;
 }
 
 /* .layer-label {
@@ -98,14 +98,17 @@ input[type="range"] {
 } */
 
 .dropdown {
-    pointer-events: auto;
-    z-index: 1;
+    pointer-events: none;
 }
 
-.show {
-    mix-blend-mode: normal;
-    isolation: isolate;
-    z-index: 1;
+.dropdown-toggle {
+    pointer-events: all;
+    z-index: 0;
+}
+
+.dropdown-menu {
+    pointer-events: all;
+    z-index: 9999;
 }
 
 .sequence {
@@ -142,6 +145,7 @@ input[type="range"] {
     position: absolute;
     width: 100%;
     bottom: 0;
+    z-index: -1;
 }
 
 #master-vol, #bpm, #play {

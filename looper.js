@@ -36,7 +36,8 @@ class Looper {
         layers.forEach(layer => {
             if (layer.sequence[time]) {
                 const sample = new Tone.Player("/samples/" + layer.sample).toDestination();
-                sample.volume.value = (master_vol - 70) / 2;
+                const layer_vol = (layer.layer_volume["vol"] - 30) / 2
+                sample.volume.value = layer_vol - (100 - master_vol) / 2;
                 sample.autostart = true;
             }
             for (const dom of document.getElementsByClassName("itvl-" + time)) {
@@ -84,6 +85,12 @@ function init_buttons(l) {
         l.add_layer("kick.wav");
         render_layers(l);
     })
+    const layer_vol_inputs = document.getElementsByClassName("layer-volume");
+    for (const dom of layer_vol_inputs) {
+        dom.addEventListener("input", () => {
+            l.layers[dom.id.split('-')[1]].layer_volume["vol"] = parseInt(dom.value);
+        });
+    }
     const remove_buttons = document.getElementsByClassName("rem");
     for (const dom of remove_buttons) {
         dom.addEventListener("click", () => {
@@ -117,7 +124,7 @@ function init_active_layer(i, l) {
     html += '<div class="dropdown" id="drop'+i+'"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdown-menu-'+i+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
     html += l.layers[i].sample.split('.')[0] + '</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">'
     html += '<a class="dropdown-item" id="kick-'+i+'">kick</a><a class="dropdown-item" id="hihat-'+i+'">hihat</a><a class="dropdown-item" id="snare-'+i+'">snare</a><a class="dropdown-item" id="synth-'+i+'">synth</a></div></div>'
-    html += '<div>V: <input type="range" class="form-control-range layer-volume" id="volume'+i+'"></div>'
+    html += '<div>V: <input type="range" class="form-control-range layer-volume" min=0 max=100 value-50 id="volume-'+i+'"></div>'
     html += '<button class="rem btn btn-secondary btn-sm" type="submit" id="rem-'+i+'">Remove</button></div>'
     html += '<div class="sequence" id="seq'+i+'"></div>'
     return html;
@@ -217,6 +224,10 @@ function render_layers(l) {
                         document.getElementById("dropdown-menu-"+i).innerText = sample;
                     });
                 }
+                const layer_vol_slider = document.getElementById("volume-"+i)
+                layer_vol_slider.addEventListener("input", () => {
+                        l.layers[layer_vol_slider.id.split('-')[1]].layer_volume["vol"] = parseInt(layer_vol_slider.value);
+                });
             }
         }
         active_layers -= 1;
