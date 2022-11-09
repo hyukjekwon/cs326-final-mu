@@ -4,7 +4,8 @@
         <meta charset="UTF-8" />
         <link href="bootstrap-5.2.2-dist\css\bootstrap.css" rel="stylesheet" />
         <link rel="stylesheet" href="forumstyle.css" />
-        <script src="forum.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script type = 'module' src="forum.js"></script>
         <title>Forum</title>
     </head>
     <body class = "background">
@@ -29,11 +30,13 @@
             </div>
         </div>
         <br><br><br>
-        
+
+        <div id ="postnotif", class="alert alert-primary collapse" role="alert">Your Post Was Successfully Created</div>
+
         <div class="container body">
             <nav class="navbar navbar-expand-lg navbar-dark background row divrow form-inline">
                 <div class="navbar-nav">
-                    <a id = "FrontPage" class="nav-item nav-link col-sm forumpage subtitlebuttons" href="#">
+                    <a id = "FrontPage" class="nav-item nav-link col-sm forumpage subtitlebuttons" href="frontpage">
                         Front Page
                     </a>
                     <a id = "NewPosts" class="nav-item nav-link col-sm forumpage subtitlebuttons" href="#">

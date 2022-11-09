@@ -85,3 +85,11 @@
 #postDialog { 
     max-height: 500px;
 }
+
+#postnotif {
+    width:40%;    
+    vertical-align: middle;
+    text-align: center;
+    margin-left: 500px;
+    margin-right: 500px;
+ }

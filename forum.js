@@ -25,6 +25,27 @@ function search(){
 
 function loadFrontPage(){
     console.log("Loading Front Page");
+    {/* <div class="row divrow forumpage">
+        <div class="col-sm-2 forumpage post">
+            <div> Check out this beat I made!</div>
+            <div class= "smalltext">- Made by SickBeats 10 minutes ago</div>
+        </div>
+        <div class="col-sm-4"></div>
+        <div class="col-sm forumpage"> 
+            <button type="button" class="btn btn-primary likebutton">Like</button>
+            <div class="col-sm"> 137 likes </div>
+        </div>
+        <div class="col-sm forumpage"> 
+            <button type="button" class="btn btn-danger likebutton">Dislike</button>
+            <div class="col-sm"> 2 dislikes </div>
+        </div>
+        <div class="col-sm forumpage">
+            <button type="button" class="btn btn-secondary likebutton">Reply</button>
+            <div class="col-sm"> 42 replies </div>
+        </div>
+        <div class="col-sm forumpage post"> Posted on 10/21/2022 </div>
+    </div>
+    <br></br> */}
     //CRUD Read operation
 }
 function loadNew(){
@@ -39,7 +60,7 @@ function loadYourPosts(){
     console.log("Loading Your Posts");
     //CRUD Read operation
 }
-async function createPost(){
+function createPost(){
     console.log("Creating Post");
     const postTitle = document.getElementById("postTitle"); //Value in the post title box
     const postBody = document.getElementById("postDialog"); //Value in the post body box
@@ -73,11 +94,11 @@ async function createPost(){
                 reader.readAsDataURL(file);
             });
         }
-        var promise = getBase64(uploadedFile.files[0]);
+        const promise = getBase64(uploadedFile.files[0]);
         promise.then(function(result) {
             console.log("Uploading to server");
             const newPost = 
-            {Username:"NewUsername", "Time":date, "Title":postTitle.value, "Body":postBody.value, 
+            {"Username":"NewUsername", "Time":date, "Title":postTitle.value, "Body":postBody.value, 
             "Likes":0, "Dislikes":0, "Replies":[],"AudioFile":result};
             const response = fetch('/createPost', {
             method: 'POST',
@@ -85,10 +106,21 @@ async function createPost(){
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(newPost)
-            }).then((res) => console.log(res));
+            }).then((res) => {
+                console.log(res)
+                if (res.ok){
+                    $("#CreatePostModal").modal("hide");
+                    $("#postnotif").show();
+                    setTimeout(function() { $("#postnotif").hide();},5000);
+                    postTitle.value = "";
+                    postBody.value = "";
+                    uploadedFile.value = "";
+                }
+                else{
+                    window.alert("Error creating post");
+                }
+            });
         });
-
-        
     }
     //CRUD create operation
 }
