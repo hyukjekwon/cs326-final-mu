@@ -78,6 +78,7 @@ input[type="range"] {
     align-items: center;
     pointer-events: none;
     color: black;
+    padding: 15px 0px;
 }
 
 .layer-label {
