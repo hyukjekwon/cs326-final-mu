@@ -60,11 +60,11 @@ input[type="range"] {
     display: flex;
     flex-direction: row;
     text-align: center;
+    max-height: 25%;
 }
 
 .inactive {
     background-color: rgb(162, 162, 162);
-    max-height: 25%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -78,7 +78,7 @@ input[type="range"] {
     align-items: center;
     pointer-events: none;
     color: black;
-    /* padding: 15px 0px; */
+    /* margin: auto; */
 }
 
 .layer-label {
@@ -153,12 +153,17 @@ input[type="range"] {
 #note-control-container {
     max-height: 30%;
     flex-grow: 1;
-    margin: 0;
+    margin: 0px;
 }
 
 #note-control {
     margin-top: 0;
     background-color: #7EA2AA;
+}
+
+#note-control-panel-container {
+    /* max-height: fit-content; */
+    margin: auto;
 }
 
 #layer-panel {

@@ -29,6 +29,7 @@ class Looper {
     play_interval(layers, cursor) {
         if (metronome_playing) {
             const metronome = new Tone.Player("/samples/metronome.wav").toDestination();
+            metronome.volume.value = (master_vol - 90) / 2;
             metronome.autostart = true;
         }
         const time = cursor["time"];
@@ -70,7 +71,7 @@ function init_key_presses(l) {
         if (e.code === "Space") {
             l.play_pause();
         }
-    })
+    });
 }
 
 function init_buttons(l) {
@@ -106,14 +107,13 @@ function init_buttons(l) {
             metronome_playing = false;
         }
     });
-
 }
 
 function init_active_layer(i, l) {
     let html = '<div class="layer-info d-flex flex-column"><div class="layer-label">Layer '+i+'</div><div class="dropdown" id="drop'+i+'"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdown-menu-'+i+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
     html += l.layers[i].sample.split('.')[0] + '</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">'
     html += '<a class="dropdown-item" href="#" id="kick-'+i+'">kick</a><a class="dropdown-item" href="#" id="hihat-'+i+'">hihat</a><a class="dropdown-item" href="#" id="snare-'+i+'">snare</a><a class="dropdown-item" href="#" id="synth-'+i+'">synth</a></div>'
-    html += '<button class="rem btn btn-secondary btn-sm" type="submit" id="rem'+i+'">Remove</button></div>L/R<input type="range" class="form-control-range" id="lr'+i+'">Volume<input type="range" class="form-control-range" id="volume'+i+'"></div><div class="sequence" id="seq'+i+'"></div>'
+    html += '<button class="rem btn btn-secondary btn-sm" type="submit" id="rem'+i+'">Remove</button></div>Volume<input type="range" class="form-control-range" id="volume'+i+'"></div><div class="sequence" id="seq'+i+'"></div>'
     return html;
 }
 
@@ -158,10 +158,10 @@ function render_sequences(l) {
                 interval.addEventListener("click", (e) => {
                     if (interval.classList.contains("itvl-activated")) {
                         l.layers[i].sequence[j] = 0;
-                        interval.classList.remove("itvl-activated")
+                        interval.classList.remove("itvl-activated");
                     } else {
                         l.layers[i].sequence[j] = 1;
-                        interval.classList.add("itvl-activated")
+                        interval.classList.add("itvl-activated");
                     }
                 });
                 sequence.appendChild(interval);

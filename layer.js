@@ -2,7 +2,6 @@ class Layer {
     constructor(sample) {
         this.sample = sample;
         this.sequence = this.init_sequence();
-        this.pan = 50;
         this.layer_volume = 50;
     }
     init_sequence() {
