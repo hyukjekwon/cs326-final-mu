@@ -1,6 +1,7 @@
 import {Layer} from './layer.js';
 
-let master_vol = 75;
+let master_vol = 75; // between 0 and 100
+let metronome_playing = false;
 
 class Looper {
     constructor() {
@@ -18,14 +19,23 @@ class Looper {
             return this.layers.splice(index, 1);
         }
     }
+    set_bpm_and_period(bpm) {
+        this.bpm = bpm;
+        if (this.playing) {
+            clearInterval(this.interval);
+            this.interval = setInterval(this.play_interval, 30000 / this.bpm, this.layers, this.cursor);
+        }
+    }
     play_interval(layers, cursor) {
+        if (metronome_playing) {
+            const metronome = new Tone.Player("/samples/metronome.wav").toDestination();
+            metronome.autostart = true;
+        }
         const time = cursor["time"];
-        const metronome = new Tone.Player("/samples/metronome.wav").toDestination();
-        metronome.autostart = true;
         layers.forEach(layer => {
             if (layer.sequence[time]) {
                 const sample = new Tone.Player("/samples/" + layer.sample).toDestination();
-                sample.volume.value = (master_vol - 50) / 2;
+                sample.volume.value = (master_vol - 70) / 2;
                 sample.autostart = true;
             }
             for (const dom of document.getElementsByClassName("itvl-" + time)) {
@@ -47,8 +57,9 @@ class Looper {
                 dom.classList.remove("itvl-cursor");
             }
         } else {
+            Tone.start();
             console.log("play");
-            this.interval = setInterval(this.play_interval, Math.floor(this.bpm * 2.0833), this.layers, this.cursor);
+            this.interval = setInterval(this.play_interval, 30000 / this.bpm, this.layers, this.cursor);
             this.playing = true;
         }
     }
@@ -63,12 +74,10 @@ function init_key_presses(l) {
 }
 
 function init_buttons(l) {
-    const play = document.getElementById("play");
-    play.addEventListener("mouseup", () => {
+    document.getElementById("play").addEventListener("mouseup", () => {
         l.play_pause();
     })
-    const add_layer = document.getElementById("add-button");
-    add_layer.addEventListener("click", () => {
+    document.getElementById("add-button").addEventListener("click", () => {
         l.add_layer("kick.wav");
         render_layers(l);
     })
@@ -79,10 +88,25 @@ function init_buttons(l) {
             render_layers(l);
         });
     }
-    const master_vol_slider = document.getElementById("master-vol");
-    master_vol_slider.addEventListener("input", () => {
-        master_vol = master_vol_slider.value;
-    })
+    const mast_vol_input = document.getElementById("master-vol")
+    mast_vol_input.addEventListener("input", () => {
+        master_vol = mast_vol_input.value;
+    });
+    const bpm_input = document.getElementById("bpm")
+    bpm_input.addEventListener("input", () => {
+        l.set_bpm_and_period(bpm_input.value);
+    });
+    const metro_btn = document.getElementById("metronome")
+    metro_btn.addEventListener("click", () => {
+        if (!metronome_playing) {
+            metro_btn.classList.add("btn-danger")
+            metronome_playing = true;
+        } else {
+            metro_btn.classList.remove("btn-danger")
+            metronome_playing = false;
+        }
+    });
+
 }
 
 function init_active_layer(i, l) {
@@ -202,9 +226,6 @@ function render_layers(l) {
 
 function init_all() {
     let l = new Looper();
-    Tone.start();
-    // l.add_layer("hihat.wav")
-    console.log(l);
     init_layers(l);
     init_key_presses(l);
     init_buttons(l);
