@@ -62,7 +62,24 @@ function init_master_buttons(l) {
     })
 }
 
-function render_layers() {
+function init_layers(l) {
+    let active_layers = l.layers.length;
+    for (let i = 0; i < 4; i++) {
+        const layer = document.getElementById("layer" + (i + 1));
+        layer.classList.add("layer")
+        if (active_layers < 1) {
+            if (active_layers === 0) {
+                layer.innerHTML = '<button class="btn btn-secondary" type="submit">Add Layer</button>';
+            }
+            layer.classList.add("inactive")
+        } else {
+            layer.innerHTML = '<div class="layer-info d-flex flex-column"><div class="layer-label">Layer '+i+'</div><div class="dropdown" id="drop'+i+'"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sample</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton"><a class="dropdown-item" href="#">Kick</a><a class="dropdown-item" href="#">Hi-Hat</a><a class="dropdown-item" href="#">Snare</a><a class="dropdown-item" href="#">Synth</a></div><button class="btn btn-secondary btn-sm" type="submit" id="rem'+i+'">Remove</button></div>L/R<input type="range" class="form-control-range" id="lr'+i+'">Volume<input type="range" class="form-control-range" id="volume'+i+'"></div><div class="sequence" id="seq'+i+'"></div>'
+        }
+        active_layers -= 1;
+    }
+}
+
+function render_sequences() {
     const layer = document.getElementById("layer-control");
     const sequences = document.getElementsByClassName("sequence");
     for (let sequence of sequences) {
@@ -78,10 +95,13 @@ function init_all() {
     Tone.start();
     l = new Looper()
     l.add_layer("hihat.wav")
+    l.add_layer("hihat.wav")
+    l.add_layer("hihat.wav")
     console.log(l)
     init_key_presses(l);
     init_master_buttons();
-    render_layers();
+    init_layers(l);
+    render_sequences();
 }
 
 init_all()
