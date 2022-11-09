@@ -116,17 +116,18 @@ input[type="range"] {
     mix-blend-mode: overlay;
 }
 
-.itvl-cursor {
-    background-color: rgb(167, 167, 167);
-}
-
 .itvl-hover {
     background-color: rgb(104, 104, 104);
+}
+
+.itvl-cursor {
+    background-color: rgb(167, 167, 167);
 }
 
 .itvl-activated {
     background-color: rgb(57, 57, 57);
 }
+
 
 #master-vol, #bpm, #play {
     margin: 10px 0;

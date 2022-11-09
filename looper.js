@@ -1,10 +1,11 @@
 import {Layer} from './layer.js';
 
+let master_vol = 75;
+
 class Looper {
     constructor() {
         this.layers = [new Layer("kick.wav")];
         this.bpm = 120;
-        this.master_volume = 75;
         this.playing = false;
         this.interval;
         this.cursor = {"time": 0}; // obj to alter by reference
@@ -24,6 +25,7 @@ class Looper {
         layers.forEach(layer => {
             if (layer.sequence[time]) {
                 const sample = new Tone.Player("/samples/" + layer.sample).toDestination();
+                sample.volume.value = (master_vol - 50) / 2;
                 sample.autostart = true;
             }
             for (const dom of document.getElementsByClassName("itvl-" + time)) {
@@ -62,21 +64,25 @@ function init_key_presses(l) {
 
 function init_buttons(l) {
     const play = document.getElementById("play");
-    play.addEventListener("mouseup", (e) => {
+    play.addEventListener("mouseup", () => {
         l.play_pause();
     })
     const add_layer = document.getElementById("add-button");
-    add_layer.addEventListener("click", (e) => {
+    add_layer.addEventListener("click", () => {
         l.add_layer("kick.wav");
         render_layers(l);
     })
     const remove_buttons = document.getElementsByClassName("rem");
     for (const dom of remove_buttons) {
-        dom.addEventListener("click", (e) => {
+        dom.addEventListener("click", () => {
             l.remove_layer(dom.id.split('.')[1])
             render_layers(l);
         });
     }
+    const master_vol_slider = document.getElementById("master-vol");
+    master_vol_slider.addEventListener("input", () => {
+        master_vol = master_vol_slider.value;
+    })
 }
 
 function init_active_layer(i, l) {
