@@ -61,6 +61,7 @@ input[type="range"] {
     flex-direction: row;
     text-align: center;
     max-height: 25%;
+    pointer-events: auto;
 }
 
 .inactive {
@@ -72,13 +73,13 @@ input[type="range"] {
 
 .layer-info {
     flex-basis: 0;
-    flex-grow: 0.2;
+    padding: 10px;
+    min-width: 22%;
     background-color: rgba(255, 255, 255, 0.34);
     mix-blend-mode: overlay;
     align-items: center;
-    pointer-events: none;
+    pointer-events: auto;
     color: black;
-    /* margin: auto; */
 }
 
 .layer-label {
@@ -87,6 +88,7 @@ input[type="range"] {
     margin: 5px;
     padding: 0px 10px;
     border-radius: 15px;
+    pointer-events: none;
 }
 
 .dropdown {
@@ -128,6 +130,9 @@ input[type="range"] {
     background-color: rgb(57, 57, 57);
 }
 
+.rem {
+    pointer-events: all;
+}
 
 #master-vol, #bpm, #play {
     margin: 10px 0;

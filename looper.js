@@ -98,7 +98,7 @@ function init_buttons(l) {
         l.set_bpm_and_period(bpm_input.value);
     });
     const metro_btn = document.getElementById("metronome")
-    metro_btn.addEventListener("click", () => {
+    metro_btn.addEventListener("mouseup", () => {
         if (!metronome_playing) {
             metro_btn.classList.add("btn-danger")
             metronome_playing = true;
@@ -110,10 +110,12 @@ function init_buttons(l) {
 }
 
 function init_active_layer(i, l) {
-    let html = '<div class="layer-info d-flex flex-column"><div class="layer-label">Layer '+i+'</div><div class="dropdown" id="drop'+i+'"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdown-menu-'+i+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+    let html = '<div class="layer-info d-flex flex-column">'
+    // html += '<div class="layer-label">Layer '+i+'</div>'
+    html += '<div class="dropdown" id="drop'+i+'"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdown-menu-'+i+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
     html += l.layers[i].sample.split('.')[0] + '</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">'
-    html += '<a class="dropdown-item" href="#" id="kick-'+i+'">kick</a><a class="dropdown-item" href="#" id="hihat-'+i+'">hihat</a><a class="dropdown-item" href="#" id="snare-'+i+'">snare</a><a class="dropdown-item" href="#" id="synth-'+i+'">synth</a></div>'
-    html += '<button class="rem btn btn-secondary btn-sm" type="submit" id="rem'+i+'">Remove</button></div>Volume<input type="range" class="form-control-range" id="volume'+i+'"></div><div class="sequence" id="seq'+i+'"></div>'
+    html += '<a class="dropdown-item" href="#" id="kick-'+i+'">kick</a><a class="dropdown-item" href="#" id="hihat-'+i+'">hihat</a><a class="dropdown-item" href="#" id="snare-'+i+'">snare</a><a class="dropdown-item" href="#" id="synth-'+i+'">synth</a></div></div>'
+    html += '<button class="rem btn btn-secondary btn-sm" type="submit" id="rem'+i+'">Remove</button>Volume<input type="range" class="form-control-range" id="volume'+i+'"></div><div class="sequence" id="seq'+i+'"></div>'
     return html;
 }
 
