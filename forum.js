@@ -39,8 +39,43 @@ function loadYourPosts(){
     console.log("Loading Your Posts");
     //CRUD Read operation
 }
-function createPost(){
+async function createPost(){
     console.log("Creating Post");
+    const postTitle = document.getElementById("postTitle"); //Value in the post title box
+    const postBody = document.getElementById("postDialog"); //Value in the post body box
+    const uploadedFile = document.getElementById("FileUpload"); //Value in the post file input
+    if(postTitle.value === "" || uploadedFile.files.length == 0){ //If there's no title or file then it doesn't actually create a post (body text is optional)
+        if (postTitle.value === "" && uploadedFile.files.length == 0){
+            window.alert("Missing Title and File Input")
+        }
+        else if (postTitle.value === ""){
+            window.alert("Missing Title");
+        } else { window.alert("Missing File Input");}
+    }else{
+        //Semd a forum post of format:  
+        //{Username:"NewUsername", Time:date, Title:title, Body:body, 
+        //Likes:0, Dislikes:0, Replies:[],AudioFile:File}
+
+        const currentdate = new Date();
+        const date = 
+        (currentdate.getMonth()+1) + "/"
+        + currentdate.getDate()  + "/" 
+        + currentdate.getFullYear() + " @ "  
+        + currentdate.getHours() + ":"  
+        + currentdate.getMinutes() + ":" 
+        + currentdate.getSeconds();
+        
+        const newPost = 
+        {Username:"NewUsername", Time:date, Title:postTitle.value, Body:postBody.value, 
+        Likes:0, Dislikes:0, Replies:[],AudioFile:uploadedFile.files[0]};
+        const response = await fetch('/createPost', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newPost)
+        }).then((res) => console.log(res));
+    }
     //CRUD create operation
 }
 function Login(){

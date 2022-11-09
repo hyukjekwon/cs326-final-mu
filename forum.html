@@ -15,7 +15,7 @@
                     <button id = "Looper" type="button" class="headerbuttons btn btn-secondary">Looper</button>
                 </div>
                 <div class="col-sm-1 forumpage">
-                    <button id = "CreatePost" type="button" class="headerbuttons btn btn-secondary">Create Post</button>
+                    <button id="creatPostButton" type="button" class="headerbuttons btn btn-secondary" data-bs-toggle="modal" data-bs-target="#CreatePostModal" >Create Post</button>
                 </div>
                 <div class="col-sm-1 forumpage">
                     <button id = "Login" type="button" class="headerbuttons btn btn-secondary">Login</button>
@@ -52,6 +52,32 @@
                 </div>
             </nav>
             <br>
+            
+
+            <div class="modal fade" id="CreatePostModal" tabindex="-1" aria-labelledby="CreatePostModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content createpostmodal">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Create Post</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <textarea class="form-control" placeholder="Title" id="postTitle" rows=1></textarea>
+                                <br>
+                                <textarea class="form-control" placeholder="Post Body (optional)" id="postDialog" rows=6></textarea>
+                                <br>
+                                <div class="mb-1">
+                                    <label for="formFile" class="form-label">Upload Beat</label>
+                                    <input class="form-control" type="file" id="FileUpload" accept = ".wav">
+                                </div>
+                            </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button id = "CreatePost" type="button" class="btn btn-primary">Post</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!--This will be the post template-->
             <!--Sample post-->

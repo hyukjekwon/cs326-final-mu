@@ -71,3 +71,17 @@
     text-align: center;
     vertical-align: middle;
 }
+
+.createpostmodal {
+    background-color: dimgray;
+    color:lightblue;
+    vertical-align: middle;
+}
+
+#postTitle { 
+    resize:none; 
+}
+
+#postDialog { 
+    max-height: 500px;
+}
