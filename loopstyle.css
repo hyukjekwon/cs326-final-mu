@@ -64,6 +64,11 @@ input[type="range"] {
     pointer-events: auto;
 }
 
+.layer-volume {
+    width: 60%;
+    margin: 5%;
+}
+
 .inactive {
     background-color: rgb(162, 162, 162);
     display: flex;
@@ -73,23 +78,24 @@ input[type="range"] {
 
 .layer-info {
     flex-basis: 0;
-    padding: 10px;
     min-width: 22%;
     background-color: rgba(255, 255, 255, 0.34);
     mix-blend-mode: overlay;
-    align-items: center;
     pointer-events: auto;
     color: black;
+    /* justify-content: center; */
+    position: relative;
+    padding-top: 15px;
 }
 
-.layer-label {
+/* .layer-label {
     background-color: rgb(84, 84, 84);
     color: white;
     margin: 5px;
     padding: 0px 10px;
     border-radius: 15px;
     pointer-events: none;
-}
+} */
 
 .dropdown {
     pointer-events: auto;
@@ -124,6 +130,7 @@ input[type="range"] {
 
 .itvl-cursor {
     background-color: rgb(167, 167, 167);
+    border-color: white;
 }
 
 .itvl-activated {
@@ -132,6 +139,9 @@ input[type="range"] {
 
 .rem {
     pointer-events: all;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
 }
 
 #master-vol, #bpm, #play {
