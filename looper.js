@@ -111,7 +111,7 @@ function render_sequences(l) {
             for (let j = 0; j < 16; j++) {
                 const interval = document.createElement("div");
                 interval.classList.add("itvl");
-                interval.classList.add("itvl-" + j);
+                interval.classList.add("itvl-"+j);
                 interval.addEventListener("mouseover", (e) => {
                     interval.classList.add("itvl-hover");
                 });
@@ -120,8 +120,10 @@ function render_sequences(l) {
                 });
                 interval.addEventListener("click", (e) => {
                     if (interval.classList.contains("itvl-activated")) {
+                        l.layers[i].sequence[j] = 0;
                         interval.classList.remove("itvl-activated")
                     } else {
+                        l.layers[i].sequence[j] = 1;
                         interval.classList.add("itvl-activated")
                     }
                 });
@@ -169,7 +171,7 @@ function init_all() {
     let l = new Looper();
     Tone.start();
     // l.add_layer("hihat.wav")
-    console.log(l)
+    console.log(l);
     init_layers(l);
     init_key_presses(l);
     init_buttons(l);
