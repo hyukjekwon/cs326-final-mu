@@ -80,9 +80,9 @@ function init_buttons(l) {
 }
 
 function init_active_layer(i, l) {
-    let html = '<div class="layer-info d-flex flex-column"><div class="layer-label">Layer '+i+'</div><div class="dropdown" id="drop'+i+'"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+    let html = '<div class="layer-info d-flex flex-column"><div class="layer-label">Layer '+i+'</div><div class="dropdown" id="drop'+i+'"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdown-menu-'+i+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
     html += l.layers[i].sample.split('.')[0] + '</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">'
-    html += '<a class="dropdown-item" href="#">kick</a><a class="dropdown-item" href="#">hihat</a><a class="dropdown-item" href="#">snare</a><a class="dropdown-item" href="#">synth</a></div>'
+    html += '<a class="dropdown-item" href="#" id="kick-'+i+'">kick</a><a class="dropdown-item" href="#" id="hihat-'+i+'">hihat</a><a class="dropdown-item" href="#" id="snare-'+i+'">snare</a><a class="dropdown-item" href="#" id="synth-'+i+'">synth</a></div>'
     html += '<button class="rem btn btn-secondary btn-sm" type="submit" id="rem'+i+'">Remove</button></div>L/R<input type="range" class="form-control-range" id="lr'+i+'">Volume<input type="range" class="form-control-range" id="volume'+i+'"></div><div class="sequence" id="seq'+i+'"></div>'
     return html;
 }
@@ -101,6 +101,13 @@ function init_layers(l) {
             layer.innerHTML = init_active_layer(i, l);
         }
         active_layers -= 1;
+    }
+    for (const sample of ["kick", "snare", "hihat", "synth"]) {
+        const dropdown_item = document.getElementById(sample+"-"+0);
+        dropdown_item.addEventListener("click", (e) => {
+            l.layers[0].sample = sample + '.wav'
+            document.getElementById("dropdown-menu-"+0).innerText = sample;
+        });
     }
 }
 
@@ -146,15 +153,22 @@ function render_layers(l) {
             }
             layer.classList.add("inactive");
         } else {
-            if (layer.classList.contains("inactive")) {
+            if (layer.classList.contains("inactive")) { // new active layer is made
                 layer.classList.remove("inactive");
                 layer.innerHTML = init_active_layer(i, l);
                 render_sequences(l);
                 const remove_button = document.getElementById("rem"+i);
                 remove_button.addEventListener("click", (e) => {
-                    l.remove_layer("rem"+i)
+                    l.remove_layer("rem"+i);
                     render_layers(l);
                 });
+                for (const sample of ["kick", "snare", "hihat", "synth"]) {
+                    const dropdown_item = document.getElementById(sample+"-"+i);
+                    dropdown_item.addEventListener("click", (e) => {
+                        l.layers[i].sample = sample + '.wav'
+                        document.getElementById("dropdown-menu-"+i).innerText = sample;
+                    });
+                }
             }
         }
         active_layers -= 1;
@@ -163,7 +177,7 @@ function render_layers(l) {
         document.getElementById("add-button").addEventListener("click", (e) => {
             l.add_layer("kick.wav");
             render_layers(l);
-        })
+        });
     }
 }
 

@@ -84,7 +84,7 @@ input[type="range"] {
 .layer-label {
     background-color: rgb(84, 84, 84);
     color: white;
-    margin: 10px;
+    margin: 5px;
     padding: 0px 10px;
     border-radius: 15px;
 }
