@@ -136,6 +136,19 @@ function render_sequences(l) {
                 });
                 sequence.appendChild(interval);
             }
+        } else { // existing sequence
+            for (let j = 0; j < 16; j++) {
+                const interval = sequence.childNodes[j];
+                if (l.layers[i].sequence[j] === 1) {  // if the sequence number is a 1
+                    if (!interval.classList.contains("itvl-activated")) {
+                        interval.classList.add("itvl-activated");
+                    }
+                } else {  // if the sequence number is a 0
+                    if (interval.classList.contains("itvl-activated")) {
+                        interval.classList.remove("itvl-activated");
+                    }
+                }
+            }
         }
     }
 }
@@ -156,7 +169,6 @@ function render_layers(l) {
             if (layer.classList.contains("inactive")) { // new active layer is made
                 layer.classList.remove("inactive");
                 layer.innerHTML = init_active_layer(i, l);
-                render_sequences(l);
                 const remove_button = document.getElementById("rem"+i);
                 remove_button.addEventListener("click", (e) => {
                     l.remove_layer("rem"+i);
@@ -173,6 +185,7 @@ function render_layers(l) {
         }
         active_layers -= 1;
     }
+    render_sequences(l);
     if (document.getElementById("add-button")) {
         document.getElementById("add-button").addEventListener("click", (e) => {
             l.add_layer("kick.wav");
