@@ -90,8 +90,14 @@ input[type="range"] {
 }
 
 .dropdown {
-    position: 'absolute';
     pointer-events: auto;
+    z-index: 1;
+}
+
+.show {
+    mix-blend-mode: normal;
+    isolation: isolate;
+    z-index: 1;
 }
 
 .sequence {
@@ -116,6 +122,10 @@ input[type="range"] {
 
 .itvl-hover {
     background-color: rgb(104, 104, 104);
+}
+
+.itvl-activated {
+    background-color: rgb(57, 57, 57);
 }
 
 #master-vol, #bpm, #play {

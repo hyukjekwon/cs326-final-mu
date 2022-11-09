@@ -1,5 +1,4 @@
 import {Layer} from './layer.js';
-let l;
 
 class Looper {
     constructor() {
@@ -69,7 +68,23 @@ function init_buttons(l) {
     const add_layer = document.getElementById("add-button");
     add_layer.addEventListener("click", (e) => {
         l.add_layer("kick.wav");
+        render_layers(l);
     })
+    const remove_buttons = document.getElementsByClassName("rem");
+    for (const dom of remove_buttons) {
+        dom.addEventListener("click", (e) => {
+            l.remove_layer(dom.id.split('.')[1])
+            render_layers(l);
+        });
+    }
+}
+
+function init_active_layer(i, l) {
+    let html = '<div class="layer-info d-flex flex-column"><div class="layer-label">Layer '+i+'</div><div class="dropdown" id="drop'+i+'"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+    html += l.layers[i].sample.split('.')[0] + '</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">'
+    html += '<a class="dropdown-item" href="#">kick</a><a class="dropdown-item" href="#">hihat</a><a class="dropdown-item" href="#">snare</a><a class="dropdown-item" href="#">synth</a></div>'
+    html += '<button class="rem btn btn-secondary btn-sm" type="submit" id="rem'+i+'">Remove</button></div>L/R<input type="range" class="form-control-range" id="lr'+i+'">Volume<input type="range" class="form-control-range" id="volume'+i+'"></div><div class="sequence" id="seq'+i+'"></div>'
+    return html;
 }
 
 function init_layers(l) {
@@ -83,40 +98,82 @@ function init_layers(l) {
             }
             layer.classList.add("inactive");
         } else {
-            layer.innerHTML = '<div class="layer-info d-flex flex-column"><div class="layer-label">Layer '+i+'</div><div class="dropdown" id="drop'+i+'"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sample</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton"><a class="dropdown-item" href="#">Kick</a><a class="dropdown-item" href="#">Hi-Hat</a><a class="dropdown-item" href="#">Snare</a><a class="dropdown-item" href="#">Synth</a></div><button class="btn btn-secondary btn-sm" type="submit" id="rem'+i+'">Remove</button></div>L/R<input type="range" class="form-control-range" id="lr'+i+'">Volume<input type="range" class="form-control-range" id="volume'+i+'"></div><div class="sequence" id="seq'+i+'"></div>'
+            layer.innerHTML = init_active_layer(i, l);
         }
         active_layers -= 1;
     }
 }
 
-function render_sequences() {
-    const layer = document.getElementById("layer-control");
-    const sequences = document.getElementsByClassName("sequence");
-    for (let sequence of sequences) {
-        for (let i = 0; i < 16; i++) {
-            const interval = document.createElement("div");
-            interval.classList.add("itvl");
-            interval.classList.add("itvl-" + i);
-            interval.addEventListener("mouseover", (e) => {
-                interval.classList.add("itvl-hover");
-            });
-            interval.addEventListener("mouseleave", (e) => {
-                interval.classList.remove("itvl-hover");
-            });
-            sequence.appendChild(interval);
+function render_sequences(l) {
+    for (let i = 0; i < l.layers.length; i++) {
+        const sequence = document.getElementById("seq" + i)
+        if (sequence.childNodes.length === 0) {
+            for (let j = 0; j < 16; j++) {
+                const interval = document.createElement("div");
+                interval.classList.add("itvl");
+                interval.classList.add("itvl-" + j);
+                interval.addEventListener("mouseover", (e) => {
+                    interval.classList.add("itvl-hover");
+                });
+                interval.addEventListener("mouseleave", (e) => {
+                    interval.classList.remove("itvl-hover");
+                });
+                interval.addEventListener("click", (e) => {
+                    if (interval.classList.contains("itvl-activated")) {
+                        interval.classList.remove("itvl-activated")
+                    } else {
+                        interval.classList.add("itvl-activated")
+                    }
+                });
+                sequence.appendChild(interval);
+            }
         }
     }
 }
 
+function render_layers(l) {
+    let active_layers = l.layers.length;
+    const layers = document.getElementsByClassName("layer");
+    for (let i = 0; i < 4; i++) {
+        const layer = layers[i];
+        if (active_layers < 1) {
+            if (active_layers === 0) {
+                layer.innerHTML = '<button class="btn btn-secondary" type="submit" id="add-button">Add Layer</button>';
+            } else if (layer.innerHTML) {
+                layer.innerHTML = '';
+            }
+            layer.classList.add("inactive");
+        } else {
+            if (layer.classList.contains("inactive")) {
+                layer.classList.remove("inactive");
+                layer.innerHTML = init_active_layer(i, l);
+                render_sequences(l);
+                const remove_button = document.getElementById("rem"+i);
+                remove_button.addEventListener("click", (e) => {
+                    l.remove_layer("rem"+i)
+                    render_layers(l);
+                });
+            }
+        }
+        active_layers -= 1;
+    }
+    if (document.getElementById("add-button")) {
+        document.getElementById("add-button").addEventListener("click", (e) => {
+            l.add_layer("kick.wav");
+            render_layers(l);
+        })
+    }
+}
+
 function init_all() {
+    let l = new Looper();
     Tone.start();
-    l = new Looper()
-    l.add_layer("hihat.wav")
+    // l.add_layer("hihat.wav")
     console.log(l)
     init_layers(l);
     init_key_presses(l);
     init_buttons(l);
-    render_sequences();
+    render_sequences(l);
 }
 
 init_all()
