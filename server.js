@@ -212,7 +212,7 @@ function latestRepliesPageGetPosts(req, res){
   res.writeHead(200, {'Content-Type': 'text/text'});
   let postIDs = [];
   let postsObjects = [];
-  Object.entries(fakedatapostslist1).forEach(([postID, value]) => {postIDs.push(postID), postsObjects.push(fakedatapostslist2[postID])});
+  Object.entries(fakedatapostslist1).forEach(([postID, value]) => {postIDs.push(postID), postsObjects.push(fakedatapostslist1[postID])});
   let frontpageposts = {"PostIDs": postIDs,"Posts":postsObjects};
   res.write(JSON.stringify(frontpageposts));
   res.end();
@@ -223,7 +223,7 @@ function yourPostsPageGetPosts(req, res){
   res.writeHead(200, {'Content-Type': 'text/text'});
   let postIDs = [];
   let postsObjects = [];
-  Object.entries(fakedatapostslist2).forEach(([postID, value]) => {postIDs.push(postID), postsObjects.push(fakedatapostslist1[postID])});
+  Object.entries(fakedatapostslist2).forEach(([postID, value]) => {postIDs.push(postID), postsObjects.push(fakedatapostslist2[postID])});
   let frontpageposts = {"PostIDs": postIDs,"Posts":postsObjects};
   res.write(JSON.stringify(frontpageposts));
   res.end();
