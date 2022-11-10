@@ -60,11 +60,17 @@ input[type="range"] {
     display: flex;
     flex-direction: row;
     text-align: center;
+    max-height: 25%;
+    pointer-events: auto;
+}
+
+.layer-volume {
+    width: 60%;
+    margin: 5%;
 }
 
 .inactive {
     background-color: rgb(162, 162, 162);
-    max-height: 25%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -72,25 +78,37 @@ input[type="range"] {
 
 .layer-info {
     flex-basis: 0;
-    flex-grow: 0.2;
+    min-width: 22%;
     background-color: rgba(255, 255, 255, 0.34);
     mix-blend-mode: overlay;
-    align-items: center;
-    pointer-events: none;
+    pointer-events: auto;
     color: black;
+    position: relative;
+    padding-top: 15px;
+    pointer-events: none;
 }
 
-.layer-label {
+/* .layer-label {
     background-color: rgb(84, 84, 84);
     color: white;
-    margin: 10px;
+    margin: 5px;
     padding: 0px 10px;
     border-radius: 15px;
-}
+    pointer-events: none;
+} */
 
 .dropdown {
-    position: 'absolute';
-    pointer-events: auto;
+    pointer-events: none;
+}
+
+.dropdown-toggle {
+    pointer-events: all;
+    z-index: 0;
+}
+
+.dropdown-menu {
+    pointer-events: all;
+    z-index: 9999;
 }
 
 .sequence {
@@ -100,11 +118,34 @@ input[type="range"] {
     flex-direction: row;
 }
 
-.interval {
+.itvl {
     flex-grow: 1;
     border-left: solid;
     border-color: black;
     border-width: 1px;
+    background-color: transparent;
+    mix-blend-mode: overlay;
+}
+
+.itvl-hover {
+    background-color: rgb(104, 104, 104);
+}
+
+.itvl-cursor {
+    background-color: rgb(167, 167, 167);
+    border-color: white;
+}
+
+.itvl-activated {
+    background-color: rgb(57, 57, 57);
+}
+
+.rem {
+    pointer-events: all;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    z-index: -1;
 }
 
 #master-vol, #bpm, #play {
@@ -131,12 +172,17 @@ input[type="range"] {
 #note-control-container {
     max-height: 30%;
     flex-grow: 1;
-    margin: 0;
+    margin: 0px;
 }
 
 #note-control {
     margin-top: 0;
     background-color: #7EA2AA;
+}
+
+#note-control-panel-container {
+    /* max-height: fit-content; */
+    margin: auto;
 }
 
 #layer-panel {
