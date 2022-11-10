@@ -51,6 +51,24 @@ A post can be liked or disliked or replied to.
 If it’s your post, it can be edited or deleted.
 ![disliked-post](milestone2_img/image4.png)
 
+# Looper Progress:
+
+I know it wasn't asked for, but I worked way too much on this front-end javascript to not show it off.
+
+Here's what the interface looks like on startup:
+
+![looper-starting-interface](milestone2_img/looper1.png)
+
+Here's what it looks like while it's running 3 layers with the metronome toggled:
+
+![looper-multiple-layers](milestone2_img/looper2.png)
+
+Here's the note control panel changing its content depending on the note you right-clicked on (you can control note type (in the format note + octave), and volume, etc)
+
+![looper-note-control](milestone2_img/looper3.png)
+
+The playback is a little wonky, but the audio definitely works!
+
 # Division of Labor:
 * Austin: Worked on forum and server handling.
 * Hyuk-Je: Worked on looper interface and functionality.
