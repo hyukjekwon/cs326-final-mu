@@ -23,43 +23,283 @@ function search(){
     }
 }
 
-function loadFrontPage(){
+
+function constructPost(postObject){
+    /* <div class="row divrow forumpage">
+            <div class="col-sm-2 forumpage post">
+                <div> Check out this beat I made!</div>
+                <div class= "smalltext">- Made by SickBeats 10 minutes ago</div>
+            </div>
+            <div class="col-sm-4">\
+            </div>
+
+
+            <div class="col-sm forumpage"> 
+                <button type="button" class="btn btn-primary likebutton">Like</button>
+                <div class="col-sm"> 137 likes </div>
+            </div>
+            <div class="col-sm forumpage"> 
+                <button type="button" class="btn btn-danger likebutton">Dislike</button>
+                <div class="col-sm"> 2 dislikes </div>
+            </div>
+            <div class="col-sm forumpage">
+                <button type="button" class="btn btn-secondary likebutton">Reply</button>
+                <div class="col-sm"> 42 replies </div>
+            </div>
+            <div class="col-sm forumpage post"> Posted on 10/21/2022 </div>
+        </div>
+        <br></br> */
+    const postHere = document.getElementById('postHere');
+    const newPost = document.createElement('div');
+    newPost.classList.add("row", "divrow", "forumpage");
+        //Post title, author, and timestamp
+        const div1 = document.createElement('div');
+        div1.classList.add("col-sm-3", "post", "forumpage");
+            const div2 = document.createElement('div');
+            div2.innerHTML = postObject["Title"];
+            const div3 = document.createElement('div');
+            div3.classList.add("smalltext");
+            //The postID was made with Date.now() so we can use it here to get time since it was posted
+            const minutesSincePost = Math.floor(Math.abs(Date.now() - postObject["PostID"])/(60*1000));
+            div3.innerHTML = "Made by " + postObject["Username"] + " " + minutesSincePost.toString() + " minutes ago";
+            div1.appendChild(div2);
+            div1.appendChild(div3);
+        newPost.appendChild(div1);
+        const div4 = document.createElement('div');
+        div4.classList.add("col-sm-4");
+        newPost.appendChild(div4);
+        //Like button and likes
+        const div5 = document.createElement('div');
+        div5.classList.add("col-sm", "forumpage");
+            const likebutton = document.createElement('button');
+            likebutton.classList.add("btn", "btn-primary", "likebutton")
+            likebutton.innerHTML = "Like";
+            div5.appendChild(likebutton);
+            const likediv = document.createElement('div');
+            likediv.innerHTML = postObject["Likes"] + " likes";
+            div5.append(likediv);
+        newPost.appendChild(div5);
+        //Dislike button and dislikes
+        const div6 = document.createElement('div');
+        div6.classList.add("col-sm", "forumpage");
+            const dislikebutton = document.createElement('button');
+            dislikebutton.classList.add("btn", "btn-danger", "likebutton")
+            dislikebutton.innerHTML = "Dislike";
+            div6.appendChild(dislikebutton);
+            const dislikediv = document.createElement('div');
+            dislikediv.innerHTML = postObject["Dislikes"] + " dislikes";
+            div6.append(dislikediv);
+        newPost.appendChild(div6);
+         //Replies button and replies
+         const div7 = document.createElement('div');
+         div7.classList.add("col-sm", "forumpage");
+             const replies = document.createElement('button');
+             replies.classList.add("btn", "btn-secondary", "likebutton")
+             replies.innerHTML = "Reply";
+             div7.appendChild(replies);
+             const repliesdiv = document.createElement('div');
+             repliesdiv.innerHTML = postObject["Replies"].length + " replies";
+             div7.append(repliesdiv);
+        newPost.appendChild(div7);
+        //timestamp
+        const div8 = document.createElement('div');
+        div8.classList.add("col-sm", "forumpage", "post");
+        div8.innerHTML = "Posted on " + postObject["Time"];
+        newPost.appendChild(div8);
+    likebutton.addEventListener('click', () => {LikeByID(postObject['PostID'])});
+    dislikebutton.addEventListener('click', () => {DislikeByID(postObject['PostID'])});
+    replies.addEventListener('click', () => {ReplyHelper(postObject['PostID'])});
+    div1.addEventListener('click', () => {ViewPostHelper(postObject['PostID'], postObject['Username'], postObject['Title'], postObject['Body'], postObject['Replies'])});
+    
+    postHere.appendChild(newPost);
+    postHere.appendChild(document.createElement('br'));
+    //console.log(postObject);
+}
+async function LikeByID(postID){
+    console.log("Liking: " + postID.toString());
+    const response = await fetch('/posts/likepost', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"PostID":postID})
+        }).then((res) => {
+            console.log(res)
+            if (res.ok){
+                console.log("Liked post");
+            }
+            else{
+                window.alert("Error liking");
+            }
+        });
+    //CRUD Update operation
+}
+
+async function DislikeByID(postID){
+    console.log("Disliking: " + postID.toString());
+    const response = await fetch('/posts/dislikepost', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"PostID":postID})
+        }).then((res) => {
+            console.log(res)
+            if (res.ok){
+                console.log("Disliked post");
+            }
+            else{
+                window.alert("Error liking");
+            }
+        });
+    //CRUD Update operation
+}
+
+async function ReplyHelper(postID){
+    
+    $("#ReplyModal").modal("show");
+    document.getElementById('replytopost').addEventListener('click', ReplyByID);
+    async function ReplyByID(){
+        console.log("Replying: " + postID.toString());
+        const thisreply = document.getElementById("replyDialog");
+        if (thisreply.value === ""){
+            window.alert("Missing reply");
+        }
+        else{
+            const response = await fetch('/posts/reply', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({"PostID":postID, "Reply":thisreply.value})
+                }).then((res) => {
+                    console.log(res)
+                    if (res.ok){
+                        console.log("Replied to post");
+                        $("#ReplyModal").modal("hide");
+                        document.getElementById('replytopost').removeEventListener('click', ReplyByID);
+                    }
+                    else{
+                        window.alert("Error liking");
+                        document.getElementById('replytopost').removeEventListener('click', ReplyByID);
+                    }
+                });
+        }
+    }
+    //CRUD Update operation
+}
+
+async function ViewPostHelper(postID, Username, Title, Body, Replies){
+    // postTitle
+    // ViewpostDialog
+    // Replies
+    $("#LookAtPost").modal("show");
+    console.log(Title);
+    document.getElementById('UserTitle').innerHTML = Username;
+    document.getElementById('thispostTitle').innerHTML = Title;
+    if (Body === ""){
+        document.getElementById('ViewPostDialog').innerHTML = "";
+    }
+    else{
+        document.getElementById('ViewPostDialog').innerHTML = Body;
+    }
+
+    //Simulated 2 replies
+    document.getElementById('Replies').innerHTML = "";
+    let thispost = document.createElement("div");
+    thispost.classList.add("col-sm-8");
+    thispost.innerHTML = "NewUsername - Nice!"; 
+    document.getElementById('Replies').append(thispost);
+    thispost = document.createElement("div");
+    thispost.classList.add("col-sm-8");
+    thispost.innerHTML = "OtherUsername - Cool!"; 
+    document.getElementById('Replies').append(thispost);
+    //document.getElementById('Replies').innerHTML = Replies;
+
+    //CRUD read operation
+}
+
+
+
+async function loadFrontPage(){
+    const postHere = document.getElementById('postHere');
+    postHere.innerHTML = "";
     console.log("Loading Front Page");
-    {/* <div class="row divrow forumpage">
-        <div class="col-sm-2 forumpage post">
-            <div> Check out this beat I made!</div>
-            <div class= "smalltext">- Made by SickBeats 10 minutes ago</div>
-        </div>
-        <div class="col-sm-4"></div>
-        <div class="col-sm forumpage"> 
-            <button type="button" class="btn btn-primary likebutton">Like</button>
-            <div class="col-sm"> 137 likes </div>
-        </div>
-        <div class="col-sm forumpage"> 
-            <button type="button" class="btn btn-danger likebutton">Dislike</button>
-            <div class="col-sm"> 2 dislikes </div>
-        </div>
-        <div class="col-sm forumpage">
-            <button type="button" class="btn btn-secondary likebutton">Reply</button>
-            <div class="col-sm"> 42 replies </div>
-        </div>
-        <div class="col-sm forumpage post"> Posted on 10/21/2022 </div>
-    </div>
-    <br></br> */}
+    let postIDs = {};
+    const response = await fetch("/frontpage/posts/getPosts")
+        .then((response) => response.json())
+            .then((data) => postIDs = data);
+    for (let i = 0; i< postIDs['PostIDs'].length; i++){
+        constructPost(postIDs['Posts'][i])
+    } 
+    
     //CRUD Read operation
 }
-function loadNew(){
+
+async function loadNew(){
+    const postHere = document.getElementById('postHere');
+    postHere.innerHTML = "";
     console.log("Loading New Posts");
+    let postIDs = {};
+    const response = await fetch("/newest/posts/getPosts")
+        .then((response) => response.json())
+            .then((data) => postIDs = data);
+    for (let i = 0; i< postIDs['PostIDs'].length; i++){
+        constructPost(postIDs['Posts'][i])
+    } 
     //CRUD Read operation
 }
-function loadReplies(){
+
+async function loadReplies(){
+    const postHere = document.getElementById('postHere');
+    postHere.innerHTML = "";
     console.log("Loading Latest Replies");
+    let postIDs = {};
+    const response = await fetch("/latestReplies/posts/getPosts")
+        .then((response) => response.json())
+            .then((data) => postIDs = data);
+    for (let i = 0; i< postIDs['PostIDs'].length; i++){
+        constructPost(postIDs['Posts'][i])
+    } 
+    
     //CRUD Read operation
 }
-function loadYourPosts(){
+async function loadYourPosts(){
+    const postHere = document.getElementById('postHere');
+    postHere.innerHTML = "";
     console.log("Loading Your Posts");
-    //CRUD Read operation
+    let postIDs = {};
+    const response = await fetch("/yourPosts/posts/getPosts")
+        .then((response) => response.json())
+            .then((data) => postIDs = data);
+    for (let i = 0; i< postIDs['PostIDs'].length; i++){
+        constructPost(postIDs['Posts'][i])
+    } 
+
+    const editbutton = document.createElement('button');
+    editbutton.classList.add("btn", "btn-warning", "likebutton")
+    editbutton.innerHTML = "Edit";
+    document.getElementById("lookatpostfooter").appendChild(editbutton);
+    editbutton.addEventListener('click', editbyID)
+
+    const deletebutton = document.createElement('button');
+    deletebutton.classList.add("btn", "btn-danger", "likebutton")
+    deletebutton.innerHTML = "Delete";
+    document.getElementById("lookatpostfooter").appendChild(deletebutton);
+    deletebutton.addEventListener('click', deletebyID)
+    //CRUD Update operation
 }
+
+function deletebyID(){
+    console.log("deleting post");
+    //CRUD Delete Operation
+}
+
+function editbyID(){
+    console.log("editing post");
+    //CRUD Delete Operation
+}
+
 function createPost(){
     console.log("Creating Post");
     const postTitle = document.getElementById("postTitle"); //Value in the post title box
@@ -97,10 +337,12 @@ function createPost(){
         const promise = getBase64(uploadedFile.files[0]);
         promise.then(function(result) {
             console.log("Uploading to server");
+            
             const newPost = 
             {"Username":"NewUsername", "Time":date, "Title":postTitle.value, "Body":postBody.value, 
             "Likes":0, "Dislikes":0, "Replies":[],"AudioFile":result};
-            const response = fetch('/createPost', {
+            
+            const response = fetch('/posts/createPost', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -124,11 +366,13 @@ function createPost(){
     }
     //CRUD create operation
 }
+
+
 function Login(){
     console.log("Logging in");
 }
 function Register(){
-    console.log("Loading Your Posts");
+    console.log("Register");
     //CRUD Read operation
 }
 function goToAccount(){

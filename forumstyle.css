@@ -93,3 +93,11 @@
     margin-left: 500px;
     margin-right: 500px;
  }
+
+ .playpausebutton {
+    text-align: center;
+    font-size:small;
+    margin-top: 22px;
+    margin-bottom: 10px;
+    vertical-align: left;
+}
