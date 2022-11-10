@@ -371,6 +371,7 @@ function createPost(){
                     postTitle.value = "";
                     postBody.value = "";
                     uploadedFile.value = "";
+                    window.location.reload();
                 }
                 else{
                     window.alert("Error creating post");

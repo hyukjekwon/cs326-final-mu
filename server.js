@@ -161,25 +161,19 @@ function basicGetHandle(req, res) {
 
 function createPost(req, res) {
     //console.log(req.body);     
-    console.log("Retrieving Post");
+    console.log("Creating New Post");
     res.writeHead(200, {'Content-Type': 'text/text'});
     res.write("Got new post");
     const postID = Date.now(); //In the future, do "/uploads/" + postID.toString() + ".txt"
     res.end();                          
-    fs.writeFileSync(path.dirname('') + "/uploads/cantina.txt", req.body.AudioFile, {encoding: 'base64'}, (err) => {
-      if (err){
-        console.log(err);
-      }
-      else{
-        //This is just a placeholder, we will probably use databases but for now it stores the audiofile in the uploads/ folder
-        //It stores the post and the path to the base64 audio file in an object with a unique post ID
-        fakedatapostslist1[postID] = {"PostID":postID, "Username":req.body.Username, "Time":req.body.Time, "Title":req.body.Title, 
-        "Body":req.body.Body, "Likes":req.body.Likes, "Dislikes":req.body.Dislikes, 
-        "Replies":req.body.Replies,"AudioFile":path.dirname('') + "/uploads/cantina"};      
-        console.log(fakedatapostslist1);
-      }
-    });                         
-}
+    fs.writeFileSync(path.dirname('') + "/uploads/cantina.txt", req.body.AudioFile, {encoding: 'base64'});                         
+    //This is just a placeholder, we will probably use databases but for now it stores the audiofile in the uploads/ folder
+    //It stores the post and the path to the base64 audio file in an object with a unique post ID
+    fakedatapostslist1[postID] = {"PostID":postID, "Username":req.body.Username, "Time":req.body.Time, "Title":req.body.Title, 
+    "Body":req.body.Body, "Likes":req.body.Likes, "Dislikes":req.body.Dislikes, 
+    "Replies":req.body.Replies,"AudioFile":path.dirname('') + "/uploads/cantina.txt"};      
+    console.log(fakedatapostslist1[postID]);  
+} 
 function frontPageHandle(req, res){
   console.log("Sending File");
   res.sendFile('forum.html', { root: path.dirname('') });      
