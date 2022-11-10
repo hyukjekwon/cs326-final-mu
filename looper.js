@@ -1,4 +1,4 @@
-import {Layer} from './layer.js';
+import {Layer, Note} from './layer.js';
 
 let master_vol = 75; // between 0 and 100
 let metronome_playing = false;
@@ -27,18 +27,27 @@ class Looper {
         }
     }
     play_interval(layers, cursor) {
-        if (metronome_playing) {
-            const metronome = new Tone.Player("/samples/metronome.wav").toDestination();
-            metronome.volume.value = (master_vol - 90) / 2;
-            metronome.autostart = true;
-        }
         const time = cursor["time"];
-        layers.forEach(layer => {
-            if (layer.sequence[time]) {
-                const sample = new Tone.Player("/samples/" + layer.sample).toDestination();
+        if (metronome_playing) { // metronome setup
+            if (!(time % 2)) {
+                const metronome = new Tone.Player("/samples/metronome.wav").toDestination();
+                metronome.volume.value = (master_vol - 90) / 2;
+                metronome.autostart = true;
+            }
+        }
+        layers.forEach(layer => { // iterate through layers
+            const itvl = layer.sequence[time];
+            if (itvl) { // if note is active
+                let note;
                 const layer_vol = (layer.layer_volume["vol"] - 30) / 2
-                sample.volume.value = layer_vol - (100 - master_vol) / 2;
-                sample.autostart = true;
+                if (layer.sample === "synth.wav") { // if synth
+                    note = new Tone.Synth().toDestination();
+                    note.triggerAttackRelease(itvl.note, itvl.duration + "n")
+                } else {
+                    note = new Tone.Player("/samples/" + layer.sample).toDestination();
+                    note.autostart = true;
+                }
+                note.volume.value = layer_vol - (100 - master_vol) / 2;
             }
             for (const dom of document.getElementsByClassName("itvl-" + time)) {
                 dom.classList.add("itvl-cursor");
@@ -162,10 +171,10 @@ function render_sequences(l) {
                 const interval = document.createElement("div");
                 interval.classList.add("itvl");
                 interval.classList.add("itvl-"+j);
-                interval.addEventListener("mouseover", (e) => {
+                interval.addEventListener("mouseover", () => {
                     interval.classList.add("itvl-hover");
                 });
-                interval.addEventListener("mouseleave", (e) => {
+                interval.addEventListener("mouseleave", () => {
                     interval.classList.remove("itvl-hover");
                 });
                 interval.addEventListener("click", (e) => {
@@ -173,8 +182,17 @@ function render_sequences(l) {
                         l.layers[i].sequence[j] = 0;
                         interval.classList.remove("itvl-activated");
                     } else {
-                        l.layers[i].sequence[j] = 1;
+                        l.layers[i].sequence[j] = l.layers[i].sequence[j]? l.layers[i].sequence[j]: new Note("C4");
                         interval.classList.add("itvl-activated");
+                        if (l.layers[i].sequence[j]) {
+                            render_note_control(l.layers[i].sequence[j])
+                        }
+                    }
+                });
+                interval.addEventListener("contextmenu", (e) => {
+                    e.preventDefault();
+                    if (l.layers[i].sequence[j]) {
+                        render_note_control(l.layers[i].sequence[j])
                     }
                 });
                 sequence.appendChild(interval);
@@ -182,11 +200,11 @@ function render_sequences(l) {
         } else { // existing sequence
             for (let j = 0; j < 16; j++) {
                 const interval = sequence.childNodes[j];
-                if (l.layers[i].sequence[j] === 1) {  // if the sequence number is a 1
+                if (l.layers[i].sequence[j]) {  // if the note is active
                     if (!interval.classList.contains("itvl-activated")) {
                         interval.classList.add("itvl-activated");
                     }
-                } else {  // if the sequence number is a 0
+                } else {  // if the note is empty
                     if (interval.classList.contains("itvl-activated")) {
                         interval.classList.remove("itvl-activated");
                     }
@@ -239,6 +257,22 @@ function render_layers(l) {
             render_layers(l);
         });
     }
+}
+
+function render_note_control(note) {
+    let html ='Note: <input type="tel" placeholder='+note.note+' value='+note.note+' id="note-input">'
+    html += 'Volume: <input type="range" class="form-control-range" min=0 max=100 value='+note.note_volume+' id="note-volume">'
+    html += 'Delay: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-delay">'
+    html += 'Reverb: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-reverb">'
+    document.getElementById("note-control-panel-container").innerHTML = html;
+    const note_input = document.getElementById("note-input");
+    note_input.addEventListener("keyup", () => {
+        note.note = note_input.value;
+    });
+    const volume_slider = document.getElementById("note-volume");
+    volume_slider.addEventListener("input", () => {
+        note.volume = volume_slider.value;
+    });
 }
 
 function init_all() {

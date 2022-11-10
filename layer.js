@@ -12,4 +12,12 @@ class Layer {
     }
 }
 
-export {Layer};
+class Note {
+    constructor(note) {
+        this.note = note; // string in note + octave format i.e. C4
+        this.note_volume = {"vol": 50};
+        this.duration = 16 // 16th note division
+    }
+}
+
+export {Layer, Note};
