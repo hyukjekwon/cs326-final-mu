@@ -216,9 +216,23 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     document.getElementById('Replies').append(thispost);
     //document.getElementById('Replies').innerHTML = Replies;
 
-    //CRUD read operation
+    //Resets the playAudio button and adds a new event listner
+    let PlayAudio = document.getElementById('PlayAudio');
+    PlayAudio.replaceWith(PlayAudio.cloneNode(true))
+    PlayAudio = document.getElementById('PlayAudio');
+    PlayAudio.addEventListener('click', grabAudio);
+    
+    async function grabAudio(){
+        let audio = {}
+        await fetch('/posts/getAudioFile?id=' + postID)
+            .then((res) => res.json())
+                .then((data) => audio = data);
+        console.log(audio['AudioFile']);
+        var thisAudioFile = new Audio("data:audio/mp3;base64," + audio['AudioFile'])
+        thisAudioFile.play();
+        console.log("What?");
+    }
 }
-
 
 
 async function loadFrontPage(){

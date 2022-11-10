@@ -166,7 +166,7 @@ function createPost(req, res) {
     res.write("Got new post");
     const postID = Date.now(); //In the future, do "/uploads/" + postID.toString() + ".txt"
     res.end();                          
-    fs.writeFile(path.dirname('') + "/uploads/cantina.txt", req.body.AudioFile, (err) => {
+    fs.writeFileSync(path.dirname('') + "/uploads/cantina.txt", req.body.AudioFile, {encoding: 'base64'}, (err) => {
       if (err){
         console.log(err);
       }
@@ -175,7 +175,7 @@ function createPost(req, res) {
         //It stores the post and the path to the base64 audio file in an object with a unique post ID
         fakedatapostslist1[postID] = {"PostID":postID, "Username":req.body.Username, "Time":req.body.Time, "Title":req.body.Title, 
         "Body":req.body.Body, "Likes":req.body.Likes, "Dislikes":req.body.Dislikes, 
-        "Replies":req.body.Replies,"AudioFile":path.dirname('') + "/uploads/cantina.txt"};      
+        "Replies":req.body.Replies,"AudioFile":path.dirname('') + "/uploads/cantina"};      
         console.log(fakedatapostslist1);
       }
     });                         
@@ -254,6 +254,16 @@ function receivereply(req, res){
   res.end();   
 }
 
+function getAudio(req, res){
+  //This will receive the post ID and add 1 like to the total
+  console.log("Getting audio file from post ID: " + req.query.id);
+  res.writeHead(200, {'Content-Type': 'application/json'});
+  console.log("Getting file: " + fakedatapostslist1[req.query.id]["AudioFile"]);
+  const contents = fs.readFileSync(fakedatapostslist1[req.query.id]["AudioFile"], {encoding: 'base64'});
+  res.write(JSON.stringify({"AudioFile":contents}));
+  res.end();   
+}
+
 const app = express();
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
@@ -270,6 +280,7 @@ app.get('/', (req, res) => {(basicGetHandle(req, res))});
 
 
 app.get('/frontpage', (req, res) => {(frontPageHandle(req, res))});
+app.get('/posts/getAudioFile', (req, res) => {(getAudio(req, res))});
 app.post('/posts/createPost', (req, res) => {(createPost(req, res))});
 app.post('/posts/likepost', (req, res) => {(likepost(req, res))});
 app.post('/posts/dislikepost', (req, res) => {(dislikepost(req, res))});
