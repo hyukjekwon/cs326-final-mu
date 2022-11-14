@@ -5,7 +5,7 @@ let metronome_playing = false;
 
 class Looper {
     constructor() {
-        this.layers = [new Layer("kick.wav")];
+        this.layers = [new Layer("Kick.wav")];
         this.bpm = 120;
         this.playing = false;
         this.interval;
@@ -91,7 +91,7 @@ function init_buttons(l) {
         l.play_pause();
     })
     document.getElementById("add-button").addEventListener("click", () => {
-        l.add_layer("kick.wav");
+        l.add_layer("Kick.wav");
         render_layers(l);
     })
     const layer_vol_inputs = document.getElementsByClassName("layer-volume");
@@ -132,7 +132,7 @@ function init_active_layer(i, l) {
     // html += '<div class="layer-label">Layer '+i+'</div>'
     html += '<div class="dropdown" id="drop'+i+'"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdown-menu-'+i+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
     html += l.layers[i].sample.split('.')[0] + '</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">'
-    html += '<a class="dropdown-item" id="kick-'+i+'">kick</a><a class="dropdown-item" id="hihat-'+i+'">hihat</a><a class="dropdown-item" id="snare-'+i+'">snare</a><a class="dropdown-item" id="synth-'+i+'">synth</a></div></div>'
+    html += '<a class="dropdown-item" id="Kick-'+i+'">Kick</a><a class="dropdown-item" id="Hihat-'+i+'">Hihat</a><a class="dropdown-item" id="snare-'+i+'">snare</a><a class="dropdown-item" id="synth-'+i+'">synth</a></div></div>'
     html += '<div>V: <input type="range" class="form-control-range layer-volume" min=0 max=100 value-50 id="volume-'+i+'"></div>'
     html += '<button class="rem btn btn-secondary btn-sm" type="submit" id="rem-'+i+'">Remove</button></div>'
     html += '<div class="sequence" id="seq'+i+'"></div>'
@@ -154,7 +154,7 @@ function init_layers(l) {
         }
         active_layers -= 1;
     }
-    for (const sample of ["kick", "snare", "hihat", "synth"]) {
+    for (const sample of ["Kick", "snare", "Hihat", "synth"]) {
         const dropdown_item = document.getElementById(sample+"-"+0);
         dropdown_item.addEventListener("click", (e) => {
             l.layers[0].sample = sample + '.wav'
@@ -235,7 +235,7 @@ function render_layers(l) {
                     l.remove_layer(i);
                     render_layers(l);
                 });
-                for (const sample of ["kick", "snare", "hihat", "synth"]) {
+                for (const sample of ["Kick", "snare", "Hihat", "synth"]) {
                     const dropdown_item = document.getElementById(sample+"-"+i);
                     dropdown_item.addEventListener("click", (e) => {
                         l.layers[i].sample = sample + '.wav'
@@ -253,7 +253,7 @@ function render_layers(l) {
     render_sequences(l);
     if (document.getElementById("add-button")) {
         document.getElementById("add-button").addEventListener("click", (e) => {
-            l.add_layer("kick.wav");
+            l.add_layer("Kick.wav");
             render_layers(l);
         });
     }
