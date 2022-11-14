@@ -8,9 +8,10 @@
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <script src="looper.js"></script>
+        <script type="text/javascript" src="./Tone.min.js"></script>
+        <script type="module" src="looper.js"></script>
     </head>
-    <body class="background" onload=init_all()>
+    <body class="background">
         <div class="container-fluid d-flex flex-column h-100" id="main">
             <div class="row websiteheader forumpage">
                 <a class="col WebsiteTitle" href="#">WebLooper: Edit Mode</a>
@@ -19,78 +20,36 @@
             <div class="row" id="layer-master">
                 <div class="col panel d-flex flex-column" id="layer-panel">
                     <div class="panel-label p-1">Layers</div>
-                    <div class="layer" id="layer1">
-                        <div class="layer-info d-flex flex-column">
-                            <div class="layer-label">Layer 1</div>
-                            <div class="dropdown" id="drop1">
-                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Sample
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#">Kick</a>
-                                    <a class="dropdown-item" href="#">Hi-Hat</a>
-                                    <a class="dropdown-item" href="#">Snare</a>
-                                    <a class="dropdown-item" href="#">Synth</a>
-                                </div>
-                                <button class="btn btn-secondary btn-sm" type="submit" id="rem1">Remove</button>
-                            </div>
-                            L/R
-                            <input type="range" class="form-control-range" id="lr1">
-                            Volume
-                            <input type="range" class="form-control-range" id="volume1">
-                        </div>
-                        <div class="sequence" id="seq1"></div>
-                    </div>
-                    <div class="layer" id="layer2">
-                        <div class="layer-info d-flex flex-column">
-                            <div class="layer-label">Layer 2</div>
-                            <div class="dropdown" id="drop1">
-                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Sample
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#">Kick</a>
-                                    <a class="dropdown-item" href="#">Hi-Hat</a>
-                                    <a class="dropdown-item" href="#">Snare</a>
-                                    <a class="dropdown-item" href="#">Synth</a>
-                                </div>
-                                <button class="btn btn-secondary btn-sm" type="submit" id="rem2">Remove</button>
-                            </div>
-                            L/R
-                            <input type="range" class="form-control-range" id="lr2">
-                            Volume
-                            <input type="range" class="form-control-range" id="volume2">
-                        </div>
-                        <div class="sequence" id="seq2"></div>
-                    </div>
-                    <div class="layer inactive" id="layer3">
-                        <button class="btn btn-secondary" type="submit">Add Layer</button>
-                    </div>
-                    <div class="layer inactive" id="layer4"></div>
+                    <div id="layer-1"></div>
+                    <div id="layer-2"></div>
+                    <div id="layer-3"></div>
+                    <div id="layer-4"></div>
                 </div>
                 <div class="col-3 panel d-flex flex-column" id="master-panel">
                     <div class="panel-label p-1">Master</div>
                     <div class="">
-                        Master Volume <input type="range" class="form-control-range" value=70 id="master-vol">
+                        Master Volume <input type="range" class="form-control-range" min=0 max=100 value=70 id="master-vol">
                     </div>
                     <div class="">
-                        BPM: <input type="number" label="BPM" value="120" id="bpm">
+                        BPM: <input type="number" label="BPM" min=60 max=300 value="120" id="bpm">
+                        BPM: <input type="number" label="BPM" value=120 id="bpm">
                     </div>
                     <div class="flex-grow-1">
                         Shortcut: Spacebar 
                         <button class="btn btn-secondary btn-md" type="submit" id="play">Play/Pause</button>
                     </div>
-                    <button class="btn btn-secondary btn-lg" type="submit" id="save-post">Save and Post</button>
+                    <button class="btn btn-secondary btn-md" type="submit" id="metronome">Metronome</button>
+                    <button class="btn btn-success btn-lg" type="submit" id="save-post">Save/Post</button>
                 </div>
             </div>
             <div class="row" id="note-control-container">
                 <div class="col panel" id="note-control">
                     <div class="panel-label p-1">Note control</div>
-                    <div class="d-flex flex-column m-4">
-                        Note: <input type="tel" placeholder=C4 id="note-volume">
-                        Volume: <input type="range" class="form-control-range" value=70 id="note-volume">
-                        Delay: <input type="range" class="form-control-range" value=0 id="note-delay">
-                        Reverb: <input type="range" class="form-control-range" value=0 id="note-reverb">
+                    <div class="d-flex flex-column" id="note-control-panel-container">
+                        Note: <input type="tel" placeholder=C4 id="note-input">
+                        Volume: <input type="range" class="form-control-range" min=0 max=100 value=50 id="note-volume">
+                        Delay: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-delay">
+                        Reverb: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-reverb">
                     </div>
                 </div>
             </div>
