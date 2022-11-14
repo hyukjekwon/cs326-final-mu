@@ -175,10 +175,13 @@ function createPost(req, res) {
     console.log(fakedatapostslist1[postID]);  
 } 
 function frontPageHandle(req, res){
-  console.log("Sending File");
+  console.log("Sending forum file");
   res.sendFile('forum.html', { root: path.dirname('') });      
 }
-
+function basicLooperHandle(req, res) {
+  console.log("Looper");
+  res.sendFile('looper.html', { root: path.dirname('') });                                                                                 
+}
 function frontPageGetPosts(req, res){
   console.log("Getting Front Page Posts");
   res.writeHead(200, {'Content-Type': 'text/text'});
@@ -274,6 +277,7 @@ app.get('/', (req, res) => {(basicGetHandle(req, res))});
 
 
 app.get('/frontpage', (req, res) => {(frontPageHandle(req, res))});
+app.get('/looper', (req, res) => {(basicLooperHandle(req, res))});
 app.get('/posts/getAudioFile', (req, res) => {(getAudio(req, res))});
 app.post('/posts/createPost', (req, res) => {(createPost(req, res))});
 app.post('/posts/likepost', (req, res) => {(likepost(req, res))});

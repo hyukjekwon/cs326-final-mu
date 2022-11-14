@@ -381,7 +381,10 @@ function createPost(){
     }
     //CRUD create operation
 }
-
+function goToLooper(){
+    console.log("Switching to looper");
+    window.location = "looper"
+}
 
 function Login(){
     console.log("Logging in");
@@ -403,6 +406,7 @@ function init() {
     document.getElementById("LatestReplies").addEventListener('click', function(){setActive('LatestReplies')});
     document.getElementById("YourPosts").addEventListener('click', function(){setActive('YourPosts')});
     document.getElementById("searchbutton").addEventListener('click', search);
+    document.getElementById("Looper").addEventListener('click', goToLooper);
     document.getElementById("FrontPage").addEventListener('click', loadFrontPage);
     document.getElementById("NewPosts").addEventListener('click', loadNew);
     document.getElementById("LatestReplies").addEventListener('click', loadReplies);
