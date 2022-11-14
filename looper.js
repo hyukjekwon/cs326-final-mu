@@ -30,7 +30,7 @@ class Looper {
         const time = cursor["time"];
         if (metronome_playing) { // metronome setup
             if (!(time % 2)) {
-                const metronome = new Tone.Player("/samples/metronome.wav").toDestination();
+                const metronome = new Tone.Player("./samples/metronome.wav").toDestination();
                 metronome.volume.value = (master_vol - 90) / 2;
                 metronome.autostart = true;
             }
@@ -44,7 +44,7 @@ class Looper {
                     note = new Tone.Synth().toDestination();
                     note.triggerAttackRelease(itvl.note, itvl.duration + "n")
                 } else {
-                    note = new Tone.Player("/samples/" + layer.sample).toDestination();
+                    note = new Tone.Player("./samples/" + layer.sample).toDestination();
                     note.autostart = true;
                 }
                 note.volume.value = layer_vol - (100 - master_vol) / 2;
