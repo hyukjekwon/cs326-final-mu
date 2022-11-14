@@ -5,7 +5,7 @@ let metronome_playing = false;
 
 class Looper {
     constructor() {
-        this.layers = [new Layer("Kick.wav")];
+        this.layers = [new Layer("kick.wav")];
         this.bpm = 120;
         this.playing = false;
         this.interval;
@@ -91,7 +91,7 @@ function init_buttons(l) {
         l.play_pause();
     })
     document.getElementById("add-button").addEventListener("click", () => {
-        l.add_layer("Kick.wav");
+        l.add_layer("kick.wav");
         render_layers(l);
     })
     const layer_vol_inputs = document.getElementsByClassName("layer-volume");
@@ -154,7 +154,7 @@ function init_layers(l) {
         }
         active_layers -= 1;
     }
-    for (const sample of ["Kick", "Snare", "Hihat", "synth"]) {
+    for (const sample of ["kick", "snare", "hihat", "synth"]) {
         const dropdown_item = document.getElementById(sample+"-"+0);
         dropdown_item.addEventListener("click", (e) => {
             l.layers[0].sample = sample + '.wav'
@@ -235,7 +235,7 @@ function render_layers(l) {
                     l.remove_layer(i);
                     render_layers(l);
                 });
-                for (const sample of ["Kick", "Snare", "Hihat", "synth"]) {
+                for (const sample of ["kick", "snare", "hihat", "synth"]) {
                     const dropdown_item = document.getElementById(sample+"-"+i);
                     dropdown_item.addEventListener("click", (e) => {
                         l.layers[i].sample = sample + '.wav'
@@ -253,7 +253,7 @@ function render_layers(l) {
     render_sequences(l);
     if (document.getElementById("add-button")) {
         document.getElementById("add-button").addEventListener("click", (e) => {
-            l.add_layer("Kick.wav");
+            l.add_layer("kick.wav");
             render_layers(l);
         });
     }
