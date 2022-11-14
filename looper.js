@@ -5,7 +5,7 @@ let metronome_playing = false;
 
 class Looper {
     constructor() {
-        this.layers = [new Layer("kick.wav")];
+        this.layers = [new Layer("Kick.wav")];
         this.bpm = 120;
         this.playing = false;
         this.interval;
@@ -30,7 +30,7 @@ class Looper {
         const time = cursor["time"];
         if (metronome_playing) { // metronome setup
             if (!(time % 2)) {
-                const metronome = new Tone.Player("./samples/metronome.wav").toDestination();
+                const metronome = new Tone.Player("/samples/metronome.wav").toDestination();
                 metronome.volume.value = (master_vol - 90) / 2;
                 metronome.autostart = true;
             }
@@ -44,7 +44,7 @@ class Looper {
                     note = new Tone.Synth().toDestination();
                     note.triggerAttackRelease(itvl.note, itvl.duration + "n")
                 } else {
-                    note = new Tone.Player("./samples/" + layer.sample).toDestination();
+                    note = new Tone.Player("/samples/" + layer.sample).toDestination();
                     note.autostart = true;
                 }
                 note.volume.value = layer_vol - (100 - master_vol) / 2;
@@ -91,7 +91,7 @@ function init_buttons(l) {
         l.play_pause();
     })
     document.getElementById("add-button").addEventListener("click", () => {
-        l.add_layer("kick.wav");
+        l.add_layer("Kick.wav");
         render_layers(l);
     })
     const layer_vol_inputs = document.getElementsByClassName("layer-volume");
@@ -154,7 +154,7 @@ function init_layers(l) {
         }
         active_layers -= 1;
     }
-    for (const sample of ["kick", "snare", "hihat", "synth"]) {
+    for (const sample of ["Kick", "Snare", "Hihat", "synth"]) {
         const dropdown_item = document.getElementById(sample+"-"+0);
         dropdown_item.addEventListener("click", (e) => {
             l.layers[0].sample = sample + '.wav'
@@ -235,7 +235,7 @@ function render_layers(l) {
                     l.remove_layer(i);
                     render_layers(l);
                 });
-                for (const sample of ["kick", "snare", "hihat", "synth"]) {
+                for (const sample of ["Kick", "Snare", "Hihat", "synth"]) {
                     const dropdown_item = document.getElementById(sample+"-"+i);
                     dropdown_item.addEventListener("click", (e) => {
                         l.layers[i].sample = sample + '.wav'
@@ -253,7 +253,7 @@ function render_layers(l) {
     render_sequences(l);
     if (document.getElementById("add-button")) {
         document.getElementById("add-button").addEventListener("click", (e) => {
-            l.add_layer("kick.wav");
+            l.add_layer("Kick.wav");
             render_layers(l);
         });
     }
