@@ -169,15 +169,11 @@ input[type="range"] {
     margin: 0;
 }
 
-#note-control-container {
-    max-height: 30%;
-    flex-grow: 1;
-    margin: 0px;
-}
-
 #note-control {
-    margin-top: 0;
     background-color: #7EA2AA;
+    max-height: 40%;
+    flex-grow: 1;
+    margin: 10px 10px 0px 0px;
 }
 
 #note-control-panel-container {
@@ -193,6 +189,7 @@ input[type="range"] {
     margin-left: 0;
     background-color: #888DA7;
     align-items: center;
+    min-height: 60%;
 }
 
 #master-vol {
