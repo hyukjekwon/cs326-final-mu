@@ -161,6 +161,18 @@ function basicGetHandle(req, res) {
     res.redirect('/frontpage');                                                                              
 }
 
+function registerUser(req, res) {
+    console.log("Registering User");
+    // check if user exists in database
+    // if so, alert user that username is taken
+    // if not, add user to database
+
+    const [username, password] = [req.body.username, req.body.password];
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(`<h1>Username: ${username}</h1>`);
+    res.write(`<h1>Password: ${password}</h1>`);
+    res.end();
+}
 function createPost(req, res) {
     //console.log(req.body);     
     console.log("Creating New Post");
@@ -187,6 +199,10 @@ function basicLooperHandle(req, res) {
 function loginHandle(req, res) {
   console.log("Login");
   res.sendFile('login.html', {root: path.dirname('')});
+}
+function registerHandle(req, res) {
+  console.log("Register");
+  res.sendFile('register.html', {root: path.dirname('')});
 }
 function frontPageGetPosts(req, res){
   console.log("Getting Front Page Posts");
@@ -282,17 +298,20 @@ app.use(cookieParser());
 const [user, pass] = ['user', 'pass']; // replace with db/env variable
 
 //Will show the correct posts in the future, for now just returns all the posts
-app.get('/frontpage/posts/getPosts', (req, res) => {(frontPageGetPosts(req, res))});
-app.get('/newest/posts/getPosts', (req, res) => {(newestPageGetPosts(req, res))});
-app.get('/latestReplies/posts/getPosts', (req, res) => {(latestRepliesPageGetPosts(req, res))});
-app.get('/yourPosts/posts/getPosts', (req, res) => {(yourPostsPageGetPosts(req, res))});
-app.get('/', (req, res) => {(basicGetHandle(req, res))});
+app.get('/frontpage/posts/getPosts', frontPageGetPosts);
+app.get('/newest/posts/getPosts', newestPageGetPosts);
+app.get('/latestReplies/posts/getPosts', latestRepliesPageGetPosts);
+app.get('/yourPosts/posts/getPosts', yourPostsPageGetPosts);
+app.get('/', basicGetHandle);
 
 
 app.get('/frontpage', frontPageHandle);
 app.get('/looper', basicLooperHandle);
 app.get('/posts/getAudioFile', getAudio);
 app.get('/login', loginHandle);
+app.get('/register', registerHandle);
+app.post('/userlogin', userLogin);
+app.post('/userregister', userRegister);
 app.post('/posts/createPost', createPost);
 app.post('/posts/likepost', likepost);
 app.post('/posts/dislikepost', dislikepost);

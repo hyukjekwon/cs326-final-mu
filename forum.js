@@ -392,6 +392,7 @@ function Login(){
 }
 function Register(){
     console.log("Register");
+    window.location = 'register'
     //CRUD Read operation
 }
 function goToAccount(){
