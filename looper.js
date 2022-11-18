@@ -2,7 +2,6 @@ import {Layer, Note} from './layer.js';
 
 let master_vol = 75; // between 0 and 100
 let metronome_playing = false;
-let changes_made = false;
 
 class Looper {
     constructor() {
@@ -93,7 +92,6 @@ function init_buttons(l) {
     })
     document.getElementById("add-button").addEventListener("click", () => {
         l.add_layer("kick.wav");
-        changes_made = true;
         render_layers(l);
     })
     const layer_vol_inputs = document.getElementsByClassName("layer-volume");
@@ -106,7 +104,6 @@ function init_buttons(l) {
     for (const dom of remove_buttons) {
         dom.addEventListener("click", () => {
             l.remove_layer(dom.id.split('-')[1])
-            changes_made = true;
             render_layers(l);
         });
     }
@@ -236,7 +233,6 @@ function render_layers(l) {
                 const remove_button = document.getElementById("rem-"+i);
                 remove_button.addEventListener("click", (e) => {
                     l.remove_layer(i);
-                    changes_made = true;
                     render_layers(l);
                 });
                 for (const sample of ["Kick", "Snare", "Hihat", "synth"]) {
@@ -254,10 +250,7 @@ function render_layers(l) {
         }
         active_layers -= 1;
     }
-    if (changes_made) {
-        render_sequences(l);
-        changes_made = false;
-    }
+    render_sequences(l);
     if (document.getElementById("add-button")) {
         document.getElementById("add-button").addEventListener("click", (e) => {
             l.add_layer("kick.wav");
