@@ -28,7 +28,7 @@
                 <div class="d-flex flex-column" id="note-master">
                     <div class="flex-column panel" id="note-control">
                         <div class="panel-label p-1">Note control</div>
-                        <div class="d-flex flex-column" id="note-control-panel-container">
+                        <div class="d-flex flex-column" id="note-dash-container">
                             Note: <input type="text" placeholder=C4 id="note-input">
                             Volume: <input type="range" class="form-control-range" min=0 max=100 value=50 id="note-volume">
                             Delay: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-delay">
@@ -37,18 +37,20 @@
                     </div>
                     <div class="panel d-flex flex-column" id="master-panel">
                         <div class="panel-label p-1">Master</div>
-                        <div class="">
-                            Master Volume <input type="range" class="form-control-range" min=0 max=100 value=70 id="master-vol">
+                        <div class="flex-grow-1" id="master-dash-container">
+                            <div class="">
+                                Master Volume <input type="range" class="form-control-range" min=0 max=100 value=70 id="master-vol">
+                            </div>
+                            <div class="">
+                                BPM: <input type="number" label="BPM" min=60 max=300 value="120" id="bpm">
+                            </div>
+                            <div class="">
+                                Spacebar 
+                                <button class="btn btn-info btn-md" type="submit" id="play">Play/Pause</button>
+                            </div>
+                            <button class="btn btn-secondary btn-md" type="submit" id="metronome">Metronome</button>
+                            <button class="btn btn-success btn-lg" type="submit" id="save-post">Save/Post</button>
                         </div>
-                        <div class="">
-                            BPM: <input type="number" label="BPM" min=60 max=300 value="120" id="bpm">
-                        </div>
-                        <div class="flex-grow-1">
-                            Shortcut: Spacebar 
-                            <button class="btn btn-secondary btn-md" type="submit" id="play">Play/Pause</button>
-                        </div>
-                        <button class="btn btn-secondary btn-md" type="submit" id="metronome">Metronome</button>
-                        <button class="btn btn-success btn-lg" type="submit" id="save-post">Save/Post</button>
                     </div>
                 </div>
             </div>

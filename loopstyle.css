@@ -91,16 +91,12 @@ input[type="range"] {
     pointer-events: none;
 } */
 
-/* .dropdown {
-    position:absolute;
-} */
-
-/* .dropdown-toggle {
-    position:relative;
-} */
+.dropdown-toggle {
+    opacity: 100%;
+}
 
 .dropdown-menu {
-    position: relative;
+    background-color: white;
 }
 
 .sequence {
@@ -119,23 +115,23 @@ input[type="range"] {
 }
 
 .itvl-hover {
-    background-color: rgb(104, 104, 104);
+    background-color: rgb(135, 87, 129);
 }
 
 .itvl-cursor {
-    background-color: rgb(167, 167, 167);
+    background-color: rgb(237, 176, 216);
     border-color: white;
 }
 
 .itvl-activated {
-    background-color: rgb(57, 57, 57);
+    background-color: rgb(102, 56, 89);
 }
 
 .rem {
-    pointer-events: all;
     position: absolute;
     width: 100%;
     bottom: 0;
+    border-radius: 0;
 }
 
 #master-vol, #bpm, #play {
@@ -166,9 +162,8 @@ input[type="range"] {
     margin: 10px 10px 0px 0px;
 }
 
-#note-control-panel-container {
-    /* max-height: fit-content; */
-    margin: auto;
+#note-dash-container {
+    margin: 10px;
 }
 
 #layer-panel {
@@ -182,11 +177,18 @@ input[type="range"] {
     min-height: 60%;
 }
 
+#master-dash-container {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #master-vol {
     width: 80%;
 }
 
 #save-post {
-    align-self: auto;
-    margin: 30px;
+    margin-top: auto;
+    margin-bottom: 10px
 }
