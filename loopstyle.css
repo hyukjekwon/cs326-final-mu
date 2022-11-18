@@ -114,13 +114,13 @@ input[type="range"] {
     background-color: transparent;
 }
 
-.itvl-hover {
-    background-color: rgb(135, 87, 129);
+.itvl-cursor {
+    background-color: rgb(176, 145, 175);
+    border-color: white;
 }
 
-.itvl-cursor {
-    background-color: rgb(237, 176, 216);
-    border-color: white;
+.itvl-hover {
+    background-color: rgb(119, 90, 123);
 }
 
 .itvl-activated {
