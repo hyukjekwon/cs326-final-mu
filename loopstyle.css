@@ -7,10 +7,10 @@ a {
     text-decoration: none;
 }
 
-/* input[type="range"] {
+input[type="range"] {
     pointer-events: auto;
     flex-grow: 1;
-} */
+}
 
 .websiteheader {
     height: 40px;
@@ -45,7 +45,6 @@ a {
 .panel-label {
     background-color:rgba(0, 0, 0, 0.2);
     color: white;
-    mix-blend-mode: overlay;
     text-align: center;
     font-size: large;
     width: 100%;
@@ -78,7 +77,6 @@ a {
 .layer-info {
     min-width: 22%;
     background-color: rgba(255, 255, 255, 0.34);
-    /* mix-blend-mode: overlay; */
     color: black;
     position: relative;
     padding-top: 15px;
@@ -118,7 +116,6 @@ a {
     border-color: black;
     border-width: 1px;
     background-color: transparent;
-    mix-blend-mode: overlay;
 }
 
 .itvl-hover {
