@@ -280,7 +280,6 @@ app.use(sessions({
 }))
 app.use(cookieParser());
 const [user, pass] = ['user', 'pass']; // replace with db/env variable
-let session;
 
 //Will show the correct posts in the future, for now just returns all the posts
 app.get('/frontpage/posts/getPosts', (req, res) => {(frontPageGetPosts(req, res))});
