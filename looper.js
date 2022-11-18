@@ -87,6 +87,7 @@ function init_key_presses(l) {
 
 /* INITIALIZES ALL BUTTON EVENT LISTENERS */
 function init_buttons(l) {
+    console.log('init_buttons')
     document.getElementById("play").addEventListener("mouseup", () => {
         l.play_pause();
     })
@@ -128,6 +129,7 @@ function init_buttons(l) {
 }
 
 function init_active_layer(i, l) {
+    console.log('init_active_layer')
     let html = '<div class="layer-info d-flex flex-column">'
     // html += '<div class="layer-label">Layer '+i+'</div>'
     html += '<div class="dropdown" id="drop'+i+'"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdown-menu-'+i+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
@@ -140,6 +142,7 @@ function init_active_layer(i, l) {
 }
 
 function init_layers(l) {
+    console.log('init_layers')
     let active_layers = l.layers.length;
     for (let i = 0; i < 4; i++) {
         const layer = document.getElementById("layer-" + (i + 1));
@@ -157,17 +160,20 @@ function init_layers(l) {
     for (const sample of ["Kick", "Snare", "Hihat", "synth"]) {
         const dropdown_item = document.getElementById(sample+"-"+0);
         dropdown_item.addEventListener("click", (e) => {
+            console.log('dropdown clicked')
             l.layers[0].sample = sample + '.wav'
             document.getElementById("dropdown-menu-"+0).innerText = sample;
         });
     }
 }
 
+/* With the looper class as input, this function renders every sequence. */
 function render_sequences(l) {
-    for (let i = 0; i < l.layers.length; i++) {
-        const sequence = document.getElementById("seq" + i)
-        if (sequence.childNodes.length === 0) {
-            for (let j = 0; j < 16; j++) {
+    console.log('render_sequences')
+    for (let i = 0; i < l.layers.length; i++) {  // iterate over every layer
+        const sequence = document.getElementById("seq" + i)  // select corres. sequence dom
+        if (sequence.childNodes.length === 0) {  // if it's an empty sequence
+            for (let j = 0; j < 16; j++) {  // iterate over every iterval in the sequence
                 const interval = document.createElement("div");
                 interval.classList.add("itvl");
                 interval.classList.add("itvl-"+j);
@@ -198,7 +204,7 @@ function render_sequences(l) {
                 sequence.appendChild(interval);
             }
         } else { // existing sequence
-            for (let j = 0; j < 16; j++) {
+            for (let j = 0; j < 16; j++) {  // iterate over every interval
                 const interval = sequence.childNodes[j];
                 if (l.layers[i].sequence[j]) {  // if the note is active
                     if (!interval.classList.contains("itvl-activated")) {
@@ -214,7 +220,9 @@ function render_sequences(l) {
     }
 }
 
+/* Takes in looper class and renders each layer. Invokes render_sequences. */
 function render_layers(l) {
+    console.log('render_layers')
     let active_layers = l.layers.length;
     const layers = document.getElementsByClassName("layer");
     for (let i = 0; i < 4; i++) {
@@ -238,6 +246,7 @@ function render_layers(l) {
                 for (const sample of ["Kick", "Snare", "Hihat", "synth"]) {
                     const dropdown_item = document.getElementById(sample+"-"+i);
                     dropdown_item.addEventListener("click", (e) => {
+                        console.log('dropdown clicked')
                         l.layers[i].sample = sample + '.wav'
                         document.getElementById("dropdown-menu-"+i).innerText = sample;
                     });
@@ -260,13 +269,14 @@ function render_layers(l) {
 }
 
 function render_note_control(note) {
+    console.log('render_note_control')
     let html ='Note: <input type="tel" placeholder='+note.note+' value='+note.note+' id="note-input">'
     html += 'Volume: <input type="range" class="form-control-range" min=0 max=100 value='+note.note_volume+' id="note-volume">'
     html += 'Delay: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-delay">'
     html += 'Reverb: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-reverb">'
     document.getElementById("note-control-panel-container").innerHTML = html;
     const note_input = document.getElementById("note-input");
-    note_input.addEventListener("keyup", () => {
+    note_input.addEventListener("input", () => {
         note.note = note_input.value;
     });
     const volume_slider = document.getElementById("note-volume");
@@ -276,6 +286,7 @@ function render_note_control(note) {
 }
 
 function init_all() {
+    console.log('init_all')
     let l = new Looper();
     init_layers(l);
     init_key_presses(l);

@@ -7,10 +7,10 @@ a {
     text-decoration: none;
 }
 
-input[type="range"] {
+/* input[type="range"] {
     pointer-events: auto;
     flex-grow: 1;
-}
+} */
 
 .websiteheader {
     height: 40px;
@@ -61,7 +61,6 @@ input[type="range"] {
     flex-direction: row;
     text-align: center;
     max-height: 25%;
-    pointer-events: auto;
 }
 
 .layer-volume {
@@ -77,15 +76,12 @@ input[type="range"] {
 }
 
 .layer-info {
-    flex-basis: 0;
     min-width: 22%;
     background-color: rgba(255, 255, 255, 0.34);
-    mix-blend-mode: overlay;
-    pointer-events: auto;
+    /* mix-blend-mode: overlay; */
     color: black;
     position: relative;
     padding-top: 15px;
-    pointer-events: none;
 }
 
 /* .layer-label {
@@ -97,18 +93,16 @@ input[type="range"] {
     pointer-events: none;
 } */
 
-.dropdown {
-    pointer-events: none;
-}
+/* .dropdown {
+    position:absolute;
+} */
 
-.dropdown-toggle {
-    pointer-events: all;
-    z-index: 0;
-}
+/* .dropdown-toggle {
+    position:relative;
+} */
 
 .dropdown-menu {
-    pointer-events: all;
-    z-index: 9999;
+    position: relative;
 }
 
 .sequence {
@@ -145,7 +139,6 @@ input[type="range"] {
     position: absolute;
     width: 100%;
     bottom: 0;
-    z-index: -1;
 }
 
 #master-vol, #bpm, #play {

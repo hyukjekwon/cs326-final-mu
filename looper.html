@@ -12,26 +12,24 @@
         <script type="module" src="looper.js"></script>
     </head>
     <body class="background">
-        <div class="container-fluid d-flex flex-column h-100" id="main">
-            <div class="row websiteheader forumpage">
+        <div class="d-flex flex-column h-100" id="main">
+            <div class="websiteheader forumpage">
                 <a class="col WebsiteTitle" href="#">WebLooper: Edit Mode</a>
                 <a class="col-1 forumpage align-self-end" href="/frontpage">Forum</a>
             </div>
             <div class="d-flex flex-row h-100" id="panel-container">
-                <div class="row" id="layer-master">
-                    <div class="col panel d-flex flex-column" id="layer-panel">
-                        <div class="panel-label p-1">Layers</div>
-                        <div id="layer-1"></div>
-                        <div id="layer-2"></div>
-                        <div id="layer-3"></div>
-                        <div id="layer-4"></div>
-                    </div>
+                <div class="col panel d-flex flex-column" id="layer-panel">
+                    <div class="panel-label p-1">Layers</div>
+                    <div id="layer-1"></div>
+                    <div id="layer-2"></div>
+                    <div id="layer-3"></div>
+                    <div id="layer-4"></div>
                 </div>
                 <div class="d-flex flex-column" id="note-master">
                     <div class="flex-column panel" id="note-control">
                         <div class="panel-label p-1">Note control</div>
                         <div class="d-flex flex-column" id="note-control-panel-container">
-                            Note: <input type="tel" placeholder=C4 id="note-input">
+                            Note: <input type="text" placeholder=C4 id="note-input">
                             Volume: <input type="range" class="form-control-range" min=0 max=100 value=50 id="note-volume">
                             Delay: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-delay">
                             Reverb: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-reverb">
