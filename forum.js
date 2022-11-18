@@ -388,6 +388,7 @@ function goToLooper(){
 
 function Login(){
     console.log("Logging in");
+    window.location = 'login'
 }
 function Register(){
     console.log("Register");

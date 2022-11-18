@@ -3,6 +3,8 @@ import path from 'path';
 import http from 'http'; 
 import express from 'express'
 import fs, { read } from 'fs'
+import cookieParser from 'cookie-parser';
+import express-session from 'express-session';
 
 
 //Fake data for posts, this is the format they will use
@@ -182,6 +184,10 @@ function basicLooperHandle(req, res) {
   console.log("Looper");
   res.sendFile('looper.html', { root: path.dirname('') });                                                                                 
 }
+function loginHandle(req, res) {
+  console.log("Login");
+  res.sendFile('login.html', {root: path.dirname('')});
+}
 function frontPageGetPosts(req, res){
   console.log("Getting Front Page Posts");
   res.writeHead(200, {'Content-Type': 'text/text'});
@@ -267,6 +273,14 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 const port = 80;
 app.use(express.static(path.dirname('')));
 console.log("Sending File");
+app.use(sessions({
+  secret: 'test_secret_not_for_prod',
+  saveUninitialized: true,
+  resave: false
+}))
+app.use(cookieParser());
+const [user, pass] = ['user', 'pass']; // replace with db/env variable
+let session;
 
 //Will show the correct posts in the future, for now just returns all the posts
 app.get('/frontpage/posts/getPosts', (req, res) => {(frontPageGetPosts(req, res))});
@@ -276,13 +290,14 @@ app.get('/yourPosts/posts/getPosts', (req, res) => {(yourPostsPageGetPosts(req, 
 app.get('/', (req, res) => {(basicGetHandle(req, res))});
 
 
-app.get('/frontpage', (req, res) => {(frontPageHandle(req, res))});
-app.get('/looper', (req, res) => {(basicLooperHandle(req, res))});
-app.get('/posts/getAudioFile', (req, res) => {(getAudio(req, res))});
-app.post('/posts/createPost', (req, res) => {(createPost(req, res))});
-app.post('/posts/likepost', (req, res) => {(likepost(req, res))});
-app.post('/posts/dislikepost', (req, res) => {(dislikepost(req, res))});
-app.post('/posts/reply', (req, res) => {(receivereply(req, res))});
+app.get('/frontpage', frontPageHandle);
+app.get('/looper', basicLooperHandle);
+app.get('/posts/getAudioFile', getAudio);
+app.get('/login', loginHandle);
+app.post('/posts/createPost', createPost);
+app.post('/posts/likepost', likepost);
+app.post('/posts/dislikepost', dislikepost);
+app.post('/posts/reply', receivereply);
 
 
 app.listen(process.env.PORT || port, () => {
