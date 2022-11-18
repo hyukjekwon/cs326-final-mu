@@ -4,7 +4,7 @@ import http from 'http';
 import express from 'express'
 import fs, { read } from 'fs'
 import cookieParser from 'cookie-parser';
-import 'express-session' from 'express-session';
+import {express-session} from 'express-session';
 
 
 //Fake data for posts, this is the format they will use
