@@ -273,7 +273,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 const port = 80;
 app.use(express.static(path.dirname('')));
 console.log("Sending File");
-app.use(sessions({
+app.use(session({
   secret: 'test_secret_not_for_prod',
   saveUninitialized: true,
   resave: false
