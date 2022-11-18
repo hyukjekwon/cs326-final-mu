@@ -161,7 +161,7 @@ function basicGetHandle(req, res) {
     res.redirect('/frontpage');                                                                              
 }
 
-function registerUser(req, res) {
+function userRegister(req, res) {
     console.log("Registering User");
     // check if user exists in database
     // if so, alert user that username is taken
@@ -172,6 +172,12 @@ function registerUser(req, res) {
     res.write(`<h1>Username: ${username}</h1>`);
     res.write(`<h1>Password: ${password}</h1>`);
     res.end();
+}
+function userLogin(req, res) {
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write(`<h1>Username: ${req.body.username}</h1>`);
+  res.write(`<h1>Password: ${req.body.password}</h1>`);
+  res.end();
 }
 function createPost(req, res) {
     //console.log(req.body);     
