@@ -3,6 +3,7 @@ import {Layer, Note} from './layer.js';
 let master_vol = 75; // between 0 and 100
 let metronome_playing = false;
 let num_notes = 16;
+let num_layers = 6;
 
 class Looper {
     constructor() {
@@ -145,8 +146,11 @@ function init_active_layer(i, l) {
 function init_layers(l) {
     console.log('init_layers')
     let active_layers = l.layers.length;
-    for (let i = 0; i < 4; i++) {
-        const layer = document.getElementById("layer-" + (i + 1));
+    for (let i = 0; i < num_layers; i++) {
+        // const layer = document.getElementById("layer-" + (i + 1));
+        const layer = document.createElement("div");
+        layer.id = "layer-" + (i + 1);
+        document.getElementById("layer-panel").appendChild(layer);
         layer.classList.add("layer");
         if (active_layers < 1) {
             if (active_layers === 0) {
@@ -226,7 +230,7 @@ function render_layers(l) {
     console.log('render_layers')
     let active_layers = l.layers.length;
     const layers = document.getElementsByClassName("layer");
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < num_layers; i++) {
         const layer = layers[i];
         if (active_layers < 1) {  // if layer is inactive
             if (active_layers === 0) {  // set button for topmost inactive layer
