@@ -2,17 +2,18 @@ import {Layer, Note} from './layer.js';
 
 let master_vol = 75; // between 0 and 100
 let metronome_playing = false;
+let num_notes = 16;
 
 class Looper {
     constructor() {
-        this.layers = [new Layer("kick.wav")];
+        this.layers = [new Layer("kick.wav", num_notes)];
         this.bpm = 120;
         this.playing = false;
         this.interval;
         this.cursor = {"time": 0}; // obj to alter by reference
     }
     add_layer(sample) {
-        this.layers.push(new Layer(sample));
+        this.layers.push(new Layer(sample, num_notes));
     }
     remove_layer(index) {
         if (this.layers.length > 1) {
@@ -52,11 +53,11 @@ class Looper {
             for (const dom of document.getElementsByClassName("itvl-" + time)) {
                 dom.classList.add("itvl-cursor");
             }
-            for (const dom of document.getElementsByClassName("itvl-" + (time+15)%16)) {
+            for (const dom of document.getElementsByClassName("itvl-" + (time+num_notes-1)%num_notes)) {
                 dom.classList.remove("itvl-cursor");
             }
         });
-        cursor["time"] = (time + 1) % 16;
+        cursor["time"] = (time + 1) % num_notes;
     }
     play_pause() {
         if (this.playing) {
@@ -173,7 +174,7 @@ function render_sequences(l) {
     for (let i = 0; i < l.layers.length; i++) {  // iterate over every layer
         const sequence = document.getElementById("seq" + i)  // select corres. sequence dom
         if (sequence.childNodes.length === 0) {  // if it's an empty sequence
-            for (let j = 0; j < 16; j++) {  // iterate over every iterval in the sequence
+            for (let j = 0; j < num_notes; j++) {  // iterate over every iterval in the sequence
                 const interval = document.createElement("div");
                 interval.classList.add("itvl");
                 interval.classList.add("itvl-"+j);
@@ -204,7 +205,7 @@ function render_sequences(l) {
                 sequence.appendChild(interval);
             }
         } else { // existing sequence
-            for (let j = 0; j < 16; j++) {  // iterate over every interval
+            for (let j = 0; j < num_notes; j++) {  // iterate over every interval
                 const interval = sequence.childNodes[j];
                 if (l.layers[i].sequence[j]) {  // if the note is active
                     if (!interval.classList.contains("itvl-activated")) {
