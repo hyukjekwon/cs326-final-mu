@@ -12,6 +12,23 @@ class Looper {
         this.playing = false;
         this.interval;
         this.cursor = {"time": 0}; // obj to alter by reference
+        this.sampler = new Tone.Sampler({
+            urls: {
+                A1: "kick.wav",
+                A2: "hihat.wav",
+                A3: "snare.wav"
+            },
+            baseUrl: "/samples/"
+        }).toDestination();
+        this.metronome_loop = new Tone.Loop(time => {
+            this.metronome_sampler.triggerAttack(time)
+        }, '4n')
+        this.metronome_sampler = new Tone.Sampler({
+            urls: {
+                C4: "metronome.wav"
+            },
+            baseUrl: "/samples/"
+        }).toDestination()
     }
     add_layer(sample) {
         this.layers.push(new Layer(sample, num_notes));
@@ -23,63 +40,51 @@ class Looper {
     }
     set_bpm_and_period(bpm) {
         this.bpm = bpm;
-        if (this.playing) {
-            clearInterval(this.interval);
-            this.interval = setInterval(this.play_interval, 30000 / this.bpm, this.layers, this.cursor);
-        }
+        Tone.Transport.bpm.value = bpm;
     }
-    play_interval(layers, cursor) {
+    set_metronome() {
+        this.metronome_sampler.volume.value = metronome_playing ? 1: -1024
+    }
+    init_loops() {
+        this.metronome_loop = new Tone.Loop(time => {
+            this.metronome_sampler.triggerAttack('C4', time);
+            this.render_itvls(this.cursor);
+        }, '4n');
+    }
+    render_itvls(cursor) {
         const time = cursor["time"];
-        if (metronome_playing) { // metronome setup
-            if (!(time % 2)) {
-                const metronome = new Tone.Player("/samples/metronome.wav").toDestination();
-                metronome.volume.value = (master_vol - 90) / 2;
-                metronome.autostart = true;
-            }
+        for (const dom of document.getElementsByClassName("itvl-" + time)) {
+            dom.classList.add("itvl-cursor");
         }
-        layers.forEach(layer => { // iterate through layers
-            const itvl = layer.sequence[time];
-            if (itvl) { // if note is active
-                let note;
-                const layer_vol = (layer.layer_volume["vol"] - 30) / 2
-                if (layer.sample === "synth.wav") { // if synth
-                    note = new Tone.Synth().toDestination();
-                    note.triggerAttackRelease(itvl.note, itvl.duration + "n")
-                } else {
-                    note = new Tone.Player("/samples/" + layer.sample).toDestination();
-                    note.autostart = true;
-                }
-                note.volume.value = layer_vol - (100 - master_vol) / 2;
-            }
-            for (const dom of document.getElementsByClassName("itvl-" + time)) {
-                dom.classList.add("itvl-cursor");
-            }
-            for (const dom of document.getElementsByClassName("itvl-" + (time+num_notes-1)%num_notes)) {
-                dom.classList.remove("itvl-cursor");
-            }
-        });
+        for (const dom of document.getElementsByClassName("itvl-" + (time+num_notes-1)%num_notes)) {
+            dom.classList.remove("itvl-cursor");
+        }
         cursor["time"] = (time + 1) % num_notes;
     }
-    play_pause() {
+    async play_pause() {
         if (this.playing) {
             console.log("pause");
-            clearInterval(this.interval);
+            this.metronome_loop.dispose();
+            Tone.Transport.stop();
+            Tone.Transport.clear(0);
             this.playing = false;
             this.cursor = {"time": 0};
             for (const dom of document.getElementsByClassName("itvl")) {
                 dom.classList.remove("itvl-cursor");
             }
         } else {
-            Tone.start();
+            this.init_loops();
+            this.metronome_sampler.volume.value = -1024;
+            this.metronome_loop.start(0);
+            Tone.Transport.start(Tone.now());
             console.log("play");
-            this.interval = setInterval(this.play_interval, 30000 / this.bpm, this.layers, this.cursor);
             this.playing = true;
         }
     }
 }
 
 function init_key_presses(l) {
-    document.addEventListener("keyup", (e) => {
+    document.addEventListener("keyup", async e => {
         if (e.code === "Space") {
             l.play_pause();
         }
@@ -90,7 +95,7 @@ function init_key_presses(l) {
 /* INITIALIZES ALL BUTTON EVENT LISTENERS */
 function init_buttons(l) {
     console.log('init_buttons')
-    document.getElementById("play").addEventListener("mouseup", () => {
+    document.getElementById("play").addEventListener("mouseup", async () => {
         l.play_pause();
     })
     document.getElementById("add-button").addEventListener("click", () => {
@@ -127,18 +132,18 @@ function init_buttons(l) {
             metro_btn.classList.remove("btn-danger")
             metronome_playing = false;
         }
+        l.set_metronome()
     });
 }
 
 function init_active_layer(i, l) {
     console.log('init_active_layer')
     let html = '<div class="layer-info d-flex flex-column">'
-    // html += '<div class="layer-label">Layer '+i+'</div>'
-    html += '<div class="dropdown" id="drop'+i+'"><button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="dropdown-menu-'+i+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+    html += '<div class="dropdown" id="drop'+i+'"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdown-menu-'+i+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
     html += l.layers[i].sample.split('.')[0] + '</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">'
     html += '<a class="dropdown-item" id="kick-'+i+'">kick</a><a class="dropdown-item" id="hihat-'+i+'">hihat</a><a class="dropdown-item" id="snare-'+i+'">snare</a><a class="dropdown-item" id="synth-'+i+'">synth</a></div></div>'
     html += '<div>V: <input type="range" class="form-control-range layer-volume" min=0 max=100 value-50 id="volume-'+i+'"></div>'
-    html += '<button class="rem btn btn-danger btn-sm" type="submit" id="rem-'+i+'">Remove</button></div>'
+    html += '<button class="rem btn btn-secondary btn-sm" type="submit" id="rem-'+i+'">Remove</button></div>'
     html += '<div class="sequence" id="seq'+i+'"></div>'
     return html;
 }
@@ -159,6 +164,17 @@ function init_layers(l) {
             layer.classList.add("inactive");
         } else {
             layer.innerHTML = init_active_layer(i, l);
+            const remove_button = document.getElementById("rem-"+i);
+            remove_button.addEventListener("click", () => {
+                l.remove_layer(i);
+                render_layers(l);
+            });
+            remove_button.addEventListener("mouseenter", () => {
+                remove_button.classList.add('btn-danger');
+            });
+            remove_button.addEventListener("mouseleave", () => {
+                remove_button.classList.remove('btn-danger');
+            });
         }
         active_layers -= 1;
     }
@@ -244,9 +260,15 @@ function render_layers(l) {
                 layer.classList.remove("inactive");
                 layer.innerHTML = init_active_layer(i, l);
                 const remove_button = document.getElementById("rem-"+i);
-                remove_button.addEventListener("click", (e) => {
+                remove_button.addEventListener("click", () => {
                     l.remove_layer(i);
                     render_layers(l);
+                });
+                remove_button.addEventListener("mouseenter", () => {
+                    remove_button.classList.add('btn-danger');
+                });
+                remove_button.addEventListener("mouseleave", () => {
+                    remove_button.classList.remove('btn-danger');
                 });
                 for (const sample of ["kick", "snare", "hihat", "synth"]) {
                     const dropdown_item = document.getElementById(sample+"-"+i);
