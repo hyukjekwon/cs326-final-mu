@@ -178,6 +178,9 @@ function userRegister(req, res) {
   const connectionString = getSecret('DATABASE_URL');
   const client = new pg.Client({
     connectionString,
+    ssl: {
+      rejectUnauthorized: false
+    }
   });
   client.connect();
   client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
