@@ -7,7 +7,8 @@ import cookieParser from 'cookie-parser';
 import pg from 'pg';
 import crypto from 'crypto';
 import session from 'express-session';
-const pgSession = require('connect-pg-simple')(session);
+import connectPg from 'connect-pg-simple';
+const pgSession = connectPg(session);
 
 //Fake data for posts, this is the format they will use
 let fakedatapostslist1 = {
