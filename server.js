@@ -8,7 +8,7 @@ import pg from 'pg';
 import crypto from 'crypto';
 import session from 'express-session';
 import connectPg from 'connect-pg-simple';
-const pgSession = connectPg(session);
+//const pgSession = connectPg(session);
 
 //Fake data for posts, this is the format they will use
 let fakedatapostslist1 = {
@@ -369,7 +369,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 const port = 80;
 app.use(express.static(path.dirname('')));
 console.log("Sending File");
-app.use(session({
+/*app.use(session({
   store: new pgSession({
     conString: getSecret('DATABASE_URL'),
     ssl: {
@@ -379,7 +379,7 @@ app.use(session({
   secret: 'test_secret_not_for_prod', // put in env variable
   saveUninitialized: true,
   resave: false
-}))
+}))*/
 app.use(cookieParser());
 const [user, pass] = ['user', 'pass']; // replace with db/env variable
 
