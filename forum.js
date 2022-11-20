@@ -391,7 +391,7 @@ function Login(){
     window.location = 'login'
 }
 function Register(){
-    console.log("Register");
+    console.log("Register pls");
     window.location = 'register'
     //CRUD Read operation
 }
