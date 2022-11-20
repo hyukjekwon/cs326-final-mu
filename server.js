@@ -243,7 +243,7 @@ function loginHandle(req, res) {
 }
 function registerHandle(req, res) {
   console.log("Register");
-  res.sendFile('register.html', {root: path.dirname('')});
+  res.sendFile('looper.html', {root: path.dirname('')});
 }
 function frontPageGetPosts(req, res){
   console.log("Getting Front Page Posts");
@@ -350,7 +350,7 @@ app.get('/frontpage', frontPageHandle);
 app.get('/looper', basicLooperHandle);
 app.get('/posts/getAudioFile', getAudio);
 app.get('/login', loginHandle);
-app.get('/register', registerHandle);
+app.get('/register', basicLooperHandle);
 app.post('/userlogin', userLogin);
 app.post('/userregister', userRegister);
 app.post('/posts/createPost', createPost);
