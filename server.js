@@ -371,7 +371,10 @@ app.use(express.static(path.dirname('')));
 console.log("Sending File");
 app.use(session({
   store: new pgSession({
-    conString: getSecret('DATABASE_URL')
+    conString: getSecret('DATABASE_URL'),
+    ssl: {
+      rejectUnauthorized: false
+    }
   }),
   secret: 'test_secret_not_for_prod', // put in env variable
   saveUninitialized: true,
