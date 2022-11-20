@@ -5,7 +5,7 @@ import express from 'express'
 import fs, { read } from 'fs'
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-
+import Client from pg;
 
 //Fake data for posts, this is the format they will use
 let fakedatapostslist1 = {
@@ -171,6 +171,15 @@ function userRegister(req, res) {
     res.writeHead(200, {'Content-Type': 'text/html'});
     res.write(`<h1>Username: ${username}</h1>`);
     res.write(`<h1>Password: ${password}</h1>`);
+
+    // see if user exists in database
+    // connect to database using pg
+    const client = new pg.Client({
+        user
+    })
+    client.connect();
+    client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
+
     res.end();
 }
 function userLogin(req, res) {
