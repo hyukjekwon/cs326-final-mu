@@ -108,6 +108,7 @@ async function LikeByID(postID){
                 window.alert("Error liking");
             }
         });
+        window.location.reload();
     //CRUD Update operation
 }
 
@@ -128,6 +129,7 @@ async function DislikeByID(postID){
                 window.alert("Error liking");
             }
         });
+        window.location.reload();
     //CRUD Update operation
 }
 
