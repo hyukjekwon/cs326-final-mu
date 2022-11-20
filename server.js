@@ -172,7 +172,7 @@ function userRegister(req, res) {
   // check if user exists in database
   // if so, alert user that username is taken
   // if not, add user to database
-  const [username, password] = [req.body.username, req.body.password];
+  const username = req.body.username;
   res.writeHead(200, {'Content-Type': 'text/html'});
 
   const connectionString = getSecret('DATABASE_URL');
@@ -194,14 +194,16 @@ function userRegister(req, res) {
     }
 
     // user does not exist
-    // add user to database
-    client.query('INSERT INTO users (username, password) VALUES ($1, $2)', [username, password], (err, result) => {
+    // create salt, hash password, add to database
+    const salt = crypto.randomBytes(64).toString('ascii');
+    const hash = crypto.createHash('sha256').update(salt + req.body.password).digest('ascii');
+    client.query('INSERT INTO users (username, salt, hash) VALUES ($1, $2, $3)', [username, salt, hash], (err, result) => {
       if (err) {
         console.error(err.stack);
         res.write('<p>There was an error, please try again</p>');
         return;
       }
-      res.write('<h1>Succesfully registered</h1>');
+      res.write(String.raw`<h1>Succesfully registered ${username}</h1>`);
     });
   });
   res.end();
