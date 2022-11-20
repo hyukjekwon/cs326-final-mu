@@ -243,7 +243,7 @@ function loginHandle(req, res) {
 }
 function registerHandle(req, res) {
   console.log("Register");
-  res.sendFile('looper.html', {root: path.dirname('')});
+  res.sendFile('register.html', {root: path.dirname('')});
 }
 function frontPageGetPosts(req, res){
   console.log("Getting Front Page Posts");
