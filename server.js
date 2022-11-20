@@ -6,6 +6,7 @@ import fs, { read } from 'fs'
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import pg from 'pg';
+import crypto from 'crypto';
 
 //Fake data for posts, this is the format they will use
 let fakedatapostslist1 = {
