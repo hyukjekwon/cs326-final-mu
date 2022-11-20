@@ -189,7 +189,7 @@ function userRegister(req, res) {
   client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
     if (err) {
       console.error(err.stack);
-      res.send('<p>There was an error, please try again</p>');
+      res.send('<p>error1, please try again</p>');
       return;
     }
     
@@ -203,10 +203,12 @@ function userRegister(req, res) {
     // create salt, hash password, add to database
     const salt = crypto.randomBytes(64).toString('ascii');
     const hash = crypto.createHash('sha256').update(salt + req.body.password).digest('ascii');
+    console.log('salt: ' + salt);
+    console.log('hash: ' + hash);
     client.query('INSERT INTO users (username, salt, hash) VALUES ($1, $2, $3)', [username, salt, hash], (err, result) => {
       if (err) {
         console.error(err.stack);
-        res.write('<p>There was an error, please try again</p>');
+        res.write('<p>error2, please try again</p>');
         return;
       }
       res.write(String.raw`<h1>Succesfully registered ${username}</h1>`);
