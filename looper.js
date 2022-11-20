@@ -29,6 +29,7 @@ class Looper {
             },
             baseUrl: "/samples/"
         }).toDestination()
+        this.metronome_sampler.volume.value = -1024;
     }
     add_layer(sample) {
         this.layers.push(new Layer(sample, num_notes));
@@ -74,7 +75,6 @@ class Looper {
             }
         } else {
             this.init_loops();
-            this.metronome_sampler.volume.value = -1024;
             this.metronome_loop.start(0);
             Tone.Transport.start(Tone.now());
             console.log("play");

@@ -3,6 +3,12 @@ class Layer {
         this.sample = sample;
         this.sequence = this.init_sequence(num_notes);
         this.layer_volume = {"vol": 50}; // to be passed by reference to setinterval
+        this.sampler = new Tone.Sampler({
+            urls: {
+                C4: sample
+            },
+            baseUrl: "/samples/"
+        }).toDestination()
     }
     init_sequence(num_notes) {
         return [...Array(num_notes-1)].map(e=>0);
