@@ -5,7 +5,7 @@ import express from 'express'
 import fs, { read } from 'fs'
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import Client from pg;
+import Client from 'pg';
 
 //Fake data for posts, this is the format they will use
 let fakedatapostslist1 = {
