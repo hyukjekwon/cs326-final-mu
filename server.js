@@ -350,7 +350,7 @@ app.get('/frontpage', frontPageHandle);
 app.get('/looper', basicLooperHandle);
 app.get('/posts/getAudioFile', getAudio);
 app.get('/login', loginHandle);
-app.get('/register', basicLooperHandle);
+app.get('/register', registerHandle);
 app.post('/userlogin', userLogin);
 app.post('/userregister', userRegister);
 app.post('/posts/createPost', createPost);
