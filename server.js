@@ -5,7 +5,7 @@ import express from 'express'
 import fs, { read } from 'fs'
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import Client from 'pg';
+import pg from 'pg';
 
 //Fake data for posts, this is the format they will use
 let fakedatapostslist1 = {
@@ -176,7 +176,7 @@ function userRegister(req, res) {
   res.writeHead(200, {'Content-Type': 'text/html'});
 
   const connectionString = getSecret('DATABASE_URL');
-  const client = new Client({
+  const client = new pg.Client({
     connectionString,
   });
   client.connect();
