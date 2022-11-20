@@ -156,31 +156,55 @@ let fakedatapostslist2 = {
     AudioFile: './uploads/cantina.txt'
   }
 }
+
+function getSecret(key) {
+  return process.env[key] || require('secrets.json')[key];
+}
+
 function basicGetHandle(req, res) {
     console.log("Redirecting");
     res.redirect('/frontpage');                                                                              
 }
 
+// ya boy is vulnerable to sql injection
 function userRegister(req, res) {
-    console.log("Registering User");
-    // check if user exists in database
-    // if so, alert user that username is taken
-    // if not, add user to database
+  console.log("Registering User");
+  // check if user exists in database
+  // if so, alert user that username is taken
+  // if not, add user to database
+  const [username, password] = [req.body.username, req.body.password];
+  res.writeHead(200, {'Content-Type': 'text/html'});
 
-    const [username, password] = [req.body.username, req.body.password];
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(`<h1>Username: ${username}</h1>`);
-    res.write(`<h1>Password: ${password}</h1>`);
+  const connectionString = getSecret('DATABASE_URL');
+  const client = new pg.Client({
+    connectionString,
+  });
+  client.connect();
+  client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
+    if (err) {
+      console.error(err.stack);
+      res.write('<p>There was an error, please try again</p>');
+      return;
+    }
+    
+    if (result.rows.length) {
+      // user exists
+      res.write(`<h1>Username already exists</h1>`);
+      return;
+    }
 
-    // see if user exists in database
-    // connect to database using pg
-    const client = new pg.Client({
-        user
-    })
-    client.connect();
-    client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
-
-    res.end();
+    // user does not exist
+    // add user to database
+    client.query('INSERT INTO users (username, password) VALUES ($1, $2)', [username, password], (err, result) => {
+      if (err) {
+        console.error(err.stack);
+        res.write('<p>There was an error, please try again</p>');
+        return;
+      }
+      res.write('<h1>Succesfully registered</h1>');
+    });
+  });
+  res.end();
 }
 function userLogin(req, res) {
   res.writeHead(200, {'Content-Type': 'text/html'});
