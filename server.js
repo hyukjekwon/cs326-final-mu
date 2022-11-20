@@ -176,7 +176,7 @@ function userRegister(req, res) {
   res.writeHead(200, {'Content-Type': 'text/html'});
 
   const connectionString = getSecret('DATABASE_URL');
-  const client = new pg.Client({
+  const client = new Client({
     connectionString,
   });
   client.connect();
