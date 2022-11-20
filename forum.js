@@ -25,30 +25,6 @@ function search(){
 
 
 function constructPost(postObject){
-    /* <div class="row divrow forumpage">
-            <div class="col-sm-2 forumpage post">
-                <div> Check out this beat I made!</div>
-                <div class= "smalltext">- Made by SickBeats 10 minutes ago</div>
-            </div>
-            <div class="col-sm-4">\
-            </div>
-
-
-            <div class="col-sm forumpage"> 
-                <button type="button" class="btn btn-primary likebutton">Like</button>
-                <div class="col-sm"> 137 likes </div>
-            </div>
-            <div class="col-sm forumpage"> 
-                <button type="button" class="btn btn-danger likebutton">Dislike</button>
-                <div class="col-sm"> 2 dislikes </div>
-            </div>
-            <div class="col-sm forumpage">
-                <button type="button" class="btn btn-secondary likebutton">Reply</button>
-                <div class="col-sm"> 42 replies </div>
-            </div>
-            <div class="col-sm forumpage post"> Posted on 10/21/2022 </div>
-        </div>
-        <br></br> */
     const postHere = document.getElementById('postHere');
     const newPost = document.createElement('div');
     newPost.classList.add("row", "divrow", "forumpage");
@@ -166,21 +142,32 @@ async function ReplyHelper(postID){
             window.alert("Missing reply");
         }
         else{
+            //turing all apostrophes into \' so database stuff doesnt get messed up
+            let filteredreply = ""
+            for (let i = 0; i < thisreply.value.length; i++){
+                if (thisreply.value[i] === "'"){
+                    filteredreply += "''";
+                }
+                else{
+                    filteredreply += thisreply.value[i];
+                }
+            }
             const response = await fetch('/posts/reply', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({"PostID":postID, "Reply":thisreply.value})
+                body: JSON.stringify({"PostID":postID, "Reply":filteredreply, "time":Date.now()})
                 }).then((res) => {
                     console.log(res)
                     if (res.ok){
                         console.log("Replied to post");
                         $("#ReplyModal").modal("hide");
                         document.getElementById('replytopost').removeEventListener('click', ReplyByID);
+                        window.location.reload();
                     }
                     else{
-                        window.alert("Error liking");
+                        window.alert("Error replying");
                         document.getElementById('replytopost').removeEventListener('click', ReplyByID);
                     }
                 });
@@ -203,18 +190,35 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     else{
         document.getElementById('ViewPostDialog').innerHTML = Body;
     }
-
+    document.getElementById('postID').value = postID;
     //Simulated 2 replies
     document.getElementById('Replies').innerHTML = "";
-    let thispost = document.createElement("div");
-    thispost.classList.add("col-sm-8");
-    thispost.innerHTML = "NewUsername - Nice!"; 
-    document.getElementById('Replies').append(thispost);
-    thispost = document.createElement("div");
-    thispost.classList.add("col-sm-8");
-    thispost.innerHTML = "OtherUsername - Cool!"; 
-    document.getElementById('Replies').append(thispost);
-    //document.getElementById('Replies').innerHTML = Replies;
+    if (Replies.length === 0){
+        document.getElementById('Replies').innerHTML = "No one has replied yet";
+    }
+    else {
+        //Adds each reply to HTML modal in replies box
+        Object.values(Replies).forEach((value) => {
+            Object.keys(value).forEach((username) => {
+                if (username !== '.time.'){
+                    let fullreply = document.createElement("div");
+                    fullreply.classList.add("singleReply");
+                    let thispost = document.createElement("div");
+                    thispost.classList.add("col-sm-8", "replyHelper");
+                    thispost.innerHTML = username.concat(': ' + value[username]); 
+                    let thistime = document.createElement("div");
+                    thistime.classList.add("col-sm-8", "replysmalltext");
+                    thistime.innerHTML =  (Math.floor(Math.abs(Date.now() - value['.time.'])/(60*1000))).toString().concat(" Minutes ago");
+                    fullreply.append(thispost);
+                    fullreply.append(thistime);
+                    document.getElementById('Replies').append(fullreply);
+                }
+            })
+        });
+        const lastReplyBorder = document.createElement("div");
+        lastReplyBorder.classList.add("singleReply");
+        document.getElementById('Replies').append(lastReplyBorder);
+    }
 
     //Resets the playAudio button and adds a new event listner
     let PlayAudio = document.getElementById('PlayAudio');
@@ -227,10 +231,9 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
         await fetch('/posts/getAudioFile?id=' + postID)
             .then((res) => res.json())
                 .then((data) => audio = data);
-        console.log(audio['AudioFile']);
+        //console.log(audio['AudioFile']);
         var thisAudioFile = new Audio("data:audio/mp3;base64," + audio['AudioFile'])
         thisAudioFile.play();
-        console.log("What?");
     }
 }
 
@@ -239,14 +242,15 @@ async function loadFrontPage(){
     const postHere = document.getElementById('postHere');
     postHere.innerHTML = "";
     console.log("Loading Front Page");
-    let postIDs = {};
+    let posts = [];
     const response = await fetch("/frontpage/posts/getPosts")
         .then((response) => response.json())
-            .then((data) => postIDs = data);
-    for (let i = 0; i< postIDs['PostIDs'].length; i++){
-        constructPost(postIDs['Posts'][i])
+            .then((data) => posts = data);
+    for (let i = 0; i< posts['postsObjects'].length; i++){
+        const thisPostObject = {"PostID":posts['postsObjects'][i]['postid'], "Username":posts['postsObjects'][i]['username'], "Time": posts['postsObjects'][i]['time'], "Title":posts['postsObjects'][i]['title'], "Body":posts['postsObjects'][i]['body'], "Likes": posts['postsObjects'][i]['likes'], "Dislikes": posts['postsObjects'][i]['dislikes'], "Replies":posts['postsObjects'][i]['replies'],"AudioFile":posts['postsObjects'][i]['audiofile']}
+        constructPost(thisPostObject);
     } 
-    
+    document.getElementById("YourPostsButton").innerHTML = "";
     //CRUD Read operation
 }
 
@@ -254,13 +258,15 @@ async function loadNew(){
     const postHere = document.getElementById('postHere');
     postHere.innerHTML = "";
     console.log("Loading New Posts");
-    let postIDs = {};
+    let posts = [];
     const response = await fetch("/newest/posts/getPosts")
         .then((response) => response.json())
-            .then((data) => postIDs = data);
-    for (let i = 0; i< postIDs['PostIDs'].length; i++){
-        constructPost(postIDs['Posts'][i])
+            .then((data) => posts = data);
+    for (let i = 0; i< posts['postsObjects'].length; i++){
+        const thisPostObject = {"PostID":posts['postsObjects'][i]['postid'], "Username":posts['postsObjects'][i]['username'], "Time": posts['postsObjects'][i]['time'], "Title":posts['postsObjects'][i]['title'], "Body":posts['postsObjects'][i]['body'], "Likes": posts['postsObjects'][i]['likes'], "Dislikes": posts['postsObjects'][i]['dislikes'], "Replies":posts['postsObjects'][i]['replies'],"AudioFile":posts['postsObjects'][i]['audiofile']}
+        constructPost(thisPostObject);
     } 
+    document.getElementById("YourPostsButton").innerHTML = "";
     //CRUD Read operation
 }
 
@@ -268,49 +274,69 @@ async function loadReplies(){
     const postHere = document.getElementById('postHere');
     postHere.innerHTML = "";
     console.log("Loading Latest Replies");
-    let postIDs = {};
-    const response = await fetch("/latestReplies/posts/getPosts")
+    let posts = [];
+    const response = await fetch("/latestreplies/posts/getPosts")
         .then((response) => response.json())
-            .then((data) => postIDs = data);
-    for (let i = 0; i< postIDs['PostIDs'].length; i++){
-        constructPost(postIDs['Posts'][i])
+            .then((data) => posts = data);
+    for (let i = 0; i< posts['postsObjects'].length; i++){
+        const thisPostObject = {"PostID":posts['postsObjects'][i]['postid'], "Username":posts['postsObjects'][i]['username'], "Time": posts['postsObjects'][i]['time'], "Title":posts['postsObjects'][i]['title'], "Body":posts['postsObjects'][i]['body'], "Likes": posts['postsObjects'][i]['likes'], "Dislikes": posts['postsObjects'][i]['dislikes'], "Replies":posts['postsObjects'][i]['replies'],"AudioFile":posts['postsObjects'][i]['audiofile']}
+        constructPost(thisPostObject);
     } 
-    
+    document.getElementById("YourPostsButton").innerHTML = "";
     //CRUD Read operation
 }
 async function loadYourPosts(){
     const postHere = document.getElementById('postHere');
     postHere.innerHTML = "";
     console.log("Loading Your Posts");
-    let postIDs = {};
-    const response = await fetch("/yourPosts/posts/getPosts")
+    let posts = [];
+    const username = "NewUsername"
+    const response = await fetch("/yourPosts/posts/getPosts?username=" + username)
         .then((response) => response.json())
-            .then((data) => postIDs = data);
-    for (let i = 0; i< postIDs['PostIDs'].length; i++){
-        constructPost(postIDs['Posts'][i])
+            .then((data) => posts = data);
+    for (let i = 0; i< posts['postsObjects'].length; i++){
+        const thisPostObject = {"PostID":posts['postsObjects'][i]['postid'], "Username":posts['postsObjects'][i]['username'], "Time": posts['postsObjects'][i]['time'], "Title":posts['postsObjects'][i]['title'], "Body":posts['postsObjects'][i]['body'], "Likes": posts['postsObjects'][i]['likes'], "Dislikes": posts['postsObjects'][i]['dislikes'], "Replies":posts['postsObjects'][i]['replies'],"AudioFile":posts['postsObjects'][i]['audiofile']}
+        constructPost(thisPostObject);
     } 
-
+    //CRUD Read operation
+    document.getElementById("YourPostsButton").innerHTML = "";
     const editbutton = document.createElement('button');
     editbutton.classList.add("btn", "btn-warning", "likebutton")
     editbutton.innerHTML = "Edit";
-    document.getElementById("lookatpostfooter").appendChild(editbutton);
-    editbutton.addEventListener('click', editbyID)
+    document.getElementById("YourPostsButton").appendChild(editbutton);
+    editbutton.addEventListener('click', () => editbyID(document.getElementById("postID").value))
 
     const deletebutton = document.createElement('button');
     deletebutton.classList.add("btn", "btn-danger", "likebutton")
     deletebutton.innerHTML = "Delete";
-    document.getElementById("lookatpostfooter").appendChild(deletebutton);
-    deletebutton.addEventListener('click', deletebyID)
+    document.getElementById("YourPostsButton").appendChild(deletebutton);
+    deletebutton.addEventListener('click', () => deletebyID(document.getElementById("postID").value));
     //CRUD Update operation
 }
 
-function deletebyID(){
-    console.log("deleting post");
+async function deletebyID(postID){
+    console.log("deleting post " + postID);
+    // const response = await fetch('/posts/likepost', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({"PostID":postID})
+    //     }).then((res) => {
+    //         console.log(res)
+    //         if (res.ok){
+    //             console.log("Deleted post");
+    //         }
+    //         else{
+    //             window.alert("Error Deleting");
+    //         }
+    //     });
+    //CRUD Update operation
     //CRUD Delete Operation
 }
 
-function editbyID(){
-    console.log("editing post");
+function editbyID(postID){
+    console.log("editing post " + postID);
     //CRUD Delete Operation
 }
 
@@ -330,7 +356,6 @@ function createPost(){
         //Semd a forum post of format:  
         //{Username:"NewUsername", Time:date, Title:title, Body:body, 
         //Likes:0, Dislikes:0, Replies:[],AudioFile:File}
-
         const currentdate = new Date();
         const date = 
         (currentdate.getMonth()+1) + "/"
@@ -352,6 +377,7 @@ function createPost(){
         promise.then(function(result) {
             console.log("Uploading to server");
             
+            //Change username to persons username
             const newPost = 
             {"Username":"NewUsername", "Time":date, "Title":postTitle.value, "Body":postBody.value, 
             "Likes":0, "Dislikes":0, "Replies":[],"AudioFile":result};

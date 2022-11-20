@@ -101,3 +101,16 @@
     margin-bottom: 10px;
     vertical-align: left;
 }
+
+.replysmalltext {
+    font-size:7pt;
+    margin-left: 8px;
+}
+.replyHelper{
+    margin-left: 4px;
+}
+.singleReply {
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
