@@ -174,7 +174,7 @@ function userRegister(req, res) {
   // if so, alert user that username is taken
   // if not, add user to database
   const username = req.body.username;
-  res.writeHead(200, {'Content-Type': 'text/html'});
+  //res.writeHead(200, {'Content-Type': 'text/html'});
 
   const connectionString = getSecret('DATABASE_URL');
   const client = new pg.Client({
@@ -187,7 +187,7 @@ function userRegister(req, res) {
   client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
     if (err) {
       console.error(err.stack);
-      res.write('<p>There was an error, please try again</p>');
+      res.send('<p>There was an error, please try again</p>');
       return;
     }
     
@@ -210,7 +210,7 @@ function userRegister(req, res) {
       res.write(String.raw`<h1>Succesfully registered ${username}</h1>`);
     });
   });
-  res.end();
+  //res.end();
 }
 function userLogin(req, res) {
   res.writeHead(200, {'Content-Type': 'text/html'});
