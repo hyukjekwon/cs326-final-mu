@@ -224,7 +224,7 @@ function userLogin(req, res) {
     const hash = result.rows[0].hash;
     const hash2 = crypto.createHash('sha256').update(salt + password).digest('ascii');
     if (hash == hash2) {
-      request.session.username = username;
+      req.session.username = username;
       res.end("logged in as " + username + ', do session stuff');
       return;
     }
@@ -355,7 +355,7 @@ app.get('/register', (req, res) => res.sendFile('register.html', {root: path.dir
 app.get('/login', (req, res) => res.sendFile('login.html', {root: path.dirname('')}));
 app.get('/loggedintest', (req, res) => {
   res.writeHead(200, {'Content-Type': 'text/text'});
-  if(req.session.loggedin){
+  if(req.session.loggedin) {
     res.end("Logged in as " + req.session.username);
   }
   else{
