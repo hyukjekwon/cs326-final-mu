@@ -1,9 +1,8 @@
 import pgPromise from 'pg-promise'
-import dotenv from "dotenv"
-dotenv.config({ path: './test.env'})
-const pgp = pgPromise({});
-
+// import dotenv from "dotenv"
+// dotenv.config({ path: './test.env'})
 const dbURL = process.env.DATABASE_URL
+const pgp = pgPromise({});
 const db = pgp(dbURL);
 
 async function addPostToDB(post){
