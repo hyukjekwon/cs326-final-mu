@@ -8,7 +8,7 @@ import pg from 'pg';
 import crypto from 'crypto';
 import session from 'express-session';
 import connectPg from 'connect-pg-simple';
-//const pgSession = connectPg(session);
+const pgSession = connectPg(session);
 
 function getSecret(key) {
   return process.env[key] || require('secrets.json')[key];
@@ -339,9 +339,10 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 const port = 80;
 app.use(express.static(path.dirname('')));
 app.use(session({
+  store: new pgSession({conString: getSecret('DATABASE_URL'), ssl: {rejectUnauthorized: false}}),
   secret: 'testsecret',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false
 }))
 console.log("Sending File");
 
