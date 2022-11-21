@@ -14,13 +14,35 @@ function setActive(elementId){
     document.getElementById(elementId).classList.add("active");
 }
 
-function search(){
+async function search(){
     const search = document.getElementById("searchbox")
-    if (!(search.value === "")){
-        console.log("Searching for: " + document.getElementById("searchbox").value);
-    } else {
-        console.log("Empty");
+
+    console.log("Searching for: " + document.getElementById("searchbox").value);
+    if (document.getElementById("FrontPage").classList.contains("active")){
+        document.getElementById("FrontPage").classList.remove("active");
     }
+    if (document.getElementById("NewPosts").classList.contains("active")){
+        document.getElementById("NewPosts").classList.remove("active");
+    }
+    if (document.getElementById("LatestReplies").classList.contains("active")){
+        document.getElementById("LatestReplies").classList.remove("active");
+    }
+    if (document.getElementById("YourPosts").classList.contains("active")){
+        document.getElementById("YourPosts").classList.remove("active");
+    }
+    const postHere = document.getElementById('postHere');
+    postHere.innerHTML = "";
+    let posts = [];
+    const response = await fetch("/posts/searchPosts?Search=" + document.getElementById("searchbox").value)
+        .then((response) => response.json())
+            .then((data) => posts = data);
+    for (let i = 0; i< posts['postsObjects'].length; i++){
+        const thisPostObject = {"PostID":posts['postsObjects'][i]['postid'], "Username":posts['postsObjects'][i]['username'], "Time": posts['postsObjects'][i]['time'], "Title":posts['postsObjects'][i]['title'], "Body":posts['postsObjects'][i]['body'], "Likes": posts['postsObjects'][i]['likes'], "Dislikes": posts['postsObjects'][i]['dislikes'], "Replies":posts['postsObjects'][i]['replies'],"AudioFile":posts['postsObjects'][i]['audiofile']}
+        constructPost(thisPostObject);
+    } 
+    document.getElementById("YourPostsButton").innerHTML = "";
+    //CRUD Read operation
+
 }
 
 
@@ -318,23 +340,23 @@ async function loadYourPosts(){
 
 async function deletebyID(postID){
     console.log("deleting post " + postID);
-    // const response = await fetch('/posts/likepost', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify({"PostID":postID})
-    //     }).then((res) => {
-    //         console.log(res)
-    //         if (res.ok){
-    //             console.log("Deleted post");
-    //         }
-    //         else{
-    //             window.alert("Error Deleting");
-    //         }
-    //     });
-    //CRUD Update operation
+    const response = await fetch('/posts/delete', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"PostID":postID})
+        }).then((res) => {
+            console.log(res)
+            if (res.ok){
+                console.log("Deleted post");
+            }
+            else{
+                window.alert("Error Deleting");
+            }
+        });
     //CRUD Delete Operation
+    window.location.reload();
 }
 
 function editbyID(postID){

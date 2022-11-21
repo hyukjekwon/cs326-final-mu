@@ -14,7 +14,7 @@ async function addPostToDB(post){
   db.connect()
     .then(async (obj) => {
       db.none('INSERT INTO posts(PostID, Username, Time, Title, Body, Likes, Dislikes, Replies, AudioFile, LastReplyTime) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [post["PostID"], post["Username"], post["Time"], post["Title"], post["Body"], post["Likes"], post["Dislikes"], '[]', post["AudioFile"], 0]);
-      console.log("Post Created")
+      console.log("Post Created to DB")
       obj.done();
     })
     .catch((error) => {
@@ -35,7 +35,7 @@ async function addReplyToDB(postID, reply){
     .then(async (obj) => {
       db.none('UPDATE posts SET replies = replies::jsonb || \'' + JSON.stringify(reply) + '\'::jsonb WHERE postid = '.concat(postID));
       db.none('UPDATE posts SET LastReplyTime = ' + Date.now() + 'WHERE postid = ' + postID);
-      console.log("Reply Added")
+      console.log("Reply Added to DB")
       obj.done();
     })
     .catch((error) => {
@@ -81,11 +81,28 @@ async function getLatestRepliesPageFromDB(){
   return r;
 }
 
+
+async function searchForPosts(search){
+  let filteredsearch = ""
+  for (let i = 0; i < search.length; i++){
+    if (search[i] === "'"){
+      filteredsearch += "''";
+    }
+    else{
+      filteredsearch += search[i];
+    }
+  }
+  const c = await db.connect();
+  const r = await db.any('SELECT * FROM posts WHERE LOWER(title) LIKE \'%' + filteredsearch.toLowerCase() + '%\'');
+  c.done();
+  return r;
+}
+
 async function LikeByIdDB(postID){
   db.connect()
     .then(async (obj) => {
       db.none('UPDATE posts SET likes = likes + 1 WHERE postid = ' + postID);
-      console.log("Liked post")
+      console.log("Liked post from DB")
       obj.done();
     })
     .catch((error) => {
@@ -97,7 +114,7 @@ async function DislikeByIdDB(postID){
   db.connect()
     .then(async (obj) => {
       db.none('UPDATE posts SET dislikes = dislikes + 1 WHERE postid = ' + postID);
-      console.log("Liked post")
+      console.log("Liked post from DB")
       obj.done();
     })
     .catch((error) => {
@@ -105,7 +122,19 @@ async function DislikeByIdDB(postID){
     });
 }
 
-export {addPostToDB, getFrontPageFromDB, getNewestPageFromDB, getAudioFileFromDB, addReplyToDB, getLatestRepliesPageFromDB, getUsernamesPostsFromDB, LikeByIdDB, DislikeByIdDB};
+async function DeletePostByIdDB(postID){
+  db.connect()
+    .then(async (obj) => {
+      db.none('DELETE FROM posts WHERE postid = ' + postID);
+      console.log("Deleted post from DB")
+      obj.done();
+    })
+    .catch((error) => {
+      console.log('ERROR', error.message);
+    });
+}
+
+export {addPostToDB, getFrontPageFromDB, searchForPosts, getNewestPageFromDB, getAudioFileFromDB, addReplyToDB, getLatestRepliesPageFromDB, getUsernamesPostsFromDB, LikeByIdDB, DislikeByIdDB, DeletePostByIdDB};
 
 // const res = await getFrontPageFromDB()
 // console.log(res);

@@ -3,7 +3,7 @@ import path from 'path';
 import http from 'http'; 
 import express from 'express'
 import fs, { read } from 'fs'
-import {addPostToDB, getFrontPageFromDB, getNewestPageFromDB, getAudioFileFromDB, getLatestRepliesPageFromDB, addReplyToDB, getUsernamesPostsFromDB, LikeByIdDB, DislikeByIdDB} from './database.js'
+import {addPostToDB, getFrontPageFromDB, getNewestPageFromDB, searchForPosts, getAudioFileFromDB, getLatestRepliesPageFromDB, addReplyToDB, getUsernamesPostsFromDB, LikeByIdDB, DislikeByIdDB, DeletePostByIdDB} from './database.js'
 
 
 function basicGetHandle(req, res) {
@@ -70,6 +70,19 @@ async function latestRepliesPageGetPosts(req, res){
   res.end();
 }
 
+async function searchPosts(req, res){
+    console.log("Searching for Posts");
+    res.writeHead(200, {'Content-Type': 'text/text'});
+    let postsObjects = [];
+    const getPosts = await searchForPosts(req.query.Search);
+    //console.log(getPosts)
+    getPosts.forEach(function (value) {postsObjects.push(value);});
+    let frontpageposts = {postsObjects};
+    res.write(JSON.stringify(frontpageposts));
+    res.end(); 
+  
+}
+
 async function yourPostsPageGetPosts(req, res){
   res.writeHead(200, {'Content-Type': 'text/text'});
   let postsObjects = [];
@@ -109,6 +122,15 @@ async function receivereply(req, res){
   res.end();   
 }
 
+async function deletePost(req, res){
+  //This will receive the post ID and delete the post
+  console.log("Deleting post, post ID: " + req.body["PostID"]);
+  await DeletePostByIdDB(req.body["PostID"])
+  res.writeHead(200, {'Content-Type': 'text/text'});
+  res.write("Deleted post postID: " + req.body["PostID"]);
+  res.end();   
+}
+
 async function getAudio(req, res){
   //This will receive the post ID and add 1 like to the total
   console.log("Getting audio file from post ID: " + req.query.id);
@@ -129,6 +151,7 @@ console.log("Sending File");
 
 //Will show the correct posts in the future, for now just returns all the posts
 app.get('/frontpage/posts/getPosts', (req, res) => {(frontPageGetPosts(req, res))});
+app.get('/posts/searchPosts', (req, res) => {(searchPosts(req, res))});
 app.get('/newest/posts/getPosts', (req, res) => {(newestPageGetPosts(req, res))});
 app.get('/latestReplies/posts/getPosts', (req, res) => {(latestRepliesPageGetPosts(req, res))});
 app.get('/yourPosts/posts/getPosts', (req, res) => {(yourPostsPageGetPosts(req, res))});
@@ -142,6 +165,7 @@ app.post('/posts/createPost', (req, res) => {(createPost(req, res))});
 app.post('/posts/likepost', (req, res) => {(likepost(req, res))});
 app.post('/posts/dislikepost', (req, res) => {(dislikepost(req, res))});
 app.post('/posts/reply', (req, res) => {(receivereply(req, res))});
+app.post('/posts/delete', (req, res) => {(deletePost(req, res))});
 
 
 app.listen(process.env.PORT || port, () => {
