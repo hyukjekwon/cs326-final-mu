@@ -52,6 +52,9 @@ class Looper {
     set_metronome() {
         this.metronome_sampler.volume.value = metronome_playing ? 1: -1024
     }
+    set_master_volume() {
+        Tone.Master.volume.value = (master_vol - 75) / 4;
+    }
     init_loops() {
         console.log('init loops')
         this.metronome_loop = new Tone.Loop(time => {
@@ -137,6 +140,7 @@ function init_buttons(l) {
     const mast_vol_input = document.getElementById("master-vol")
     mast_vol_input.addEventListener("input", () => {
         master_vol = mast_vol_input.value;
+        l.set_master_volume();
     });
     const bpm_input = document.getElementById("bpm")
     bpm_input.addEventListener("input", () => {
@@ -327,8 +331,6 @@ function render_note_control(layer, l_num, i_num) {
     console.log('render_note_control')
     let html ='Note: <input type="tel" placeholder='+note.note+' value='+note.note+' id="note-input">'
     html += 'Volume: <input type="range" class="form-control-range" min=0 max=100 value='+note.note_volume+' id="note-volume">'
-    // html += 'Delay: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-delay">'
-    // html += 'Reverb: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-reverb">'
     document.getElementById("note-dash-container").innerHTML = html;
     const note_input = document.getElementById("note-input");
     note_input.addEventListener("input", () => {
