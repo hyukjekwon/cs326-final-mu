@@ -3,10 +3,12 @@ import path from 'path';
 import http from 'http'; 
 import express from 'express'
 import fs, { read } from 'fs'
+import cookieParser from 'cookie-parser';
 import pg from 'pg';
 import crypto from 'crypto';
 import session from 'express-session';
 import connectPg from 'connect-pg-simple';
+//const pgSession = connectPg(session);
 
 function getSecret(key) {
   return process.env[key] || require('secrets.json')[key];
