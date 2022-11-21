@@ -342,11 +342,11 @@ app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 const port = 80;
 app.use(express.static(path.dirname('')));
-app.use(sessions({
+app.use(session({
   secret: 'nonprodsecret',
   saveuninitialized: true,
   resave: false
-}))
+}));
 
 //Will show the correct posts in the future, for now just returns all the posts
 app.get('/frontpage/posts/getPosts', (req, res) => {(frontPageGetPosts(req, res))});
