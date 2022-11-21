@@ -168,7 +168,7 @@ function basicGetHandle(req, res) {
 }
 function userRegister(req, res) {
   const username = req.body.username;
-  connectionString = getSecret('DATABASE_URL');
+  const connectionString = getSecret('DATABASE_URL');
   // connect to db using pg
   const client = new pg.Client({connectionString, tls: {rejectUnauthorized: false}});
   client.connect();
@@ -204,7 +204,7 @@ function userRegister(req, res) {
 function userLogin(req, res) {
   const username = req.body.username;
   const password = req.body.password;
-  connectionString = getSecret('DATABASE_URL');
+  const connectionString = getSecret('DATABASE_URL');
   // connect to db using pg
   const client = new pg.Client({connectionString, tls: {rejectUnauthorized: false}});
   client.connect();
