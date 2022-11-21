@@ -204,8 +204,7 @@ function userRegister(req, res) {
     // create salt, hash password, add to database
     const salt = crypto.randomBytes(64).toString('ascii');
     const hash = crypto.createHash('sha256').update(salt + req.body.password).digest('ascii');
-    console.log('salt: ' + salt);
-    console.log('hash: ' + hash);
+    console.log('username, salt, hash:', [username, salt, hash])
     client.query('INSERT INTO users (username, salt, hash) VALUES ($1, $2, $3)', [username, salt, hash], (err, result) => {
       if (err) {
         console.error(err.stack);
