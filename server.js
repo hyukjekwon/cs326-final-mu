@@ -363,7 +363,7 @@ app.get('/register', basicRegisterHandle);
 app.get('/login', basicLoginHandle);
 app.post('/userregister', userRegister);
 app.post('/userlogin', userLogin);
-app.get('/loggedintest', (req, res) => {
+app.get('/sessiontest', (req, res) => {
   console.log("Logged in test");
   const session = req.session;
   console.log(session)
