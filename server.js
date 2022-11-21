@@ -6,6 +6,10 @@ import fs, { read } from 'fs'
 import session from 'express-session';
 import connectPg from 'connect-pg-simple';
 
+function getSecret(key) {
+  return process.env[key] || require('secrets.json')[key];
+}
+
 //Fake data for posts, this is the format they will use
 let fakedatapostslist1 = {
   '1668023535539': {
