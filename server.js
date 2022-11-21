@@ -3,6 +3,8 @@ import path from 'path';
 import http from 'http'; 
 import express from 'express'
 import fs, { read } from 'fs'
+import pg from 'pg';
+import crypto from 'crypto';
 import session from 'express-session';
 import connectPg from 'connect-pg-simple';
 
