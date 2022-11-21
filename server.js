@@ -360,8 +360,8 @@ app.post('/posts/createPost', (req, res) => {(createPost(req, res))});
 app.post('/posts/likepost', (req, res) => {(likepost(req, res))});
 app.post('/posts/dislikepost', (req, res) => {(dislikepost(req, res))});
 app.post('/posts/reply', (req, res) => {(receivereply(req, res))});
-app.post('/register', userRegister);
-app.post('/login', userLogin);
+app.post('/userregister', userRegister);
+app.post('/userlogin', userLogin);
 
 app.listen(process.env.PORT || port, () => {
   console.log(`Example app listening on port ${port}`);
