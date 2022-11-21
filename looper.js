@@ -25,6 +25,7 @@ class Looper {
             },
             baseUrl: "/samples/"
         }).toDestination();
+        this.synth = new Tone.PolySynth().toDestination();
         this.metronome_loop = new Tone.Loop(time => {
             this.metronome_sampler.triggerAttack(time)
         }, '4n')
@@ -70,7 +71,11 @@ class Looper {
         for (const layer of this.layers) {
             const note = layer.sequence[time];
             if (note) {
-                this.sampler.triggerAttack(sample_lookup[layer.sample], Tone.now());
+                if (layer.sample.startsWith("synth")) {
+                    this.synth.triggerAttackRelease(note.note, "8n");
+                } else {
+                    this.sampler.triggerAttack(sample_lookup[layer.sample], Tone.now());
+                }
             }
         }
     }
@@ -312,8 +317,8 @@ function render_note_control(note) {
     console.log('render_note_control')
     let html ='Note: <input type="tel" placeholder='+note.note+' value='+note.note+' id="note-input">'
     html += 'Volume: <input type="range" class="form-control-range" min=0 max=100 value='+note.note_volume+' id="note-volume">'
-    html += 'Delay: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-delay">'
-    html += 'Reverb: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-reverb">'
+    // html += 'Delay: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-delay">'
+    // html += 'Reverb: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-reverb">'
     document.getElementById("note-dash-container").innerHTML = html;
     const note_input = document.getElementById("note-input");
     note_input.addEventListener("input", () => {
