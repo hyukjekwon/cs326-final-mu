@@ -3,7 +3,8 @@ import path from 'path';
 import http from 'http'; 
 import express from 'express'
 import fs, { read } from 'fs'
-
+import session from 'express-session';
+import connectPg from 'connect-pg-simple';
 
 //Fake data for posts, this is the format they will use
 let fakedatapostslist1 = {
@@ -152,6 +153,31 @@ let fakedatapostslist2 = {
     Dislikes: 7,
     Replies: [{"NewUsername":"Nice!"},{"OtherUsername":"Cool!"}],
     AudioFile: './uploads/cantina.txt'
+  }
+}
+function userRegister(req, res) {
+  console.log(req.body);
+  const username = req.body.username;
+  res.writeHead(200, {'Content-Type': 'text/text'});
+  const connectionString = getSecret('DATABASE_URL');
+  const client = new pg.Client({connectionString});
+  client.connect();
+  client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
+    if (err) {
+      console.error(err.stack);
+      res.end('error1');
+      return;
+    }
+    if (result.rows.length) {
+      res.end('username taken');
+      return
+    }
+    // create salt
+    const salt = crypto.randomBytes(64).toString('ascii');
+    // create hash
+    const hash = crypto.pbkdf2Sync(req.body.password, salt, 10000, 64, 'sha512').toString('ascii');
+
+    client.query('INSERT INTO users (username, salt, hash) VALUES ($1, $2, $3)', [username, req.body.salt, req.body.hash], (err, result) => {
   }
 }
 function basicGetHandle(req, res) {
