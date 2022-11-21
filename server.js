@@ -211,7 +211,7 @@ function userRegister(req, res) {
         res.write('<p>error2, please try again</p>');
         return;
       }
-      res.write(String.raw`<h1>Succesfully registered</h1>`);
+      res.write(`<h1>Succesfully registered ${username}</h1>`);
     });
   });
   res.end();
