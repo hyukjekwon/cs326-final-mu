@@ -170,7 +170,7 @@ function userRegister(req, res) {
   const username = req.body.username;
   const connectionString = getSecret('DATABASE_URL');
   // connect to db using pg
-  const client = new pg.Client({connectionString, tls: {rejectUnauthorized: false}});
+  const client = new pg.Client({connectionString, ssl: {rejectUnauthorized: false}});
   client.connect();
   // check if username is already taken
   client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
@@ -206,7 +206,7 @@ function userLogin(req, res) {
   const password = req.body.password;
   const connectionString = getSecret('DATABASE_URL');
   // connect to db using pg
-  const client = new pg.Client({connectionString, tls: {rejectUnauthorized: false}});
+  const client = new pg.Client({connectionString, ssl: {rejectUnauthorized: false}});
   client.connect();
   // check if username is already taken
   client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
