@@ -7,6 +7,8 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import pg from 'pg';
 import crypto from 'crypto';
+import connectPg from 'connect-pg-simple';
+//const pgSession = connectPg(session);
 
 //Fake data for posts, this is the format they will use
 let fakedatapostslist1 = {
@@ -187,7 +189,7 @@ function userRegister(req, res) {
   client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
     if (err) {
       console.error(err.stack);
-      res.send('<p>There was an error, please try again</p>');
+      res.send('<p>There was an error1, please try again</p>');
       return;
     }
     
@@ -201,10 +203,11 @@ function userRegister(req, res) {
     // create salt, hash password, add to database
     const salt = crypto.randomBytes(64).toString('ascii');
     const hash = crypto.createHash('sha256').update(salt + req.body.password).digest('ascii');
+    console.log('username, salt, hash:', [username, salt, hash]);
     client.query('INSERT INTO users (username, salt, hash) VALUES ($1, $2, $3)', [username, salt, hash], (err, result) => {
       if (err) {
         console.error(err.stack);
-        res.write('<p>There was an error, please try again</p>');
+        res.write('<p>There was an error2, please try again</p>');
         return;
       }
       res.write(String.raw`<h1>Succesfully registered ${username}</h1>`);
@@ -213,10 +216,41 @@ function userRegister(req, res) {
   //res.end();
 }
 function userLogin(req, res) {
+  console.log('logging in user');
   res.writeHead(200, {'Content-Type': 'text/html'});
   res.write(`<h1>Username: ${req.body.username}</h1>`);
   res.write(`<h1>Password: ${req.body.password}</h1>`);
   res.end();
+  const connectionString = getSecret('DATABASE_URL');
+  const client = new pg.Client({
+    connectionString,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  });
+  client.connect();
+  client.query('SELECT * FROM users WHERE username = $1', [req.body.username], (err, result) => {
+    if (err) {
+      console.error(err.stack);
+      res.write('<p>There was an error, please try again</p>');
+      return;
+    }
+    if (!result.rows.length) {
+      res.write('<p>Username does not exist</p>');
+      return;
+    }
+    const salt = result.rows[0].salt;
+    const hash = crypto.createHash('sha256').update(req.body.password + salt).digest('ascii');
+    if (hash === result.rows[0].hash) {
+      req.session.username = req.body.username;
+      res.write('<p>Successfully logged in</p>');
+      return;
+    }
+    else {
+      res.write('<p>Incorrect password</p>');
+      return;
+    }
+  });
 }
 function createPost(req, res) {
     //console.log(req.body);     
@@ -355,6 +389,18 @@ app.get('/looper', basicLooperHandle);
 app.get('/posts/getAudioFile', getAudio);
 app.get('/login', loginHandle);
 app.get('/register', registerHandle);
+app.get('/loggedintest', (req, res) => {
+  const sesh = req.session;
+  console.log(sesh);
+  res.writeHead(200, {'Content-Type': 'text/text'});
+  if (sesh.userId) {
+    res.write('Logged in as ' + sesh.userId);
+  }
+  else {
+    res.write('Not logged in');
+  }
+  res.end();
+})
 app.post('/userlogin', userLogin);
 app.post('/userregister', userRegister);
 app.post('/posts/createPost', createPost);

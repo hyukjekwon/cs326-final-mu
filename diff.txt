@@ -1,0 +1,157 @@
+diff --git a/procfile b/Procfile
+similarity index 100%
+rename from procfile
+rename to Procfile
+diff --git a/package.json b/package.json
+index d4b293e..223ff78 100644
+--- a/package.json
++++ b/package.json
+@@ -4,6 +4,7 @@
+ 		"cookie-parser": "^1.4.6",
+ 		"express": "^4.18.2",
+ 		"express-session": "^1.17.3",
+-		"pg": "^8.8.0"
++		"pg": "^8.8.0",
++		"connect-pg-simple": "^8.0.0"
+ 	}
+ }
+diff --git a/server.js b/server.js
+index 2886d15..124aae1 100644
+--- a/server.js
++++ b/server.js
+@@ -4,9 +4,11 @@ import http from 'http';
+ import express from 'express'
+ import fs, { read } from 'fs'
+ import cookieParser from 'cookie-parser';
+-import session from 'express-session';
+ import pg from 'pg';
+ import crypto from 'crypto';
++import session from 'express-session';
++import connectPg from 'connect-pg-simple';
++//const pgSession = connectPg(session);
+ 
+ //Fake data for posts, this is the format they will use
+ let fakedatapostslist1 = {
+@@ -173,8 +175,9 @@ function userRegister(req, res) {
+   // check if user exists in database
+   // if so, alert user that username is taken
+   // if not, add user to database
++  console.log(req.body);
+   const username = req.body.username;
+-  //res.writeHead(200, {'Content-Type': 'text/html'});
++  res.writeHead(200, {'Content-Type': 'text/html'});
+ 
+   const connectionString = getSecret('DATABASE_URL');
+   const client = new pg.Client({
+@@ -187,7 +190,7 @@ function userRegister(req, res) {
+   client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
+     if (err) {
+       console.error(err.stack);
+-      res.send('<p>There was an error, please try again</p>');
++      res.send('<p>error1, please try again</p>');
+       return;
+     }
+     
+@@ -201,22 +204,56 @@ function userRegister(req, res) {
+     // create salt, hash password, add to database
+     const salt = crypto.randomBytes(64).toString('ascii');
+     const hash = crypto.createHash('sha256').update(salt + req.body.password).digest('ascii');
++    console.log('username, salt, hash:', [username, salt, hash])
+     client.query('INSERT INTO users (username, salt, hash) VALUES ($1, $2, $3)', [username, salt, hash], (err, result) => {
+       if (err) {
+         console.error(err.stack);
+-        res.write('<p>There was an error, please try again</p>');
++        res.write('<p>error2, please try again</p>');
+         return;
+       }
+-      res.write(String.raw`<h1>Succesfully registered ${username}</h1>`);
++      res.write('<h1>Succesfully registered ${username}</h1>');
+     });
+   });
+-  //res.end();
++  res.end();
+ }
+ function userLogin(req, res) {
++  console.log('logging in user');
+   res.writeHead(200, {'Content-Type': 'text/html'});
+-  res.write(`<h1>Username: ${req.body.username}</h1>`);
+-  res.write(`<h1>Password: ${req.body.password}</h1>`);
+-  res.end();
++  const connectionString = getSecret('DATABASE_URL');
++  const client = new pg.Client({
++    connectionString,
++    ssl: {
++      rejectUnauthorized: false
++    }
++  });
++  client.connect();
++  client.query('SELECT * FROM users WHERE username = $1', [req.body.username], (err, result) => {
++    if (err) {
++      console.error(err.stack);
++      res.write('<p>There was an error, please try again</p>');
++      return;
++    }
++    if (!result.rows.length) {
++      res.write('<p>Username does not exist</p>');
++      return;
++    }
++    const salt = result.rows[0].salt;
++    const hash = crypto.createHash('sha256').update(req.body.password + salt).digest('ascii');
++    if (hash === result.rows[0].hash) {
++      req.session.username = req.body.username;
++      res.write('<p>Successfully logged in</p>');
++      return;
++    }
++    else {
++      res.write('<p>Incorrect password</p>');
++      return;
++    }
++  });
++
++
++  // res.write(`<h1>Username: ${req.body.username}</h1>`);
++  // res.write(`<h1>Password: ${req.body.password}</h1>`);
++  // res.end();
+ }
+ function createPost(req, res) {
+     //console.log(req.body);     
+@@ -334,11 +371,17 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+ const port = 80;
+ app.use(express.static(path.dirname('')));
+ console.log("Sending File");
+-app.use(session({
+-  secret: 'test_secret_not_for_prod',
++/*app.use(session({
++  store: new pgSession({
++    conString: getSecret('DATABASE_URL'),
++    ssl: {
++      rejectUnauthorized: false
++    }
++  }),
++  secret: 'test_secret_not_for_prod', // put in env variable
+   saveUninitialized: true,
+   resave: false
+-}))
++}))*/
+ app.use(cookieParser());
+ const [user, pass] = ['user', 'pass']; // replace with db/env variable
+ 
+@@ -355,6 +398,18 @@ app.get('/looper', basicLooperHandle);
+ app.get('/posts/getAudioFile', getAudio);
+ app.get('/login', loginHandle);
+ app.get('/register', registerHandle);
++app.get('/loggedintest', (req, res) => {
++  const sesh = req.session;
++  console.log(sesh);
++  res.writeHead(200, {'Content-Type': 'text/text'});
++  if (sesh.userId) {
++    res.write('Logged in as ' + sesh.userId);
++  }
++  else {
++    res.write('Not logged in');
++  }
++  res.end();
++})
+ app.post('/userlogin', userLogin);
+ app.post('/userregister', userRegister);
+ app.post('/posts/createPost', createPost);
