@@ -4,6 +4,11 @@ let master_vol = 75; // between 0 and 100
 let metronome_playing = false;
 let num_notes = 16;
 let num_layers = 6;
+const sample_lookup = {
+    "kick.wav": "A1",
+    "hihat.wav": "A2",
+    "snare.wav": "A3"
+};
 
 class Looper {
     constructor() {
@@ -47,12 +52,13 @@ class Looper {
         this.metronome_sampler.volume.value = metronome_playing ? 1: -1024
     }
     init_loops() {
+        console.log('init loops')
         this.metronome_loop = new Tone.Loop(time => {
             this.metronome_sampler.triggerAttack('C4', time);
-            this.render_itvls(this.cursor);
-        }, '4n');
+            this.play_itvls(this.cursor);
+        }, '8n');
     }
-    render_itvls(cursor) {
+    play_itvls(cursor) {
         const time = cursor["time"];
         for (const dom of document.getElementsByClassName("itvl-" + time)) {
             dom.classList.add("itvl-cursor");
@@ -61,6 +67,12 @@ class Looper {
             dom.classList.remove("itvl-cursor");
         }
         cursor["time"] = (time + 1) % num_notes;
+        for (const layer of this.layers) {
+            const note = layer.sequence[time];
+            if (note) {
+                this.sampler.triggerAttack(sample_lookup[layer.sample], Tone.now());
+            }
+        }
     }
     async play_pause() {
         if (this.playing) {
@@ -182,7 +194,8 @@ function init_layers(l) {
         const dropdown_item = document.getElementById(sample+"-"+0);
         dropdown_item.addEventListener("click", (e) => {
             console.log('dropdown clicked')
-            l.layers[0].sample = sample + '.wav'
+            l.layers[0].change_sample(sample + '.wav');
+            console.log(l.layers)
             document.getElementById("dropdown-menu-"+0).innerText = sample;
         });
     }
@@ -274,7 +287,7 @@ function render_layers(l) {
                     const dropdown_item = document.getElementById(sample+"-"+i);
                     dropdown_item.addEventListener("click", (e) => {
                         console.log('dropdown clicked')
-                        l.layers[i].sample = sample + '.wav'
+                        l.layers[i].change_sample(sample + '.wav');
                         document.getElementById("dropdown-menu-"+i).innerText = sample;
                     });
                 }
