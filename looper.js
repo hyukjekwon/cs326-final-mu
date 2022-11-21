@@ -2,18 +2,43 @@ import {Layer, Note} from './layer.js';
 
 let master_vol = 75; // between 0 and 100
 let metronome_playing = false;
-let changes_made = false;
+let num_notes = 16;
+let num_layers = 6;
+const sample_lookup = {
+    "kick.wav": "A1",
+    "hihat.wav": "A2",
+    "snare.wav": "A3"
+};
 
 class Looper {
     constructor() {
-        this.layers = [new Layer("Kick.wav")];
+        this.layers = [new Layer("kick.wav", num_notes)];
         this.bpm = 120;
         this.playing = false;
         this.interval;
         this.cursor = {"time": 0}; // obj to alter by reference
+        this.sampler = new Tone.Sampler({
+            urls: {
+                A1: "kick.wav",
+                A2: "hihat.wav",
+                A3: "snare.wav"
+            },
+            baseUrl: "/samples/"
+        }).toDestination();
+        this.synth = new Tone.PolySynth().toDestination();
+        this.metronome_loop = new Tone.Loop(time => {
+            this.metronome_sampler.triggerAttack(time)
+        }, '4n')
+        this.metronome_sampler = new Tone.Sampler({
+            urls: {
+                C4: "metronome.wav"
+            },
+            baseUrl: "/samples/"
+        }).toDestination()
+        this.metronome_sampler.volume.value = -1024;
     }
     add_layer(sample) {
-        this.layers.push(new Layer(sample));
+        this.layers.push(new Layer(sample, num_notes));
     }
     remove_layer(index) {
         if (this.layers.length > 1) {
@@ -22,63 +47,63 @@ class Looper {
     }
     set_bpm_and_period(bpm) {
         this.bpm = bpm;
-        if (this.playing) {
-            clearInterval(this.interval);
-            this.interval = setInterval(this.play_interval, 30000 / this.bpm, this.layers, this.cursor);
-        }
+        Tone.Transport.bpm.value = bpm;
     }
-    play_interval(layers, cursor) {
+    set_metronome() {
+        this.metronome_sampler.volume.value = metronome_playing ? 1: -1024
+    }
+    init_loops() {
+        console.log('init loops')
+        this.metronome_loop = new Tone.Loop(time => {
+            this.metronome_sampler.triggerAttack('C4', time);
+            this.play_itvls(this.cursor);
+        }, '8n');
+    }
+    play_itvls(cursor) {
         const time = cursor["time"];
-        if (metronome_playing) { // metronome setup
-            if (!(time % 2)) {
-                const metronome = new Tone.Player("/samples/metronome.wav").toDestination();
-                metronome.volume.value = (master_vol - 90) / 2;
-                metronome.autostart = true;
+        for (const dom of document.getElementsByClassName("itvl-" + time)) {
+            dom.classList.add("itvl-cursor");
+        }
+        for (const dom of document.getElementsByClassName("itvl-" + (time+num_notes-1)%num_notes)) {
+            dom.classList.remove("itvl-cursor");
+        }
+        cursor["time"] = (time + 1) % num_notes;
+        for (const layer of this.layers) {
+            const note = layer.sequence[time];
+            if (note) {
+                if (layer.sample.startsWith("synth")) {
+                    if (note.is_valid()) {
+                        this.synth.triggerAttackRelease(note.note, "8n");
+                    }
+                } else {
+                    this.sampler.triggerAttack(sample_lookup[layer.sample], Tone.now());
+                }
             }
         }
-        layers.forEach(layer => { // iterate through layers
-            const itvl = layer.sequence[time];
-            if (itvl) { // if note is active
-                let note;
-                const layer_vol = (layer.layer_volume["vol"] - 30) / 2
-                if (layer.sample === "synth.wav") { // if synth
-                    note = new Tone.Synth().toDestination();
-                    note.triggerAttackRelease(itvl.note, itvl.duration + "n")
-                } else {
-                    note = new Tone.Player("/samples/" + layer.sample).toDestination();
-                    note.autostart = true;
-                }
-                note.volume.value = layer_vol - (100 - master_vol) / 2;
-            }
-            for (const dom of document.getElementsByClassName("itvl-" + time)) {
-                dom.classList.add("itvl-cursor");
-            }
-            for (const dom of document.getElementsByClassName("itvl-" + (time+15)%16)) {
-                dom.classList.remove("itvl-cursor");
-            }
-        });
-        cursor["time"] = (time + 1) % 16;
     }
-    play_pause() {
+    async play_pause() {
         if (this.playing) {
             console.log("pause");
-            clearInterval(this.interval);
+            this.metronome_loop.dispose();
+            Tone.Transport.stop();
+            Tone.Transport.clear(0);
             this.playing = false;
             this.cursor = {"time": 0};
             for (const dom of document.getElementsByClassName("itvl")) {
                 dom.classList.remove("itvl-cursor");
             }
         } else {
-            Tone.start();
+            this.init_loops();
+            this.metronome_loop.start(0);
+            Tone.Transport.start(Tone.now());
             console.log("play");
-            this.interval = setInterval(this.play_interval, 30000 / this.bpm, this.layers, this.cursor);
             this.playing = true;
         }
     }
 }
 
 function init_key_presses(l) {
-    document.addEventListener("keyup", (e) => {
+    document.addEventListener("keyup", async e => {
         if (e.code === "Space") {
             l.play_pause();
         }
@@ -88,12 +113,12 @@ function init_key_presses(l) {
 
 /* INITIALIZES ALL BUTTON EVENT LISTENERS */
 function init_buttons(l) {
-    document.getElementById("play").addEventListener("mouseup", () => {
+    console.log('init_buttons')
+    document.getElementById("play").addEventListener("mouseup", async () => {
         l.play_pause();
     })
     document.getElementById("add-button").addEventListener("click", () => {
         l.add_layer("kick.wav");
-        changes_made = true;
         render_layers(l);
     })
     const layer_vol_inputs = document.getElementsByClassName("layer-volume");
@@ -106,7 +131,6 @@ function init_buttons(l) {
     for (const dom of remove_buttons) {
         dom.addEventListener("click", () => {
             l.remove_layer(dom.id.split('-')[1])
-            changes_made = true;
             render_layers(l);
         });
     }
@@ -127,15 +151,16 @@ function init_buttons(l) {
             metro_btn.classList.remove("btn-danger")
             metronome_playing = false;
         }
+        l.set_metronome()
     });
 }
 
 function init_active_layer(i, l) {
+    console.log('init_active_layer')
     let html = '<div class="layer-info d-flex flex-column">'
-    // html += '<div class="layer-label">Layer '+i+'</div>'
-    html += '<div class="dropdown" id="drop'+i+'"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdown-menu-'+i+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+    html += '<div class="dropdown" id="drop'+i+'"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdown-menu-'+i+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
     html += l.layers[i].sample.split('.')[0] + '</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">'
-    html += '<a class="dropdown-item" id="Kick-'+i+'">Kick</a><a class="dropdown-item" id="Hihat-'+i+'">Hihat</a><a class="dropdown-item" id="Snare-'+i+'">Snare</a><a class="dropdown-item" id="synth-'+i+'">synth</a></div></div>'
+    html += '<a class="dropdown-item" id="kick-'+i+'">kick</a><a class="dropdown-item" id="hihat-'+i+'">hihat</a><a class="dropdown-item" id="snare-'+i+'">snare</a><a class="dropdown-item" id="synth-'+i+'">synth</a></div></div>'
     html += '<div>V: <input type="range" class="form-control-range layer-volume" min=0 max=100 value-50 id="volume-'+i+'"></div>'
     html += '<button class="rem btn btn-secondary btn-sm" type="submit" id="rem-'+i+'">Remove</button></div>'
     html += '<div class="sequence" id="seq'+i+'"></div>'
@@ -143,9 +168,13 @@ function init_active_layer(i, l) {
 }
 
 function init_layers(l) {
+    console.log('init_layers')
     let active_layers = l.layers.length;
-    for (let i = 0; i < 4; i++) {
-        const layer = document.getElementById("layer-" + (i + 1));
+    for (let i = 0; i < num_layers; i++) {
+        // const layer = document.getElementById("layer-" + (i + 1));
+        const layer = document.createElement("div");
+        layer.id = "layer-" + (i + 1);
+        document.getElementById("layer-panel").appendChild(layer);
         layer.classList.add("layer");
         if (active_layers < 1) {
             if (active_layers === 0) {
@@ -154,23 +183,33 @@ function init_layers(l) {
             layer.classList.add("inactive");
         } else {
             layer.innerHTML = init_active_layer(i, l);
+            const remove_button = document.getElementById("rem-"+i);
+            remove_button.addEventListener("mouseenter", () => {
+                remove_button.classList.add('btn-danger');
+            });
+            remove_button.addEventListener("mouseleave", () => {
+                remove_button.classList.remove('btn-danger');
+            });
         }
         active_layers -= 1;
     }
-    for (const sample of ["Kick", "Snare", "Hihat", "synth"]) {
+    for (const sample of ["kick", "snare", "hihat", "synth"]) {  // init samples
         const dropdown_item = document.getElementById(sample+"-"+0);
-        dropdown_item.addEventListener("click", (e) => {
-            l.layers[0].sample = sample + '.wav'
+        dropdown_item.addEventListener("click", () => {
+            console.log('dropdown clicked')
+            l.layers[0].change_sample(sample + '.wav');
             document.getElementById("dropdown-menu-"+0).innerText = sample;
         });
     }
 }
 
+/* With the looper class as input, this function renders every sequence. */
 function render_sequences(l) {
-    for (let i = 0; i < l.layers.length; i++) {
-        const sequence = document.getElementById("seq" + i)
-        if (sequence.childNodes.length === 0) {
-            for (let j = 0; j < 16; j++) {
+    console.log('render_sequences')
+    for (let i = 0; i < l.layers.length; i++) {  // iterate over every layer
+        const sequence = document.getElementById("seq" + i)  // select corres. sequence dom
+        if (sequence.childNodes.length === 0) {  // if it's an empty sequence
+            for (let j = 0; j < num_notes; j++) {  // iterate over every interval in the sequence
                 const interval = document.createElement("div");
                 interval.classList.add("itvl");
                 interval.classList.add("itvl-"+j);
@@ -180,36 +219,44 @@ function render_sequences(l) {
                 interval.addEventListener("mouseleave", () => {
                     interval.classList.remove("itvl-hover");
                 });
-                interval.addEventListener("click", (e) => {
+                interval.addEventListener("click", () => {
                     if (interval.classList.contains("itvl-activated")) {
                         l.layers[i].sequence[j] = 0;
                         interval.classList.remove("itvl-activated");
+                        interval.innerHTML = "";
                     } else {
                         l.layers[i].sequence[j] = l.layers[i].sequence[j]? l.layers[i].sequence[j]: new Note("C4");
                         interval.classList.add("itvl-activated");
                         if (l.layers[i].sequence[j]) {
-                            render_note_control(l.layers[i].sequence[j])
+                            render_note_control(l.layers[i], i, j);
+                            if (l.layers[i].sample === "synth.wav") {
+                                render_synth_note(interval, l.layers[i].sequence[j].note);
+                            }
                         }
                     }
                 });
                 interval.addEventListener("contextmenu", (e) => {
                     e.preventDefault();
                     if (l.layers[i].sequence[j]) {
-                        render_note_control(l.layers[i].sequence[j])
+                        render_note_control(l.layers[i], i, j)
                     }
                 });
                 sequence.appendChild(interval);
             }
         } else { // existing sequence
-            for (let j = 0; j < 16; j++) {
+            for (let j = 0; j < num_notes; j++) {  // iterate over every interval
                 const interval = sequence.childNodes[j];
                 if (l.layers[i].sequence[j]) {  // if the note is active
                     if (!interval.classList.contains("itvl-activated")) {
                         interval.classList.add("itvl-activated");
+                        if (l.layers[i].sample === "synth.wav") {
+                            render_synth_note(interval, l.layers[i].sequence[j].note);
+                        }
                     }
                 } else {  // if the note is empty
                     if (interval.classList.contains("itvl-activated")) {
                         interval.classList.remove("itvl-activated");
+                        interval.innerHTML = "";
                     }
                 }
             }
@@ -217,10 +264,12 @@ function render_sequences(l) {
     }
 }
 
+/* Takes in looper class and renders each layer. Invokes render_sequences. */
 function render_layers(l) {
+    console.log('render_layers')
     let active_layers = l.layers.length;
     const layers = document.getElementsByClassName("layer");
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < num_layers; i++) {
         const layer = layers[i];
         if (active_layers < 1) {  // if layer is inactive
             if (active_layers === 0) {  // set button for topmost inactive layer
@@ -234,15 +283,21 @@ function render_layers(l) {
                 layer.classList.remove("inactive");
                 layer.innerHTML = init_active_layer(i, l);
                 const remove_button = document.getElementById("rem-"+i);
-                remove_button.addEventListener("click", (e) => {
+                remove_button.addEventListener("click", () => {
                     l.remove_layer(i);
-                    changes_made = true;
                     render_layers(l);
                 });
-                for (const sample of ["Kick", "Snare", "Hihat", "synth"]) {
+                remove_button.addEventListener("mouseenter", () => {
+                    remove_button.classList.add('btn-danger');
+                });
+                remove_button.addEventListener("mouseleave", () => {
+                    remove_button.classList.remove('btn-danger');
+                });
+                for (const sample of ["kick", "snare", "hihat", "synth"]) {
                     const dropdown_item = document.getElementById(sample+"-"+i);
                     dropdown_item.addEventListener("click", (e) => {
-                        l.layers[i].sample = sample + '.wav'
+                        console.log('dropdown clicked')
+                        l.layers[i].change_sample(sample + '.wav');
                         document.getElementById("dropdown-menu-"+i).innerText = sample;
                     });
                 }
@@ -254,27 +309,34 @@ function render_layers(l) {
         }
         active_layers -= 1;
     }
-    if (changes_made) {
-        render_sequences(l);
-        changes_made = false;
-    }
+    render_sequences(l);
     if (document.getElementById("add-button")) {
-        document.getElementById("add-button").addEventListener("click", (e) => {
+        document.getElementById("add-button").addEventListener("click", () => {
             l.add_layer("kick.wav");
             render_layers(l);
         });
     }
 }
 
-function render_note_control(note) {
+function render_synth_note(itvl, note) {
+    return itvl.innerHTML = `<div class="synth_note">${note}<\div>`;
+}
+
+function render_note_control(layer, l_num, i_num) {
+    let note = layer.sequence[i_num];
+    console.log('render_note_control')
     let html ='Note: <input type="tel" placeholder='+note.note+' value='+note.note+' id="note-input">'
     html += 'Volume: <input type="range" class="form-control-range" min=0 max=100 value='+note.note_volume+' id="note-volume">'
-    html += 'Delay: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-delay">'
-    html += 'Reverb: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-reverb">'
-    document.getElementById("note-control-panel-container").innerHTML = html;
+    // html += 'Delay: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-delay">'
+    // html += 'Reverb: <input type="range" class="form-control-range" min=0 max=100 value=0 id="note-reverb">'
+    document.getElementById("note-dash-container").innerHTML = html;
     const note_input = document.getElementById("note-input");
-    note_input.addEventListener("keyup", () => {
+    note_input.addEventListener("input", () => {
         note.note = note_input.value;
+        if (layer.sample === 'synth.wav') {
+            const itvl = document.getElementById(`seq${l_num}`).childNodes[i_num];
+            render_synth_note(itvl, note.note);
+        }
     });
     const volume_slider = document.getElementById("note-volume");
     volume_slider.addEventListener("input", () => {
@@ -283,6 +345,7 @@ function render_note_control(note) {
 }
 
 function init_all() {
+    console.log('init_all')
     let l = new Looper();
     init_layers(l);
     init_key_presses(l);

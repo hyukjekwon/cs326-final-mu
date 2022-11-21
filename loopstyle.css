@@ -45,7 +45,6 @@ input[type="range"] {
 .panel-label {
     background-color:rgba(0, 0, 0, 0.2);
     color: white;
-    mix-blend-mode: overlay;
     text-align: center;
     font-size: large;
     width: 100%;
@@ -61,7 +60,6 @@ input[type="range"] {
     flex-direction: row;
     text-align: center;
     max-height: 25%;
-    pointer-events: auto;
 }
 
 .layer-volume {
@@ -74,18 +72,15 @@ input[type="range"] {
     display: flex;
     justify-content: center;
     align-items: center;
+    max-height: 25%;
 }
 
 .layer-info {
-    flex-basis: 0;
     min-width: 22%;
     background-color: rgba(255, 255, 255, 0.34);
-    mix-blend-mode: overlay;
-    pointer-events: auto;
     color: black;
     position: relative;
     padding-top: 15px;
-    pointer-events: none;
 }
 
 /* .layer-label {
@@ -97,18 +92,12 @@ input[type="range"] {
     pointer-events: none;
 } */
 
-.dropdown {
-    pointer-events: none;
-}
-
 .dropdown-toggle {
-    pointer-events: all;
-    z-index: 0;
+    opacity: 100%;
 }
 
 .dropdown-menu {
-    pointer-events: all;
-    z-index: 9999;
+    background-color: white;
 }
 
 .sequence {
@@ -120,32 +109,37 @@ input[type="range"] {
 
 .itvl {
     flex-grow: 1;
+    display: flex;
     border-left: solid;
     border-color: black;
     border-width: 1px;
     background-color: transparent;
-    mix-blend-mode: overlay;
-}
-
-.itvl-hover {
-    background-color: rgb(104, 104, 104);
+    max-width: 6.25%;
 }
 
 .itvl-cursor {
-    background-color: rgb(167, 167, 167);
+    background-color: rgb(176, 145, 175);
     border-color: white;
 }
 
+.itvl-hover {
+    background-color: rgb(119, 90, 123);
+}
+
 .itvl-activated {
-    background-color: rgb(57, 57, 57);
+    background-color: rgb(102, 56, 89);
+    align-items: center;
+}
+
+.synth_note {
+    width: 100%;
 }
 
 .rem {
-    pointer-events: all;
-    position: absolute;
+    margin-top: auto;
     width: 100%;
     bottom: 0;
-    z-index: -1;
+    border-radius: 0;
 }
 
 #master-vol, #bpm, #play {
@@ -176,9 +170,8 @@ input[type="range"] {
     margin: 10px 10px 0px 0px;
 }
 
-#note-control-panel-container {
-    /* max-height: fit-content; */
-    margin: auto;
+#note-dash-container {
+    margin: 10px;
 }
 
 #layer-panel {
@@ -192,11 +185,18 @@ input[type="range"] {
     min-height: 60%;
 }
 
+#master-dash-container {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #master-vol {
     width: 80%;
 }
 
 #save-post {
-    align-self: auto;
-    margin: 30px;
+    margin-top: auto;
+    margin-bottom: 10px
 }
