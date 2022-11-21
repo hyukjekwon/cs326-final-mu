@@ -218,6 +218,7 @@ function userLogin(req, res) {
       res.end('username not found/password incorrect 2');
       return
     }
+    req.session.username = username;
     res.end('success, do session stuff here');
   });
 }
@@ -366,8 +367,8 @@ app.get('/loggedintest', (req, res) => {
   console.log("Logged in test");
   const session = req.session;
   console.log(session)
-  if (session.userid) {
-    res.send("you are " + session.userid);
+  if (session.username) {
+    res.send("you are " + session.username);
   }
   else {
     res.send("you are not logged in");
