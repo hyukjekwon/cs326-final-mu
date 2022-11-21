@@ -160,7 +160,7 @@ function userRegister(req, res) {
   const username = req.body.username;
   res.writeHead(200, {'Content-Type': 'text/text'});
   const connectionString = getSecret('DATABASE_URL');
-  const client = new pg.Client({connectionString});
+  const client = new pg.Client({connectionString, ssl: {rejectUnauthorized: false}});
   client.connect();
   client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
     if (err) {
@@ -172,14 +172,20 @@ function userRegister(req, res) {
       res.end('username taken');
       return
     }
-    // create salt
     const salt = crypto.randomBytes(64).toString('ascii');
-    // create hash
-    const hash = crypto.pbkdf2Sync(req.body.password, salt, 10000, 64, 'sha512').toString('ascii');
-
-    client.query('INSERT INTO users (username, salt, hash) VALUES ($1, $2, $3)', [username, req.body.salt, req.body.hash], (err, result) => {
-  }
+    const hash = crypto.createHash('sha256').update(salt + req.body.password).digest('ascii');
+    console.log('username, salt, hash:', [username, salt, hash])
+    client.query('INSERT INTO users (username, salt, hash) VALUES ($1, $2, $3)', [username, salt, hash], (err, result) => {
+      if (err) {
+        console.error(err.stack);
+        res.write('<p>error2, please try again</p>');
+        return;
+      }
+      res.write('<h1>Succesfully registered ${username}</h1>');
+    });
+  });
 }
+
 function basicGetHandle(req, res) {
     console.log("Redirecting");
     res.redirect('/frontpage');                                                                              
