@@ -3,8 +3,16 @@ import path from 'path';
 import http from 'http'; 
 import express from 'express'
 import fs, { read } from 'fs'
+import cookieParser from 'cookie-parser';
+import pg from 'pg';
+import crypto from 'crypto';
+import session from 'express-session';
+import connectPg from 'connect-pg-simple';
+//const pgSession = connectPg(session);
 
-
+function getSecret(key) {
+  return process.env[key] || require('secrets.json')[key];
+}
 //Fake data for posts, this is the format they will use
 let fakedatapostslist1 = {
   '1668023535539': {
@@ -158,7 +166,70 @@ function basicGetHandle(req, res) {
     console.log("Redirecting");
     res.redirect('/frontpage');                                                                              
 }
-
+function userRegister(req, res) {
+  const username = req.body.username;
+  connectionString = getSecret('DATABASE_URL');
+  // connect to db using pg
+  const client = new pg.Client({connectionString, tls: {rejectUnauthorized: false}});
+  client.connect();
+  // check if username is already taken
+  client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
+    if (err) {
+      console.error(err.stack);
+      res.end('error1');
+      return;
+    }
+    if (result.rows.length) {
+      res.end("Username already taken");
+      return;
+    }
+    // add user to database
+    const password = req.body.password;
+    // salt and hash password
+    // create salt
+    const salt = crypto.randomBytes(64).toString('ascii');
+    // hash password
+    const hash = crypto.createHash('sha256').update(salt + password).digest('ascii');
+    client.query('INSERT INTO users (username, salt, hash) VALUES ($1, $2, $3)', [username, salt, hash], (err, result) => {
+      if (err) {
+        console.error(err.stack);
+        res.end('erro2');
+        return
+      }
+      console.log("added " + username);
+      res.end("created user " + username);
+    });
+  });
+}
+function userLogin(req, res) {
+  const username = req.body.username;
+  const password = req.body.password;
+  connectionString = getSecret('DATABASE_URL');
+  // connect to db using pg
+  const client = new pg.Client({connectionString, tls: {rejectUnauthorized: false}});
+  client.connect();
+  // check if username is already taken
+  client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
+    if (err) {
+      console.error(err.stack);
+      res.end('error1');
+      return;
+    }
+    if (!result.rows.length) {
+      res.end("Username not found");
+      return;
+    }
+    // check password
+    const salt = result.rows[0].salt;
+    const hash = result.rows[0].hash;
+    const hash2 = crypto.createHash('sha256').update(salt + password).digest('ascii');
+    if (hash == hash2) {
+      res.end("logged in as " + username + ', do session stuff');
+      return;
+    }
+    res.end("incorrect password");
+  });
+}
 function createPost(req, res) {
     //console.log(req.body);     
     console.log("Creating New Post");
@@ -274,7 +345,13 @@ app.get('/newest/posts/getPosts', (req, res) => {(newestPageGetPosts(req, res))}
 app.get('/latestReplies/posts/getPosts', (req, res) => {(latestRepliesPageGetPosts(req, res))});
 app.get('/yourPosts/posts/getPosts', (req, res) => {(yourPostsPageGetPosts(req, res))});
 app.get('/', (req, res) => {(basicGetHandle(req, res))});
-
+app.get('/register', (req, res) => res.sendFile('register.html', {root: path.dirname('')}));
+app.get('/login', (req, res) => res.sendFile('login.html', {root: path.dirname('')}));
+app.get('/loggedintest', (req, res) => {
+  res.writeHead(200, {'Content-Type': 'text/text'});
+  res.write("Logged in");
+  res.end();
+})
 
 app.get('/frontpage', (req, res) => {(frontPageHandle(req, res))});
 app.get('/looper', (req, res) => {(basicLooperHandle(req, res))});
@@ -283,7 +360,8 @@ app.post('/posts/createPost', (req, res) => {(createPost(req, res))});
 app.post('/posts/likepost', (req, res) => {(likepost(req, res))});
 app.post('/posts/dislikepost', (req, res) => {(dislikepost(req, res))});
 app.post('/posts/reply', (req, res) => {(receivereply(req, res))});
-
+app.post('/register', userRegister);
+app.post('/login', userLogin);
 
 app.listen(process.env.PORT || port, () => {
   console.log(`Example app listening on port ${port}`);
