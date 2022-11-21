@@ -251,11 +251,11 @@ function basicLooperHandle(req, res) {
 }
 function basicLoginHandle(req, res) {
   console.log("Login");
-  res.sendFile('login.html', { root: path.dirname('') });                                                                                 
+  res.sendFile('login.html', { root: path.dirname('') });
 }
 function basicRegisterHandle(req, res) {
   console.log("Register");
-  res.sendFile('regsiter.html', { root: path.dirname('') });                                                                                 
+  res.sendFile('register.html', { root: path.dirname('') });
 }
 function frontPageGetPosts(req, res){
   console.log("Getting Front Page Posts");
