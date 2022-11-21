@@ -355,13 +355,15 @@ app.get('/register', (req, res) => res.sendFile('register.html', {root: path.dir
 app.get('/login', (req, res) => res.sendFile('login.html', {root: path.dirname('')}));
 app.get('/loggedintest', (req, res) => {
   res.writeHead(200, {'Content-Type': 'text/text'});
+  console.log('req.session', req.session);
+  console.log('req.session.username', req.session.username);
   if(req.session.username) {
     res.end("Logged in as " + req.session.username);
   }
   else{
     res.end("Not logged in");
   }
-})
+});
 
 app.get('/frontpage', (req, res) => {(frontPageHandle(req, res))});
 app.get('/looper', (req, res) => {(basicLooperHandle(req, res))});
