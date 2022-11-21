@@ -177,7 +177,7 @@ function userRegister(req, res) {
   // if not, add user to database
   console.log(req.body);
   const username = req.body.username;
-  //res.writeHead(200, {'Content-Type': 'text/html'});
+  res.writeHead(200, {'Content-Type': 'text/html'});
 
   const connectionString = getSecret('DATABASE_URL');
   const client = new pg.Client({
@@ -214,7 +214,7 @@ function userRegister(req, res) {
       res.write(String.raw`<h1>Succesfully registered ${username}</h1>`);
     });
   });
-  //res.end();
+  res.end();
 }
 function userLogin(req, res) {
   console.log('logging in user');
