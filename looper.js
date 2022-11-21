@@ -182,10 +182,6 @@ function init_layers(l) {
         } else {
             layer.innerHTML = init_active_layer(i, l);
             const remove_button = document.getElementById("rem-"+i);
-            remove_button.addEventListener("click", () => {
-                l.remove_layer(i);
-                render_layers(l);
-            });
             remove_button.addEventListener("mouseenter", () => {
                 remove_button.classList.add('btn-danger');
             });
@@ -195,12 +191,11 @@ function init_layers(l) {
         }
         active_layers -= 1;
     }
-    for (const sample of ["kick", "snare", "hihat", "synth"]) {
+    for (const sample of ["kick", "snare", "hihat", "synth"]) {  // init samples
         const dropdown_item = document.getElementById(sample+"-"+0);
-        dropdown_item.addEventListener("click", (e) => {
+        dropdown_item.addEventListener("click", () => {
             console.log('dropdown clicked')
             l.layers[0].change_sample(sample + '.wav');
-            console.log(l.layers)
             document.getElementById("dropdown-menu-"+0).innerText = sample;
         });
     }
@@ -212,7 +207,7 @@ function render_sequences(l) {
     for (let i = 0; i < l.layers.length; i++) {  // iterate over every layer
         const sequence = document.getElementById("seq" + i)  // select corres. sequence dom
         if (sequence.childNodes.length === 0) {  // if it's an empty sequence
-            for (let j = 0; j < num_notes; j++) {  // iterate over every iterval in the sequence
+            for (let j = 0; j < num_notes; j++) {  // iterate over every interval in the sequence
                 const interval = document.createElement("div");
                 interval.classList.add("itvl");
                 interval.classList.add("itvl-"+j);
@@ -222,22 +217,26 @@ function render_sequences(l) {
                 interval.addEventListener("mouseleave", () => {
                     interval.classList.remove("itvl-hover");
                 });
-                interval.addEventListener("click", (e) => {
+                interval.addEventListener("click", () => {
                     if (interval.classList.contains("itvl-activated")) {
                         l.layers[i].sequence[j] = 0;
                         interval.classList.remove("itvl-activated");
+                        interval.innerHTML = "";
                     } else {
                         l.layers[i].sequence[j] = l.layers[i].sequence[j]? l.layers[i].sequence[j]: new Note("C4");
                         interval.classList.add("itvl-activated");
                         if (l.layers[i].sequence[j]) {
-                            render_note_control(l.layers[i].sequence[j])
+                            render_note_control(l.layers[i], i, j);
+                            if (l.layers[i].sample === "synth.wav") {
+                                render_synth_note(interval, l.layers[i].sequence[j].note);
+                            }
                         }
                     }
                 });
                 interval.addEventListener("contextmenu", (e) => {
                     e.preventDefault();
                     if (l.layers[i].sequence[j]) {
-                        render_note_control(l.layers[i].sequence[j])
+                        render_note_control(l.layers[i], i, j)
                     }
                 });
                 sequence.appendChild(interval);
@@ -248,10 +247,14 @@ function render_sequences(l) {
                 if (l.layers[i].sequence[j]) {  // if the note is active
                     if (!interval.classList.contains("itvl-activated")) {
                         interval.classList.add("itvl-activated");
+                        if (l.layers[i].sample === "synth.wav") {
+                            render_synth_note(interval, l.layers[i].sequence[j].note);
+                        }
                     }
                 } else {  // if the note is empty
                     if (interval.classList.contains("itvl-activated")) {
                         interval.classList.remove("itvl-activated");
+                        interval.innerHTML = "";
                     }
                 }
             }
@@ -306,14 +309,19 @@ function render_layers(l) {
     }
     render_sequences(l);
     if (document.getElementById("add-button")) {
-        document.getElementById("add-button").addEventListener("click", (e) => {
+        document.getElementById("add-button").addEventListener("click", () => {
             l.add_layer("kick.wav");
             render_layers(l);
         });
     }
 }
 
-function render_note_control(note) {
+function render_synth_note(itvl, note) {
+    return itvl.innerHTML = `<div class="synth_note">${note}<\div>`;
+}
+
+function render_note_control(layer, l_num, i_num) {
+    let note = layer.sequence[i_num];
     console.log('render_note_control')
     let html ='Note: <input type="tel" placeholder='+note.note+' value='+note.note+' id="note-input">'
     html += 'Volume: <input type="range" class="form-control-range" min=0 max=100 value='+note.note_volume+' id="note-volume">'
@@ -323,6 +331,10 @@ function render_note_control(note) {
     const note_input = document.getElementById("note-input");
     note_input.addEventListener("input", () => {
         note.note = note_input.value;
+        if (layer.sample === 'synth.wav') {
+            const itvl = document.getElementById(`seq${l_num}`).childNodes[i_num];
+            render_synth_note(itvl, note.note);
+        }
     });
     const volume_slider = document.getElementById("note-volume");
     volume_slider.addEventListener("input", () => {

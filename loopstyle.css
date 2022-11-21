@@ -109,10 +109,12 @@ input[type="range"] {
 
 .itvl {
     flex-grow: 1;
+    display: flex;
     border-left: solid;
     border-color: black;
     border-width: 1px;
     background-color: transparent;
+    max-width: 6.25%;
 }
 
 .itvl-cursor {
@@ -126,6 +128,11 @@ input[type="range"] {
 
 .itvl-activated {
     background-color: rgb(102, 56, 89);
+    align-items: center;
+}
+
+.synth_note {
+    width: 100%;
 }
 
 .rem {
