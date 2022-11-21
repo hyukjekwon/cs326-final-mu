@@ -25,14 +25,18 @@
     border-top: 1px solid white;
     border-bottom: 1px solid white;
 }
-
+.rad {
+    border-radius: 20px;
+}
 .headerbuttons {
     text-align: center;
     font-size:small;
     margin: 10px auto;
+    border-radius: 5px;
 }
 
 .subtitlebuttons {
+    border-radius: 50px;
     width: 100%;
     display: block;
     margin-top: 10px;
@@ -41,7 +45,7 @@
     margin-left: 10px;
 }
 .searchbar {
-    
+    border-radius: 5px;
     font-size:small;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -67,6 +71,12 @@
 }
 .post {
     background-color: dimgray;
+    margin: 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+.post:hover {
+    background-color: gray;
     margin: 10px;
     text-align: center;
     vertical-align: middle;

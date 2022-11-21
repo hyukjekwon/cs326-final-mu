@@ -49,7 +49,7 @@ async function search(){
 function constructPost(postObject){
     const postHere = document.getElementById('postHere');
     const newPost = document.createElement('div');
-    newPost.classList.add("row", "divrow", "forumpage");
+    newPost.classList.add("row", "divrow", "forumpage", "rad");
         //Post title, author, and timestamp
         const div1 = document.createElement('div');
         div1.classList.add("col-sm-3", "post", "forumpage");
