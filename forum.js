@@ -388,9 +388,11 @@ function goToLooper(){
 
 function Login(){
     console.log("Logging in");
+    window.location='login'
 }
 function Register(){
     console.log("Register");
+    window.location='register'
     //CRUD Read operation
 }
 function goToAccount(){

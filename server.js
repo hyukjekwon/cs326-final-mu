@@ -166,7 +166,7 @@ let fakedatapostslist2 = {
 function userRegister(req, res) {
   console.log(req.body);
   const username = req.body.username;
-  res.writeHead(200, {'Content-Type': 'text/text'});
+  res.writeHead(200, {'Content-Type': 'text/html'});
   const connectionString = getSecret('DATABASE_URL');
   const client = new pg.Client({connectionString, ssl: {rejectUnauthorized: false}});
   client.connect();
@@ -193,7 +193,34 @@ function userRegister(req, res) {
     });
   });
 }
+function userLogin(req, res) {
+  console.log(req.body);
+  const username = req.body.username;
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  const connectionString = getSecret('DATABASE_URL');
+  const client = new pg.Client({connectionString, ssl: {rejectUnauthorized: false}});
+  client.connect();
 
+  // check if username exists
+  client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
+    if (err) {
+      console.error(err.stack);
+      res.end('error1');
+      return;
+    }
+    if (!result.rows.length) {
+      res.end('username not found/password incorrect 1');
+      return
+    }
+    const salt = result.rows[0].salt;
+    const hash = crypto.createHash('sha256').update(salt + req.body.password).digest('ascii');
+    if (hash !== result.rows[0].hash) {
+      res.end('username not found/password incorrect 2');
+      return
+    }
+    res.end('success, do session stuff here');
+  });
+}
 function basicGetHandle(req, res) {
     console.log("Redirecting");
     res.redirect('/frontpage');                                                                              
@@ -221,6 +248,10 @@ function frontPageHandle(req, res){
 function basicLooperHandle(req, res) {
   console.log("Looper");
   res.sendFile('looper.html', { root: path.dirname('') });                                                                                 
+}
+function basicLoginHandle(req, res) {
+  console.log("Login");
+  res.sendFile('login.html', { root: path.dirname('') });                                                                                 
 }
 function frontPageGetPosts(req, res){
   console.log("Getting Front Page Posts");
@@ -319,7 +350,15 @@ app.get('/', (req, res) => {(basicGetHandle(req, res))});
 app.get('/frontpage', (req, res) => {(frontPageHandle(req, res))});
 app.get('/looper', (req, res) => {(basicLooperHandle(req, res))});
 app.get('/posts/getAudioFile', (req, res) => {(getAudio(req, res))});
+app.get('/login', basicLoginHandle);
 app.post('/userregister', userRegister);
+app.post('/userlogin', userLogin);
+app.get('/loggedintest', (req, res) => {
+  console.log("Logged in test");
+  res.writeHead(200, {'Content-Type': 'text/text'});
+  res.write("Logged in");
+  res.end();
+})
 app.post('/posts/createPost', (req, res) => {(createPost(req, res))});
 app.post('/posts/likepost', (req, res) => {(likepost(req, res))});
 app.post('/posts/dislikepost', (req, res) => {(dislikepost(req, res))});
