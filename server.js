@@ -338,7 +338,7 @@ app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 const port = 80;
 app.use(express.static(path.dirname('')));
-let pool = new pg.Pool({connectionString, ssl: {rejectUnauthorized: false}})
+let pool = new pg.Pool({connectionString: getSecret('DATABASE_URL'), ssl: {rejectUnauthorized: false}})
 app.use(session({
   store: new pgSession({createTableIfMissing: true, pool: pool}),
   secret: 'testsecret',
