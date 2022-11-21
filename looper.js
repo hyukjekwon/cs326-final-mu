@@ -2,6 +2,7 @@ import {Layer, Note} from './layer.js';
 
 let master_vol = 75; // between 0 and 100
 let metronome_playing = false;
+let changes_made = false;
 
 class Looper {
     constructor() {
@@ -91,7 +92,8 @@ function init_buttons(l) {
         l.play_pause();
     })
     document.getElementById("add-button").addEventListener("click", () => {
-        l.add_layer("Kick.wav");
+        l.add_layer("kick.wav");
+        changes_made = true;
         render_layers(l);
     })
     const layer_vol_inputs = document.getElementsByClassName("layer-volume");
@@ -104,6 +106,7 @@ function init_buttons(l) {
     for (const dom of remove_buttons) {
         dom.addEventListener("click", () => {
             l.remove_layer(dom.id.split('-')[1])
+            changes_made = true;
             render_layers(l);
         });
     }
@@ -219,20 +222,21 @@ function render_layers(l) {
     const layers = document.getElementsByClassName("layer");
     for (let i = 0; i < 4; i++) {
         const layer = layers[i];
-        if (active_layers < 1) {
-            if (active_layers === 0) {
+        if (active_layers < 1) {  // if layer is inactive
+            if (active_layers === 0) {  // set button for topmost inactive layer
                 layer.innerHTML = '<button class="btn btn-secondary" type="submit" id="add-button">Add Layer</button>';
-            } else if (layer.innerHTML) {
+            } else if (layer.innerHTML) {  // no buttons for other inactive layers
                 layer.innerHTML = '';
             }
             layer.classList.add("inactive");
-        } else {
+        } else {  // if layer is active
             if (layer.classList.contains("inactive")) { // new active layer is made
                 layer.classList.remove("inactive");
                 layer.innerHTML = init_active_layer(i, l);
                 const remove_button = document.getElementById("rem-"+i);
                 remove_button.addEventListener("click", (e) => {
                     l.remove_layer(i);
+                    changes_made = true;
                     render_layers(l);
                 });
                 for (const sample of ["Kick", "Snare", "Hihat", "synth"]) {
@@ -250,10 +254,13 @@ function render_layers(l) {
         }
         active_layers -= 1;
     }
-    render_sequences(l);
+    if (changes_made) {
+        render_sequences(l);
+        changes_made = false;
+    }
     if (document.getElementById("add-button")) {
         document.getElementById("add-button").addEventListener("click", (e) => {
-            l.add_layer("Kick.wav");
+            l.add_layer("kick.wav");
             render_layers(l);
         });
     }
