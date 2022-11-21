@@ -79,7 +79,7 @@ class Looper {
                         this.synth.triggerAttackRelease(note.note, "8n");
                     }
                 } else {
-                    this.sampler.triggerAttack(sample_lookup[layer.sample], Tone.now());
+                    layer.sampler.triggerAttack('A1', Tone.now());
                 }
             }
         }
@@ -127,7 +127,7 @@ function init_buttons(l) {
     const layer_vol_inputs = document.getElementsByClassName("layer-volume");
     for (const dom of layer_vol_inputs) {
         dom.addEventListener("input", () => {
-            l.layers[dom.id.split('-')[1]].layer_volume["vol"] = parseInt(dom.value);
+            l.layers[dom.id.split('-')[1]].sampler.volume.value = (parseInt(dom.value) - 50) / 4;
         });
     }
     const remove_buttons = document.getElementsByClassName("rem");
@@ -307,7 +307,7 @@ function render_layers(l) {
                 }
                 const layer_vol_slider = document.getElementById("volume-"+i)
                 layer_vol_slider.addEventListener("input", () => {
-                        l.layers[layer_vol_slider.id.split('-')[1]].layer_volume["vol"] = parseInt(layer_vol_slider.value);
+                        l.layers[layer_vol_slider.id.split('-')[1]].sampler.volume.value = (parseInt(layer_vol_slider.value) - 50) / 4;
                 });
             }
         }
