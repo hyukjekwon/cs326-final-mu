@@ -253,6 +253,10 @@ function basicLoginHandle(req, res) {
   console.log("Login");
   res.sendFile('login.html', { root: path.dirname('') });                                                                                 
 }
+function basicRegisterHandle(req, res) {
+  console.log("Register");
+  res.sendFile('regsiter.html', { root: path.dirname('') });                                                                                 
+}
 function frontPageGetPosts(req, res){
   console.log("Getting Front Page Posts");
   res.writeHead(200, {'Content-Type': 'text/text'});
@@ -350,6 +354,7 @@ app.get('/', (req, res) => {(basicGetHandle(req, res))});
 app.get('/frontpage', (req, res) => {(frontPageHandle(req, res))});
 app.get('/looper', (req, res) => {(basicLooperHandle(req, res))});
 app.get('/posts/getAudioFile', (req, res) => {(getAudio(req, res))});
+app.get('/register', basicRegisterHandle);
 app.get('/login', basicLoginHandle);
 app.post('/userregister', userRegister);
 app.post('/userlogin', userLogin);
