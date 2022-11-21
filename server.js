@@ -311,6 +311,7 @@ app.get('/', (req, res) => {(basicGetHandle(req, res))});
 app.get('/frontpage', (req, res) => {(frontPageHandle(req, res))});
 app.get('/looper', (req, res) => {(basicLooperHandle(req, res))});
 app.get('/posts/getAudioFile', (req, res) => {(getAudio(req, res))});
+app.post('/userregister', userRegister);
 app.post('/posts/createPost', (req, res) => {(createPost(req, res))});
 app.post('/posts/likepost', (req, res) => {(likepost(req, res))});
 app.post('/posts/dislikepost', (req, res) => {(dislikepost(req, res))});
