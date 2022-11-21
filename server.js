@@ -175,6 +175,7 @@ function userRegister(req, res) {
   // check if user exists in database
   // if so, alert user that username is taken
   // if not, add user to database
+  console.log(req.body);
   const username = req.body.username;
   //res.writeHead(200, {'Content-Type': 'text/html'});
 
