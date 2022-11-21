@@ -1,7 +1,7 @@
 import pgPromise from 'pg-promise'
 // import dotenv from "dotenv"
 // dotenv.config({ path: './test.env'})
-const dbURL = process.env.DATABASE_URL
+const dbURL = process.env['DATABASE_URL'];
 const pgp = pgPromise({});
 const db = pgp(dbURL);
 

@@ -301,12 +301,12 @@ async function loadYourPosts(){
         constructPost(thisPostObject);
     } 
     //CRUD Read operation
-    document.getElementById("YourPostsButton").innerHTML = "";
-    const editbutton = document.createElement('button');
-    editbutton.classList.add("btn", "btn-warning", "likebutton")
-    editbutton.innerHTML = "Edit";
-    document.getElementById("YourPostsButton").appendChild(editbutton);
-    editbutton.addEventListener('click', () => editbyID(document.getElementById("postID").value))
+    // document.getElementById("YourPostsButton").innerHTML = "";
+    // const editbutton = document.createElement('button');
+    // editbutton.classList.add("btn", "btn-warning", "likebutton")
+    // editbutton.innerHTML = "Edit";
+    // document.getElementById("YourPostsButton").appendChild(editbutton);
+    // editbutton.addEventListener('click', () => editbyID(document.getElementById("postID").value))
 
     const deletebutton = document.createElement('button');
     deletebutton.classList.add("btn", "btn-danger", "likebutton")
