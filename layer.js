@@ -18,6 +18,9 @@ class Note {
         this.note_volume = {"vol": 50};
         this.duration = 16 // 16th note division
     }
+    is_valid() {
+        return /(^[A-G])([b,#])?([0-9]$)/.test(this.note);
+    }
 }
 
 export {Layer, Note};

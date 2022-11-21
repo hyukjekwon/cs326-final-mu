@@ -72,7 +72,9 @@ class Looper {
             const note = layer.sequence[time];
             if (note) {
                 if (layer.sample.startsWith("synth")) {
-                    this.synth.triggerAttackRelease(note.note, "8n");
+                    if (note.is_valid()) {
+                        this.synth.triggerAttackRelease(note.note, "8n");
+                    }
                 } else {
                     this.sampler.triggerAttack(sample_lookup[layer.sample], Tone.now());
                 }
