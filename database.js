@@ -2,7 +2,7 @@ import pgPromise from 'pg-promise'
 import "dotenv/config"
 
 const pgp = pgPromise({});
-const db = pgp('postgres://fbphoffhrmiusm:39930e5e3bd148db638010a687693b7464233811561ba487a71ddce3db06f88f@ec2-23-20-224-166.compute-1.amazonaws.com:5432/d3b5t6pi52ietn?ssl=true&ssl=no-verify');
+const db = pgp('');
 
 async function addPostToDB(post){
   db.connect()
