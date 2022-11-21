@@ -341,7 +341,11 @@ app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 const port = 80;
 app.use(express.static(path.dirname('')));
-console.log("Sending File");
+app.use(sessions({
+  secret: 'nonprodsecret',
+  saveuninitialized: true,
+  resave: false
+}))
 
 //Will show the correct posts in the future, for now just returns all the posts
 app.get('/frontpage/posts/getPosts', (req, res) => {(frontPageGetPosts(req, res))});
@@ -360,8 +364,15 @@ app.post('/userregister', userRegister);
 app.post('/userlogin', userLogin);
 app.get('/loggedintest', (req, res) => {
   console.log("Logged in test");
+  const session = req.session;
+  console.log(session)
+  if (session.userid) {
+    res.send("you are " + session.userid);
+  }
+  else {
+    res.send("you are not logged in");
+  }
   res.writeHead(200, {'Content-Type': 'text/text'});
-  res.write("Logged in");
   res.end();
 })
 app.post('/posts/createPost', (req, res) => {(createPost(req, res))});
