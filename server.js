@@ -122,6 +122,15 @@ async function frontPageGetPosts(req, res){
   res.end();
 }
 
+function renderAccountPage(req, res){
+  if(req.session.username){
+    res.render('account', {username: req.session.username});
+  }
+  else{
+    res.redirect('/login');
+  }
+}
+
 async function newestPageGetPosts(req, res){
   console.log("Getting Newest Page Posts");
   res.writeHead(200, {'Content-Type': 'text/text'});
@@ -189,9 +198,13 @@ async function dislikepost(req, res){
 }
 
 async function receivereply(req, res){
+  let username = req.session.username;
+  if (!req.session.username) {
+    username = "Anonymous";
+  }
   //This will receive the post ID and add a reply to the post
   console.log("Replying to post, post ID: " + req.body["PostID"]);
-  const newrep = {"NewUsername":req.body["Reply"], ".time.":req.body["time"]};
+  const newrep = {username:req.body["Reply"], ".time.":req.body["time"]};
   await addReplyToDB(req.body["PostID"], newrep)
   res.writeHead(200, {'Content-Type': 'text/text'});
   res.write("Replied to postID: " + req.body["PostID"]);
@@ -242,7 +255,9 @@ app.get('/yourPosts/posts/getPosts', (req, res) => {(yourPostsPageGetPosts(req, 
 app.get('/', (req, res) => {(basicGetHandle(req, res))});
 app.get('/register', (req, res) => res.sendFile('register.html', {root: path.dirname('')}));
 app.get('/login', (req, res) => res.sendFile('login.html', {root: path.dirname('')}));
-app.get('/loggedintest', (req, res) => {
+app.get('/account', renderAccountPage);
+
+/*app.get('/loggedintest', (req, res) => {
   res.writeHead(200, {'Content-Type': 'text/text'});
   console.log('req.session', req.session);
   console.log('req.session.username', req.session.username);
@@ -252,7 +267,7 @@ app.get('/loggedintest', (req, res) => {
   else{
     res.end("Not logged in");
   }
-});
+});*/
 
 app.get('/frontpage', (req, res) => {(frontPageHandle(req, res))});
 app.get('/looper', (req, res) => {(basicLooperHandle(req, res))});

@@ -18,19 +18,22 @@
                 <div class="col-sm-1 forumpage">
                     <button id="createPostButton" type="button" class="headerbuttons btn btn-secondary" data-bs-toggle="modal" data-bs-target="#CreatePostModal" >Create Post</button>
                 </div>
-                <div class="col-sm-1 forumpage">
-                    <% if (username) { %>
+                <% if (username) { %>
+                    <div class="col-sm-1 forumpage">
                         <button id = "Logout" type="button" class="headerbuttons btn btn-secondary">Logout</button>
+                    </div>
+                    <div id = "MyAccount" class="col-sm-1 forumpage">
+                        <button type="button" id="MyAccount" class="headerbuttons btn btn-secondary">My Account</button>
+                    </div>
                     <% } else { %>
+                    <div class="col-sm-1 forumpage">
                         <button id = "Login" type="button" class="headerbuttons btn btn-secondary">Login</button>
+                    </div>
+                    </div>
+                    <div class="col-sm-1 forumpage">
+                        <button id = "Register" type="button" class="headerbuttons btn btn-secondary">Register</button>
+                    </div>
                     <% } %>
-                </div>
-                <div class="col-sm-1 forumpage">
-                    <button id = "Register" type="button" class="headerbuttons btn btn-secondary">Register</button>
-                </div>
-                <div id = "MyAccount" class="col-sm-1 forumpage">
-                    <button type="button" class="headerbuttons btn btn-secondary">My Account</button>
-                </div>
             </div>
         </div>
         <br><br><br>

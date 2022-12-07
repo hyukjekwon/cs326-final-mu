@@ -441,8 +441,7 @@ function Login(){
     window.location='login'
 }
 function Logout() {
-    document.cookie = '';
-    fetch('/logout', {method: 'DELETE'}).then(() => location.reload());
+    fetch('/logout', {method: 'DELETE'}).then(location.reload);
 }
 function Register(){
     console.log("Register");
@@ -451,7 +450,7 @@ function Register(){
 }
 function goToAccount(){
     console.log("Loading Your Account");
-    //CRUD Read operation
+    window.location='account'
 }
 function init() {
     console.log("Welcome!");
@@ -470,12 +469,12 @@ function init() {
     document.getElementById("CreatePost").addEventListener('click', createPost);
     if (document.getElementById("Login")) {
         document.getElementById("Login").addEventListener('click', Login);
+        document.getElementById("Register").addEventListener('click', Register);
     }
     else {
         document.getElementById("Logout").addEventListener('click', Logout);
+        document.getElementById("MyAccount").addEventListener('click', goToAccount);
     }
-    document.getElementById("Register").addEventListener('click', Register);
-    document.getElementById("MyAccount").addEventListener('click', goToAccount);
 }
 
 
