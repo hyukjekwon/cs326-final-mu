@@ -284,7 +284,7 @@ app.post('/posts/delete', (req, res) => {(deletePost(req, res))});
 app.post('/userregister', userRegister);
 app.post('/userlogin', userLogin);
 
-app.delete('/logout', (req, res) => {
+app.post('/logout', (req, res) => {
   req.session.destroy();
   res.writeHead(200, {'Content-Type': 'text/text'});
   res.redirect('/');

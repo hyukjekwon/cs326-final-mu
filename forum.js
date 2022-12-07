@@ -441,7 +441,7 @@ function Login(){
     window.location='login'
 }
 function Logout() {
-    fetch('/logout', {method: 'DELETE'}).then(location.reload);
+    fetch('/logout', {method: 'POST'}).then(location.reload);
 }
 function Register(){
     console.log("Register");
