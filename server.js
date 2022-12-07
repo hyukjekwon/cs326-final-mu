@@ -90,7 +90,7 @@ function createPost(req, res) {
     const postID = Date.now();               
     fs.writeFileSync(path.dirname('') + '/uploads/' + postID.toString() +".txt", req.body.AudioFile, {encoding: 'base64'});                         
     //It stores the post and the path to the base64 audio file in an object with a unique post ID
-    const thispost = {"PostID":postID, "Username":req.body.Username, "Time":req.body.Time, 
+    const thispost = {"PostID":postID, "Username":req.session.username || 'NewUser', "Time":req.body.Time, 
     "Title":req.body.Title, "Body":req.body.Body, "Likes":req.body.Likes, "Dislikes":req.body.Dislikes, 
     "Replies":[],"AudioFile":path.dirname('') + '/uploads/' + postID.toString() +".txt"};      
     addPostToDB(thispost);
