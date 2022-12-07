@@ -9,6 +9,7 @@ import pg from 'pg';
 import crypto from 'crypto';
 import session from 'express-session';
 import connectPg from 'connect-pg-simple';
+import ejs from 'ejs';
 const pgSession = connectPg(session);
 
 function getSecret(key) {
@@ -100,7 +101,8 @@ function createPost(req, res) {
 
 function frontPageHandle(req, res){
   console.log("Sending forum file");
-  res.sendFile('forum.html', { root: path.dirname('') });      
+  res.render('forum.ejs');
+  //res.sendFile('forum.html', { root: path.dirname('') });      
 }
 function basicLooperHandle(req, res) {
   console.log("Looper");
@@ -215,6 +217,7 @@ async function getAudio(req, res){
 }
 
 const app = express();
+app.set('view engine', 'ejs');
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 const port = 80;

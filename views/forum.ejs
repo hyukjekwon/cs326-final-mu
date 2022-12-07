@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <link href="bootstrap-5.2.2-dist\css\bootstrap.css" rel="stylesheet" />
+        <link rel="stylesheet" href="forumstyle.css" />
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script type = 'module' src="forum.js"></script>
+        <title>Forum</title>
+    </head>
+    <body class = "background">
+        <div class="container-fluid websiteheader" id = websiteheader>
+            <div class="row websiteheader">
+                <div class="col-sm-7 WebsiteTitle forumpage">WebAudio Looper Forum</div>
+                <div class="col-sm-1 forumpage">
+                    <button id = "Looper" type="button" class="headerbuttons btn btn-secondary">Looper</button>
+                </div>
+                <div class="col-sm-1 forumpage">
+                    <button id="createPostButton" type="button" class="headerbuttons btn btn-secondary" data-bs-toggle="modal" data-bs-target="#CreatePostModal" >Create Post</button>
+                </div>
+                <div class="col-sm-1 forumpage">
+                    <button id = "Login" type="button" class="headerbuttons btn btn-secondary">Login</button>
+                </div>
+                <div class="col-sm-1 forumpage">
+                    <button id = "Register" type="button" class="headerbuttons btn btn-secondary">Register</button>
+                </div>
+                <div id = "MyAccount" class="col-sm-1 forumpage">
+                    <button type="button" class="headerbuttons btn btn-secondary">My Account</button>
+                </div>
+            </div>
+        </div>
+        <br><br><br>
+
+        <div id ="postnotif", class="alert alert-primary collapse" role="alert">Your Post Was Successfully Created</div>
+
+        <div class="container body">
+            <nav class="navbar navbar-expand-lg navbar-dark background row divrow form-inline">
+                <div class="navbar-nav">
+                    <a id = "FrontPage" class="nav-item nav-link col-sm forumpage subtitlebuttons" href="frontpage">
+                        Front Page
+                    </a>
+                    <a id = "NewPosts" class="nav-item nav-link col-sm forumpage subtitlebuttons">
+                        Newest Posts
+                    </a>
+                    <a id = "LatestReplies" class="nav-item nav-link col-sm forumpage subtitlebuttons" >
+                        Latest Replies
+                    </a>
+                    <a id = "YourPosts" class="nav-item nav-link col-sm forumpage subtitlebuttons" >
+                        Your Posts
+                    </a>
+                    <div class="col-sm-3">
+                        <input id = "searchbox" class = "searchbar" type="search" placeholder="Search" aria-label="Search">
+                        <button id = "searchbutton" type="submit" class="btn btn-primary searchbutton">Search</button>
+                    </div>
+                </div>
+            </nav>
+            <br>
+            
+
+            <div class="modal fade" id="CreatePostModal" tabindex="-1" aria-labelledby="CreatePostModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content createpostmodal">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="CreatePostModalLabel">Create Post</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <textarea class="form-control" placeholder="Title" id="postTitle" rows=1></textarea>
+                                <br>
+                                <textarea class="form-control" placeholder="Post Body (optional)" id="postDialog" rows=6></textarea>
+                                <br>
+                                <div class="mb-1">
+                                    <label for="formFile" class="form-label">Upload Beat</label>
+                                    <input class="form-control" type="file" id="FileUpload" accept = ".mp3">
+                                </div>
+                            </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button id = "CreatePost" type="button" class="btn btn-primary">Post</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="ReplyModal" tabindex="-1" aria-labelledby="ReplyPostModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content createpostmodal">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="ReplyModalLabel">Reply To Post</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <textarea class="form-control" placeholder="Reply Body" id="replyDialog" rows=6></textarea>
+                            <br>
+                        </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button id = "replytopost" type="button" class="btn btn-primary">Reply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="LookAtPost" tabindex="-1" aria-labelledby="LookAtPostModalLabel" aria-hidden="true" >
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content createpostmodal">
+                        <div class="modal-header"></div>
+                            <div class="modal-body">
+                                <div>
+                                    <div id="UserTitle"></div>
+                                    <div id="postID"></div>
+                                    <br>
+                                    <div class="form-control">
+                                        <div id="thispostTitle"></div> 
+                                        <div id="ViewPostDialog" ></div>
+                                        <button id = "PlayAudio" type="button" class="btn btn-primary">Play</button>
+                                    </div>
+                                </div>
+                                <br>
+                                <div>Replies
+                                <div class="form-control" id="Replies"></div>
+                                </div>
+                                <br>
+                            </div>
+                            <div id = "lookatpostfooter" class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <div id = "YourPostsButton"></div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div id = "postHere">
+                <!--This will be the post template-->
+                <!--Sample post-->
+                <!-- <div class="row divrow forumpage">
+                    <div class="col-sm-3 forumpage post">
+                        <div> Check out this beat I made!</div>
+                        <div class= "smalltext">- Made by SickBeats 10 minutes ago</div>
+                    </div>
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm forumpage"> 
+                        <button type="button" class="btn btn-primary likebutton">Like</button>
+                        <div class="col-sm"> 137 likes </div>
+                    </div>
+                    <div class="col-sm forumpage"> 
+                        <button type="button" class="btn btn-danger likebutton">Dislike</button>
+                        <div class="col-sm"> 2 dislikes </div>
+                    </div>
+                    <div class="col-sm forumpage">
+                        <button type="button" class="btn btn-secondary likebutton">Reply</button>
+                        <div class="col-sm"> 42 replies </div>
+                    </div>
+                    <div class="col-sm forumpage post"> Posted on 10/21/2022 </div>
+                </div>
+                <br> -->
+                
+            </div>
+        </div>
+
+        
+        <script src="bootstrap-5.2.2-dist\js\bootstrap.js" ></script>
+    </body>
+</html>
