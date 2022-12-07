@@ -204,7 +204,8 @@ async function receivereply(req, res){
   }
   //This will receive the post ID and add a reply to the post
   console.log("Replying to post, post ID: " + req.body["PostID"]);
-  const newrep = {username:req.body["Reply"], ".time.":req.body["time"]};
+  const newrep = {".time.":req.body["time"]};
+  newrep[username] = req.body["Reply"];
   await addReplyToDB(req.body["PostID"], newrep)
   res.writeHead(200, {'Content-Type': 'text/text'});
   res.write("Replied to postID: " + req.body["PostID"]);
