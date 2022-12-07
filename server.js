@@ -286,7 +286,9 @@ app.post('/userlogin', userLogin);
 
 app.delete('/logout', (req, res) => {
   req.session.destroy();
+  res.writeHead(200, {'Content-Type': 'text/text'});
   res.redirect('/');
+  res.end();
 });
 app.listen(process.env.PORT || port, () => {
   console.log(`Example app listening on port ${port}`);
