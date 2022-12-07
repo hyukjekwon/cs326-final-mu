@@ -441,7 +441,8 @@ function Login(){
     window.location='login'
 }
 function Logout() {
-    fetch('/logout', {method: 'POST'}).then(location.reload);
+    (async () => await fetch('/logout', {method: 'POST'}))();
+    location.reload();
 }
 function Register(){
     console.log("Register");
