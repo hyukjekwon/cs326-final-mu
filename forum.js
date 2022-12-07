@@ -442,7 +442,7 @@ function Login(){
 }
 function Logout() {
     document.cookie = '';
-    fetch('/logout', {method: 'DELETE'});
+    fetch('/logout', {method: 'DELETE'}).then(() => location.reload());
 }
 function Register(){
     console.log("Register");
