@@ -171,9 +171,12 @@ async function searchPosts(req, res){
 async function yourPostsPageGetPosts(req, res){
   res.writeHead(200, {'Content-Type': 'text/text'});
   let postsObjects = [];
-  const getPosts = await getUsernamesPostsFromDB(req.query.username);
+  let getPosts = [];
+  if (req.session.username) {
+    getPosts = await getUsernamesPostsFromDB(req.session.username);
+    getPosts.forEach(function (value) {postsObjects.push(value);});
+  }
   //console.log(getPosts)
-  getPosts.forEach(function (value) {postsObjects.push(value);});
   let frontpageposts = {postsObjects};
   res.write(JSON.stringify(frontpageposts));
   res.end();

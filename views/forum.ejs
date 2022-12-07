@@ -51,9 +51,11 @@
                     <a id = "LatestReplies" class="nav-item nav-link col-sm forumpage subtitlebuttons" >
                         Latest Replies
                     </a>
-                    <a id = "YourPosts" class="nav-item nav-link col-sm forumpage subtitlebuttons" >
-                        Your Posts
-                    </a>
+                    <% if (username) { %>
+                        <a id = "YourPosts" class="nav-item nav-link col-sm forumpage subtitlebuttons" >
+                            Your Posts
+                        </a>
+                    <% } %>
                     <div class="col-sm-3">
                         <input id = "searchbox" class = "searchbar" type="search" placeholder="Search" aria-label="Search">
                         <button id = "searchbutton" type="submit" class="btn btn-primary searchbutton">Search</button>
