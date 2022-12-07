@@ -459,7 +459,9 @@ function init() {
     document.getElementById("FrontPage").addEventListener('click', function(){ setActive('FrontPage')});
     document.getElementById("NewPosts").addEventListener('click', function(){setActive('NewPosts')});
     document.getElementById("LatestReplies").addEventListener('click', function(){setActive('LatestReplies')});
-    document.getElementById("YourPosts").addEventListener('click', function(){setActive('YourPosts')});
+    if (document.getElementById("YourPosts")) {
+        document.getElementById("YourPosts").addEventListener('click', function(){setActive('YourPosts')});
+    }
     document.getElementById("searchbutton").addEventListener('click', search);
     document.getElementById("Looper").addEventListener('click', goToLooper);
     document.getElementById("FrontPage").addEventListener('click', loadFrontPage);
