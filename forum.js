@@ -442,14 +442,7 @@ function Login(){
 }
 function Logout() {
     document.cookie = '';
-    fetch('/logout', {method: 'DELETE'}).then((res) => {
-        if (res.ok){
-            window.location.reload();
-        }
-        console.log(res)
-        window.alert("Error Logging out");
-        }
-    );
+    fetch('/logout', {method: 'DELETE'});
 }
 function Register(){
     console.log("Register");
