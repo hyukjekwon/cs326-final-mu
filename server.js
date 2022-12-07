@@ -265,6 +265,10 @@ app.post('/posts/delete', (req, res) => {(deletePost(req, res))});
 app.post('/userregister', userRegister);
 app.post('/userlogin', userLogin);
 
+app.delete('/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/');
+});
 app.listen(process.env.PORT || port, () => {
   console.log(`Example app listening on port ${port}`);
 })

@@ -441,12 +441,15 @@ function Login(){
     window.location='login'
 }
 function Logout() {
-    // delete all cookies https://stackoverflow.com/a/73315500/5007273
-    let c=document.cookie.split(';');
-    for(const k of c) {
-        let s=k.split('=');
-        document.cookie=s[0].trim()+'=;expires=Fri, 20 Aug 2021 00:00:00 UTC';
-    }
+    document.cookie = '';
+    fetch('/logout', {method: 'DELETE'}).then((res) => {
+        if (res.ok){
+            window.location.reload();
+        }
+        console.log(res)
+        window.alert("Error Logging out");
+        }
+    );
 }
 function Register(){
     console.log("Register");
