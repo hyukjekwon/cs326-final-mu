@@ -440,6 +440,14 @@ function Login(){
     console.log("Logging in");
     window.location='login'
 }
+function Logout() {
+    // delete all cookies https://stackoverflow.com/a/73315500/5007273
+    let c=document.cookie.split(';');
+    for(const k of c) {
+        let s=k.split('=');
+        document.cookie=s[0].trim()+'=;expires=Fri, 20 Aug 2021 00:00:00 UTC';
+    }
+}
 function Register(){
     console.log("Register");
     window.location='register';
@@ -464,7 +472,12 @@ function init() {
     document.getElementById("LatestReplies").addEventListener('click', loadReplies);
     document.getElementById("YourPosts").addEventListener('click', loadYourPosts);
     document.getElementById("CreatePost").addEventListener('click', createPost);
-    document.getElementById("Login").addEventListener('click', Login);
+    if (document.getElementById("Login")) {
+        document.getElementById("Login").addEventListener('click', Login);
+    }
+    else {
+        document.getElementById("Logout").addEventListener('click', Logout);
+    }
     document.getElementById("Register").addEventListener('click', Register);
     document.getElementById("MyAccount").addEventListener('click', goToAccount);
 }

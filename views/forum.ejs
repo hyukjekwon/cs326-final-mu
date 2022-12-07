@@ -19,7 +19,11 @@
                     <button id="createPostButton" type="button" class="headerbuttons btn btn-secondary" data-bs-toggle="modal" data-bs-target="#CreatePostModal" >Create Post</button>
                 </div>
                 <div class="col-sm-1 forumpage">
-                    <button id = "Login" type="button" class="headerbuttons btn btn-secondary">Login</button>
+                    <% if (username) { %>
+                        <button id = "Logout" type="button" class="headerbuttons btn btn-secondary">Logout</button>
+                    <% } else { %>
+                        <button id = "Login" type="button" class="headerbuttons btn btn-secondary">Login</button>
+                    <% } %>
                 </div>
                 <div class="col-sm-1 forumpage">
                     <button id = "Register" type="button" class="headerbuttons btn btn-secondary">Register</button>

@@ -101,7 +101,9 @@ function createPost(req, res) {
 
 function frontPageHandle(req, res){
   console.log("Sending forum file");
-  res.render('forum.ejs');
+  // render with true to indicate logged in
+  res.render('forum.ejs', {username: req.session.username});
+  //res.render('forum.ejs');
   //res.sendFile('forum.html', { root: path.dirname('') });      
 }
 function basicLooperHandle(req, res) {
