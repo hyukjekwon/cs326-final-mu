@@ -467,7 +467,9 @@ function init() {
     document.getElementById("FrontPage").addEventListener('click', loadFrontPage);
     document.getElementById("NewPosts").addEventListener('click', loadNew);
     document.getElementById("LatestReplies").addEventListener('click', loadReplies);
-    document.getElementById("YourPosts").addEventListener('click', loadYourPosts);
+    if (document.getElementById("YourPosts")) {
+        document.getElementById("YourPosts").addEventListener('click', loadYourPosts);
+    }
     document.getElementById("CreatePost").addEventListener('click', createPost);
     if (document.getElementById("Login")) {
         document.getElementById("Login").addEventListener('click', Login);
