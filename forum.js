@@ -273,6 +273,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     }
     function Back(){
         thisAudioFile.currentTime = 0;
+        PlayAudio.innerHTML = "Pause"
         thisAudioFile.play();
     }
     $("#LookAtPost").on("hidden.bs.modal", function () {
