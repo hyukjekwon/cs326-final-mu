@@ -327,6 +327,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
         }
     }
     $("#LookAtPost").on("hidden.bs.modal", function () {
+        Pause();
         PlayAudio.removeEventListener('click', PlayPause);
         BackAudio.removeEventListener('click', Back);
         ForwardAudio.removeEventListener('click', Forward);
