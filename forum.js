@@ -252,7 +252,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     let BackAudio = document.getElementById('BackAudio');
     let ForwardAudio = document.getElementById('ForwardAudio');
     let volumeControl = document.getElementById("volume-control");
-
+    let timeControl = document.getElementById("time-control");
     let audio = {}
     await fetch('/posts/getAudioFile?id=' + postID)
         .then((res) => res.json())
@@ -262,6 +262,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     PlayAudio.addEventListener('click', PlayPause);
     BackAudio.addEventListener('click', Back);
     ForwardAudio.addEventListener('click', Forward);
+    volumeControl.addEventListener("change", changeVolume);
 
     function PlayPause(){
         if (PlayAudio.innerHTML === "Play"){
@@ -283,11 +284,14 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
         PlayAudio.innerHTML = "Pause"
         thisAudioFile.play();
     }
-    //Volume control
-    volumeControl.addEventListener("change", changeVolume);
     function changeVolume() {
         thisAudioFile.volume = volumeControl.value / 100;
+        console.log(thisAudioFile.volume);
     }
+    timeControl.max = thisAudioFile.duration;
+    timeControl.value = 0;
+    timeControl.onchange = () => thisAudioFile.currentTime = timeControl.value;
+    thisAudioFile.ontimeupdate = () => timeControl.value = thisAudioFile.currentTime;
 
     $("#LookAtPost").on("hidden.bs.modal", function () {
         thisAudioFile.pause();
