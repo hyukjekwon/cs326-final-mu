@@ -286,7 +286,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     //Volume control
     volumeControl.addEventListener("change", changeVolume);
     function changeVolume() {
-        thisAudioFile.volume = volumeControl.currentTarget.value / 100;
+        thisAudioFile.volume = volumeControl.value / 100;
     }
 
     $("#LookAtPost").on("hidden.bs.modal", function () {
