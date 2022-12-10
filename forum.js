@@ -447,14 +447,12 @@ function createPost(){
     const postTitle = document.getElementById("postTitle"); //Value in the post title box
     const postBody = document.getElementById("postDialog"); //Value in the post body box
     const uploadedFile = document.getElementById("FileUpload"); //Value in the post file input
-    if(postTitle.value === "" || uploadedFile.files.length == 0 || uploadedFile.files[0].split(".")[2] !== "mp3"){ //If there's no title or file, or file is mp3, then it doesn't actually create a post (body text is optional)
+    if(postTitle.value === "" || uploadedFile.files.length == 0){ //If there's no title or file, or file is mp3, then it doesn't actually create a post (body text is optional)
         if (postTitle.value === "" && uploadedFile.files.length == 0){
             window.alert("Missing Title and File Input")
         }
         else if (postTitle.value === ""){
             window.alert("Missing Title");
-        }else if (uploadedFile.files[0].split(".")[2] !== "mp3"){
-            window.alert("Error: Uploaded file is not an mp3 file");
         } else { window.alert("Missing File Input");}
     }else{
         //Semd a forum post of format:  
