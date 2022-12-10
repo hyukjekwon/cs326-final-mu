@@ -275,7 +275,10 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
         thisAudioFile.currentTime = 0;
         thisAudioFile.play();
     }
-    
+    $("#LookAtPost").on("hidden.bs.modal", function () {
+        thisAudioFile.currentTime = 0;
+        thisAudioFile.pause();
+    });
 }
 
 
