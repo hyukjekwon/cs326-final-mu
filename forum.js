@@ -226,7 +226,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
             Object.keys(value).forEach((username) => {
                 if (username !== '.time.'){
                     let fullreply = document.createElement("div");
-                    fullreply.classList.add("singleReply");
+                    fullreply.classList.add("singleReply", "list-group-item");
                     let thispost = document.createElement("div");
                     thispost.classList.add("col-sm-8", "replyHelper");
                     thispost.innerHTML = username.concat(': ' + value[username]); 
