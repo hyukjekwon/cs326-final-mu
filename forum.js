@@ -269,17 +269,16 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
             PlayAudio.innerHTML = "Play"
             thisAudioFile.pause();
         }
-        console.log(thisAudioFile.volume);
     }
     function Back(){
         thisAudioFile.currentTime = 0;
-        PlayAudio.innerHTML = "Pause"
-        thisAudioFile.play();
-        console.log(thisAudioFile.volume);
+        PlayAudio.innerHTML = "Play"
+        thisAudioFile.pause();
     }
     $("#LookAtPost").on("hidden.bs.modal", function () {
         thisAudioFile.pause();
-        console.log(thisAudioFile.volume);
+        PlayAudio.removeEventListener('click', PlayPause);
+        BackAudio.removeEventListener('click', Back);
     });
 }
 
