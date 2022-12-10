@@ -11,26 +11,26 @@
     <body class = "background">
         <div class="container-fluid websiteheader" id = websiteheader>
             <div class="row websiteheader">
-                <div class="col-sm-4 WebsiteTitle forumpage">WebAudio Looper Forum</div>
-                <div class="col-sm-1 forumpage">
+                <div class="col-sm-7 WebsiteTitle forumpage">WebAudio Looper Forum</div>
+                <div class="col-sm forumpage">
                     <button id = "Looper" type="button" class="headerbuttons btn btn-secondary">Looper</button>
                 </div>
-                <div class="col-sm-1 forumpage">
+                <div class="col-sm forumpage">
                     <button id="createPostButton" type="button" class="headerbuttons btn btn-secondary" data-bs-toggle="modal" data-bs-target="#CreatePostModal" >Create Post</button>
                 </div>
                 <% if (username) { %>
-                    <div class="col-sm-1 forumpage">
+                    <div class="col-sm forumpage">
                         <button id = "Logout" type="button" class="headerbuttons btn btn-secondary">Logout</button>
                     </div>
-                    <div id = "MyAccount" class="col-sm-1 forumpage">
+                    <div id = "MyAccount" class="col-sm forumpage">
                         <button type="button" id="MyAccount" class="headerbuttons btn btn-secondary">My Account</button>
                     </div>
                     
                     <% } else { %>
-                    <div class="col-sm-1 forumpage">
+                    <div class="col-sm forumpage">
                         <button id = "Login" type="button" class="headerbuttons btn btn-secondary">Login</button>
                     </div>
-                    <div class="col-sm-1 forumpage">
+                    <div class="col-sm forumpage">
                         <button id = "Register" type="button" class="headerbuttons btn btn-secondary">Register</button>
                     </div>
                     <% } %>
