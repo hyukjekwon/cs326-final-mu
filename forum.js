@@ -249,8 +249,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     PlayAudio.innerHTML = "Play";
     PlayAudio.replaceWith(PlayAudio.cloneNode(true))
     PlayAudio = document.getElementById('PlayAudio');
-    
-    
+    let BackAudio = document.getElementById('BackAudio');
     
     let audio = {}
     await fetch('/posts/getAudioFile?id=' + postID)
@@ -259,6 +258,8 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     //console.log(audio['AudioFile']);
     var thisAudioFile = new Audio("data:audio/mp3;base64," + audio['AudioFile'])
     PlayAudio.addEventListener('click', PlayPause);
+    BackAudio.addEventListener('click', Back);
+
     function PlayPause(){
         if (PlayAudio.innerHTML === "Play"){
             console.log("Playing");
@@ -270,6 +271,11 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
             thisAudioFile.pause();
         }
     }
+    function Back(){
+        thisAudioFile.currentTime = 0;
+        thisAudioFile.play();
+    }
+    
 }
 
 
