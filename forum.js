@@ -259,11 +259,11 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
         //console.log(audio['AudioFile']);
         var thisAudioFile = new Audio("data:audio/mp3;base64," + audio['AudioFile'])
         if (PlayAudio.innerHTML === "Play"){
-            PlayAudio.innerHTML === "Pause"
+            PlayAudio.innerHTML = "Pause"
             thisAudioFile.play();
         }
         else{
-            PlayAudio.innerHTML === "Play"
+            PlayAudio.innerHTML = "Play"
             thisAudioFile.pause();
         }
     }
