@@ -3,7 +3,7 @@ import path from 'path';
 import http, { request } from 'http'; 
 import express from 'express'
 import fs, { read } from 'fs'
-import {addPostToDB, getFrontPageFromDB, getNewestPageFromDB, searchForPosts, getAudioFileFromDB, getLatestRepliesPageFromDB, addReplyToDB, getUsernamesPostsFromDB, LikeByIdDB, DislikeByIdDB, DeletePostByIdDB} from './database.js'
+import {addFileToDB, addPostToDB, getFrontPageFromDB, getNewestPageFromDB, searchForPosts, getAudioFileFromDB, getLatestRepliesPageFromDB, addReplyToDB, getUsernamesPostsFromDB, LikeByIdDB, DislikeByIdDB, DeletePostByIdDB} from './database.js'
 import cookieParser from 'cookie-parser';
 import pg from 'pg';
 import crypto from 'crypto';
@@ -94,6 +94,7 @@ function createPost(req, res) {
     "Title":req.body.Title, "Body":req.body.Body, "Likes":req.body.Likes, "Dislikes":req.body.Dislikes, 
     "Replies":[],"AudioFile":path.dirname('') + '/uploads/' + postID.toString() +".txt"};      
     addPostToDB(thispost);
+    addFileToDB({"PostID":postID, "postfile":req.body.AudioFile});
     res.writeHead(200, {'Content-Type': 'text/text'});
     res.write("Got new post");
     res.end();   
@@ -225,13 +226,13 @@ async function deletePost(req, res){
 }
 
 async function getAudio(req, res){
-  //This will receive the post ID and add 1 like to the total
+  //This will receive the post ID and return the audio
   console.log("Getting audio file from post ID: " + req.query.id);
   res.writeHead(200, {'Content-Type': 'application/json'});
   const aud = await getAudioFileFromDB(req.query.id);
   console.log("Getting file: " + aud[0]["audiofile"]);
-  const contents = fs.readFileSync(aud[0]["audiofile"], {encoding: 'base64'});
-  res.write(JSON.stringify({"AudioFile":contents}));
+  //const contents = fs.readFileSync(aud[0]["audiofile"], {encoding: 'base64'});
+  //res.write(JSON.stringify({"AudioFile":contents}));
   res.end();   
 }
 

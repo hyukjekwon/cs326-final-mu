@@ -22,6 +22,18 @@ async function addPostToDB(post){
     });
 }
 
+async function addFileToDB(post){
+  db.connect()
+    .then(async (obj) => {
+      db.none('INSERT INTO filedatabase (PostID, Postfile) VALUES ($1, $2)', [post["PostID"], post["postfile"]]);
+      console.log("Audio File Created to DB")
+      obj.done();
+    })
+    .catch((error) => {
+      console.log('ERROR', error.message);
+    });
+}
+
 async function getRepliesFromDB(postID){
   const c = await db.connect()
   let newQuery = 'SELECT replies FROM posts WHERE postid = '.concat(postID);
@@ -134,7 +146,7 @@ async function DeletePostByIdDB(postID){
     });
 }
 
-export {addPostToDB, getFrontPageFromDB, searchForPosts, getNewestPageFromDB, getAudioFileFromDB, addReplyToDB, getLatestRepliesPageFromDB, getUsernamesPostsFromDB, LikeByIdDB, DislikeByIdDB, DeletePostByIdDB};
+export {addFileToDB, addPostToDB, getFrontPageFromDB, searchForPosts, getNewestPageFromDB, getAudioFileFromDB, addReplyToDB, getLatestRepliesPageFromDB, getUsernamesPostsFromDB, LikeByIdDB, DislikeByIdDB, DeletePostByIdDB};
 
 // const res = await getFrontPageFromDB()
 // console.log(res);
