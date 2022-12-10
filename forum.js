@@ -266,6 +266,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     volumeControl.addEventListener("change", changeVolume);
     timeControl.addEventListener("change", changeTime);
     timeControl.addEventListener("mousedown", Pause);
+    timeControl.addEventListener("mouseup", Play);
     thisAudioFile.addEventListener("timeupdate", TimeUpdate);
 
     function PlayPause(){
@@ -281,6 +282,10 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     function Pause(){
         PlayAudio.innerHTML = "Play"
         thisAudioFile.pause();
+    }
+    function Play(){
+        PlayAudio.innerHTML = "Pause"
+        thisAudioFile.play();
     }
     function Back(){
         thisAudioFile.currentTime = 0;
@@ -321,12 +326,13 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
         }
     }
     $("#LookAtPost").on("hidden.bs.modal", function () {
-        thisAudioFile.pause();
         PlayAudio.removeEventListener('click', PlayPause);
         BackAudio.removeEventListener('click', Back);
         ForwardAudio.removeEventListener('click', Forward);
-        volume.removeEventListener("change", changeVolume);
+        volumeControl.removeEventListener("change", changeVolume);
         timeControl.removeEventListener("change", changeTime);
+        timeControl.removeEventListener("mousedown", Pause);
+        timeControl.removeEventListener("mouseup", Play);
         thisAudioFile.removeEventListener("timeupdate", TimeUpdate);
     });
 }
