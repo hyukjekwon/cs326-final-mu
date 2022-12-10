@@ -249,16 +249,19 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     PlayAudio.innerHTML = "Play";
     PlayAudio.replaceWith(PlayAudio.cloneNode(true))
     PlayAudio = document.getElementById('PlayAudio');
-    PlayAudio.addEventListener('click', grabAudio);
     
-    async function grabAudio(){
-        let audio = {}
-        await fetch('/posts/getAudioFile?id=' + postID)
-            .then((res) => res.json())
-                .then((data) => audio = data);
-        //console.log(audio['AudioFile']);
-        var thisAudioFile = new Audio("data:audio/mp3;base64," + audio['AudioFile'])
+    
+    
+    let audio = {}
+    await fetch('/posts/getAudioFile?id=' + postID)
+        .then((res) => res.json())
+            .then((data) => audio = data);
+    //console.log(audio['AudioFile']);
+    var thisAudioFile = new Audio("data:audio/mp3;base64," + audio['AudioFile'])
+    PlayAudio.addEventListener('click', PlayPause);
+    function PlayPause(){
         if (PlayAudio.innerHTML === "Play"){
+            console.log("Playing");
             PlayAudio.innerHTML = "Pause"
             thisAudioFile.play();
         }
