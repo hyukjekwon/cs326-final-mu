@@ -34,6 +34,15 @@ async function addFileToDB(post){
     });
 }
 
+async function getAudioFileFromFileDB(postID){
+  const c = await db.connect()
+  let newQuery = 'SELECT Postfile FROM filedatabase WHERE postid = '.concat(postID);
+  const r = await db.one(newQuery);
+  c.done();
+  return r;
+}
+
+
 async function getRepliesFromDB(postID){
   const c = await db.connect()
   let newQuery = 'SELECT replies FROM posts WHERE postid = '.concat(postID);
@@ -146,7 +155,7 @@ async function DeletePostByIdDB(postID){
     });
 }
 
-export {addFileToDB, addPostToDB, getFrontPageFromDB, searchForPosts, getNewestPageFromDB, getAudioFileFromDB, addReplyToDB, getLatestRepliesPageFromDB, getUsernamesPostsFromDB, LikeByIdDB, DislikeByIdDB, DeletePostByIdDB};
+export {getAudioFileFromFileDB, addFileToDB, addPostToDB, getFrontPageFromDB, searchForPosts, getNewestPageFromDB, getAudioFileFromDB, addReplyToDB, getLatestRepliesPageFromDB, getUsernamesPostsFromDB, LikeByIdDB, DislikeByIdDB, DeletePostByIdDB};
 
 // const res = await getFrontPageFromDB()
 // console.log(res);

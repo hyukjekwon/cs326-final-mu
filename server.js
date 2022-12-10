@@ -3,7 +3,7 @@ import path from 'path';
 import http, { request } from 'http'; 
 import express from 'express'
 import fs, { read } from 'fs'
-import {addFileToDB, addPostToDB, getFrontPageFromDB, getNewestPageFromDB, searchForPosts, getAudioFileFromDB, getLatestRepliesPageFromDB, addReplyToDB, getUsernamesPostsFromDB, LikeByIdDB, DislikeByIdDB, DeletePostByIdDB} from './database.js'
+import {getAudioFileFromFileDB, addFileToDB, addPostToDB, getFrontPageFromDB, getNewestPageFromDB, searchForPosts, getAudioFileFromDB, getLatestRepliesPageFromDB, addReplyToDB, getUsernamesPostsFromDB, LikeByIdDB, DislikeByIdDB, DeletePostByIdDB} from './database.js'
 import cookieParser from 'cookie-parser';
 import pg from 'pg';
 import crypto from 'crypto';
@@ -232,7 +232,8 @@ async function getAudio(req, res){
   const aud = await getAudioFileFromDB(req.query.id);
   console.log("Getting file: " + aud[0]["audiofile"]);
   //const contents = fs.readFileSync(aud[0]["audiofile"], {encoding: 'base64'});
-  //res.write(JSON.stringify({"AudioFile":contents}));
+  const contents = await getAudioFileFromFileDB(aud);
+  res.write(JSON.stringify({"AudioFile":contents}));
   res.end();   
 }
 
