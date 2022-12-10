@@ -253,6 +253,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     let ForwardAudio = document.getElementById('ForwardAudio');
     let volumeControl = document.getElementById("volume-control");
     let timeControl = document.getElementById("time-control");
+    let AudioTimeStamp = document.getElementById("audiotimestamp");
     let audio = {}
     await fetch('/posts/getAudioFile?id=' + postID)
         .then((res) => res.json())
@@ -263,6 +264,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     BackAudio.addEventListener('click', Back);
     ForwardAudio.addEventListener('click', Forward);
     volumeControl.addEventListener("change", changeVolume);
+    timeControl.addEventListener("change", changeTime)
 
     function PlayPause(){
         if (PlayAudio.innerHTML === "Play"){
@@ -280,9 +282,16 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
         thisAudioFile.play();
     }
     function Forward(){
-        thisAudioFile.currentTime += 15;
-        PlayAudio.innerHTML = "Pause"
-        thisAudioFile.play();
+        if(thisAudioFile.currentTime + 15 < thisAudioFile.duration){
+            thisAudioFile.currentTime += 15;
+            PlayAudio.innerHTML = "Pause"
+            thisAudioFile.play();
+        }
+        else{
+            thisAudioFile.currentTime = thisAudioFile.duration
+            PlayAudio.innerHTML = "Play"
+            thisAudioFile.pause();
+        }
     }
     function changeVolume() {
         thisAudioFile.volume = volumeControl.value / 100;
@@ -290,9 +299,12 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     }
     timeControl.max = thisAudioFile.duration;
     timeControl.value = 0;
-    timeControl.onchange = () => thisAudioFile.currentTime = timeControl.value;
+    function changeTime(){
+        thisAudioFile.currentTime = timeControl.value;
+    }
     thisAudioFile.ontimeupdate = () => timeControl.value = thisAudioFile.currentTime;
-
+    thisAudioFile.ontimeupdate = () => AudioTimeStamp.innerHTML = thisAudioFile.currentTime;
+    
     $("#LookAtPost").on("hidden.bs.modal", function () {
         thisAudioFile.pause();
         PlayAudio.removeEventListener('click', PlayPause);
