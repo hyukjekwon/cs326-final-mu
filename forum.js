@@ -251,7 +251,8 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     PlayAudio = document.getElementById('PlayAudio');
     let BackAudio = document.getElementById('BackAudio');
     let ForwardAudio = document.getElementById('ForwardAudio');
-    
+    let volumeControl = document.getElementById("volume-control");
+
     let audio = {}
     await fetch('/posts/getAudioFile?id=' + postID)
         .then((res) => res.json())
@@ -283,10 +284,9 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
         thisAudioFile.play();
     }
     //Volume control
-    let volume = document.querySelector("#volume-control");
-    volume.addEventListener("change", changeVolume);
+    volumeControl.addEventListener("change", changeVolume);
     function changeVolume() {
-    thisAudioFile.volume = volume.currentTarget.value / 100;
+        thisAudioFile.volume = volumeControl.currentTarget.value / 100;
     }
 
     $("#LookAtPost").on("hidden.bs.modal", function () {
