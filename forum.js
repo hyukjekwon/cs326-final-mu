@@ -264,7 +264,9 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     BackAudio.addEventListener('click', Back);
     ForwardAudio.addEventListener('click', Forward);
     volumeControl.addEventListener("change", changeVolume);
-    timeControl.addEventListener("change", changeTime)
+    timeControl.addEventListener("change", changeTime);
+    timeControl.addEventListener("timeupdate", TimeUpdate);
+    timeControl.addEventListener("timeupdate", TimeUpdate);
 
     function PlayPause(){
         if (PlayAudio.innerHTML === "Play"){
@@ -297,20 +299,26 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
         thisAudioFile.volume = volumeControl.value / 100;
         console.log(thisAudioFile.volume);
     }
-    timeControl.max = thisAudioFile.duration;
+    timeControl.max = Math.floor(thisAudioFile.duration);
+    console.log(timeControl.max);
+    console.log(thisAudioFile.duration);
     timeControl.value = 0;
     function changeTime(){
         thisAudioFile.currentTime = timeControl.value;
     }
-    thisAudioFile.ontimeupdate = () => timeControl.value = thisAudioFile.currentTime;
-    thisAudioFile.ontimeupdate = () => AudioTimeStamp.innerHTML = thisAudioFile.currentTime;
-    
+    function TimeUpdate(){
+        timeControl.value = thisAudioFile.currentTime;
+        AudioTimeStamp.innerHTML = Math.floor(thisAudioFile.currentTime);
+    }
     $("#LookAtPost").on("hidden.bs.modal", function () {
         thisAudioFile.pause();
         PlayAudio.removeEventListener('click', PlayPause);
         BackAudio.removeEventListener('click', Back);
         ForwardAudio.removeEventListener('click', Forward);
         volume.removeEventListener("change", changeVolume);
+        timeControl.removeEventListener("change", changeTime);
+        timeControl.removeEventListener("timeupdate", TimeUpdate);
+        timeControl.removeEventListener("timeupdate", TimeUpdate);
     });
 }
 
