@@ -246,9 +246,9 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
 
     //Resets the playAudio button and adds a new event listner
     let PlayAudio = document.getElementById('PlayAudio');
+    PlayAudio.innerHTML = "Play";
     PlayAudio.replaceWith(PlayAudio.cloneNode(true))
     PlayAudio = document.getElementById('PlayAudio');
-    //if playaudio innerhtml etc.
     PlayAudio.addEventListener('click', grabAudio);
     
     async function grabAudio(){
@@ -258,7 +258,14 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
                 .then((data) => audio = data);
         //console.log(audio['AudioFile']);
         var thisAudioFile = new Audio("data:audio/mp3;base64," + audio['AudioFile'])
-        thisAudioFile.play();
+        if (PlayAudio.innerHTML === "Play"){
+            PlayAudio.innerHTML === "Pause"
+            thisAudioFile.play();
+        }
+        else{
+            PlayAudio.innerHTML === "Play"
+            thisAudioFile.pause();
+        }
     }
 }
 
