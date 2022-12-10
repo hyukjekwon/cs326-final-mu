@@ -262,7 +262,6 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
 
     function PlayPause(){
         if (PlayAudio.innerHTML === "Play"){
-            console.log("Playing");
             PlayAudio.innerHTML = "Pause"
             thisAudioFile.play();
         }
@@ -270,15 +269,17 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
             PlayAudio.innerHTML = "Play"
             thisAudioFile.pause();
         }
+        console.log(thisAudioFile.volume);
     }
     function Back(){
         thisAudioFile.currentTime = 0;
         PlayAudio.innerHTML = "Pause"
         thisAudioFile.play();
+        console.log(thisAudioFile.volume);
     }
     $("#LookAtPost").on("hidden.bs.modal", function () {
-        thisAudioFile.currentTime = 0;
         thisAudioFile.pause();
+        console.log(thisAudioFile.volume);
     });
 }
 
