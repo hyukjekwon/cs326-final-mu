@@ -248,6 +248,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     let PlayAudio = document.getElementById('PlayAudio');
     PlayAudio.replaceWith(PlayAudio.cloneNode(true))
     PlayAudio = document.getElementById('PlayAudio');
+    //if playaudio innerhtml etc.
     PlayAudio.addEventListener('click', grabAudio);
     
     async function grabAudio(){
