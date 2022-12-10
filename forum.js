@@ -250,6 +250,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     PlayAudio.replaceWith(PlayAudio.cloneNode(true))
     PlayAudio = document.getElementById('PlayAudio');
     let BackAudio = document.getElementById('BackAudio');
+    let ForwardAudio = document.getElementById('ForwardAudio');
     
     let audio = {}
     await fetch('/posts/getAudioFile?id=' + postID)
@@ -259,6 +260,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     var thisAudioFile = new Audio("data:audio/mp3;base64," + audio['AudioFile'])
     PlayAudio.addEventListener('click', PlayPause);
     BackAudio.addEventListener('click', Back);
+    ForwardAudio.addEventListener('click', Forward);
 
     function PlayPause(){
         if (PlayAudio.innerHTML === "Play"){
@@ -272,13 +274,27 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     }
     function Back(){
         thisAudioFile.currentTime = 0;
-        PlayAudio.innerHTML = "Play"
-        thisAudioFile.pause();
+        PlayAudio.innerHTML = "Pause"
+        thisAudioFile.play();
     }
+    function Forward(){
+        thisAudioFile.currentTime += 15;
+        PlayAudio.innerHTML = "Pause"
+        thisAudioFile.play();
+    }
+    //Volume control
+    let volume = document.querySelector("#volume-control");
+    volume.addEventListener("change", changeVolume);
+    function changeVolume() {
+    thisAudioFile.volume = volume.currentTarget.value / 100;
+    }
+
     $("#LookAtPost").on("hidden.bs.modal", function () {
         thisAudioFile.pause();
         PlayAudio.removeEventListener('click', PlayPause);
         BackAudio.removeEventListener('click', Back);
+        ForwardAudio.removeEventListener('click', Forward);
+        volume.removeEventListener("change", changeVolume);
     });
 }
 
