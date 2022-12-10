@@ -310,7 +310,10 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     }
     function TimeUpdate(){
         timeControl.value = thisAudioFile.currentTime;
-        AudioTimeStamp.innerHTML = Math.floor(thisAudioFile.currentTime);
+        AudioTimeStamp.innerHTML = Math.floor(thisAudioFile.currentTime/60).toString() + ":" + Math.floor(thisAudioFile.currentTime % 60).toString();
+        if(thisAudioFile.currentTime === thisAudioFile.duration){
+            PlayAudio.innerHTML = "Play"
+        }
     }
     $("#LookAtPost").on("hidden.bs.modal", function () {
         thisAudioFile.pause();
