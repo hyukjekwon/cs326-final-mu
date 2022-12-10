@@ -315,6 +315,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
         console.log(thisAudioFile.duration);
     };
     timeControl.value = 0;
+    AudioTimeStamp.innerHTML = '0:0';
     function changeTime(){
         thisAudioFile.currentTime = timeControl.value;
     }

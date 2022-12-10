@@ -122,13 +122,19 @@
                                         <div id="ViewPostDialog" ></div>
                                     </div>
                                     <br>
-                                    <button id = "PlayAudio" type="button" class="btn btn-primary"></button>
-                                    <button id = "BackAudio" type="button" class="btn btn-primary">&#8592</button>
-                                    <button id = "ForwardAudio" type="button" class="btn btn-primary">&#8594</button>
-                                    <input type="range" id="time-control" min="0" max="100">
-                                    <div id = "audiotimestamp"></div>
-                                    <div>Volume: 
-                                        <input type="range" id="volume-control" min="0" max="100">
+                                    <div>
+                                        <div class="col-sm-1"><button id = "PlayAudio" type="button" class="btn btn-primary"></button></div>
+                                        <div class="col-sm-1"><button id = "BackAudio" type="button" class="btn btn-primary">&#8592</button></div>
+                                        <div class="col-sm-1"><button id = "ForwardAudio" type="button" class="btn btn-primary">&#8594</button></div>
+                                        <div class="col-sm-2">
+                                            <input type="range" id="time-control" min="0" max="100">
+                                            <div id = "audiotimestamp"></div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div>Volume: 
+                                                <input type="range" id="volume-control" min="0" max="100">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <br>
