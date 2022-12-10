@@ -232,7 +232,7 @@ async function getAudio(req, res){
   const aud = await getAudioFileFromDB(req.query.id);
   console.log("Getting file: " + aud[0]["audiofile"]);
   //const contents = fs.readFileSync(aud[0]["audiofile"], {encoding: 'base64'});
-  const contents = await getAudioFileFromFileDB(aud);
+  const contents = await getAudioFileFromFileDB( aud[0]["audiofile"]);
   res.write(JSON.stringify({"AudioFile":contents}));
   res.end();   
 }
