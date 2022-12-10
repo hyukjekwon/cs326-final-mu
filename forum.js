@@ -265,8 +265,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     ForwardAudio.addEventListener('click', Forward);
     volumeControl.addEventListener("change", changeVolume);
     timeControl.addEventListener("change", changeTime);
-    timeControl.addEventListener("timeupdate", TimeUpdate);
-    timeControl.addEventListener("timeupdate", TimeUpdate);
+    thisAudioFile.addEventListener("timeupdate", TimeUpdate);
 
     function PlayPause(){
         if (PlayAudio.innerHTML === "Play"){
@@ -320,8 +319,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
         ForwardAudio.removeEventListener('click', Forward);
         volume.removeEventListener("change", changeVolume);
         timeControl.removeEventListener("change", changeTime);
-        timeControl.removeEventListener("timeupdate", TimeUpdate);
-        timeControl.removeEventListener("timeupdate", TimeUpdate);
+        thisAudioFile.removeEventListener("timeupdate", TimeUpdate);
     });
 }
 
