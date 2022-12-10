@@ -299,9 +299,12 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
         thisAudioFile.volume = volumeControl.value / 100;
         console.log(thisAudioFile.volume);
     }
-    timeControl.max = Math.floor(thisAudioFile.duration);
-    console.log(timeControl.max);
-    console.log(thisAudioFile.duration);
+    
+    thisAudioFile.onloadedmetadata = function() {
+        timeControl.max = Math.floor(thisAudioFile.duration);
+        console.log(timeControl.max);
+        console.log(thisAudioFile.duration);
+    };
     timeControl.value = 0;
     function changeTime(){
         thisAudioFile.currentTime = timeControl.value;
