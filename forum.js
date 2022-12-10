@@ -101,7 +101,7 @@ function constructPost(postObject){
         newPost.appendChild(div7);
         //timestamp
         const div8 = document.createElement('div');
-        div8.classList.add("col-sm", "forumpage", "post");
+        div8.classList.add("col-sm", "forumpage", "timestamp");
         div8.innerHTML = "Posted on " + postObject["Time"];
         newPost.appendChild(div8);
     likebutton.addEventListener('click', () => {LikeByID(postObject['PostID'])});
