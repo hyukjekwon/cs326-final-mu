@@ -265,6 +265,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     ForwardAudio.addEventListener('click', Forward);
     volumeControl.addEventListener("change", changeVolume);
     timeControl.addEventListener("change", changeTime);
+    timeControl.addEventListener("mousedown", Pause);
     thisAudioFile.addEventListener("timeupdate", TimeUpdate);
 
     function PlayPause(){
@@ -276,6 +277,10 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
             PlayAudio.innerHTML = "Play"
             thisAudioFile.pause();
         }
+    }
+    function Pause(){
+        PlayAudio.innerHTML = "Play"
+        thisAudioFile.pause();
     }
     function Back(){
         thisAudioFile.currentTime = 0;
