@@ -226,7 +226,9 @@ function init_buttons(l) {
             block.appendChild(download_btn);
             download_btn.addEventListener('click', async () => {
                 const handle = await window.showSaveFilePicker(options);
-                save_file(handle, blob)
+                ysFixWebmDuration(blob, 960000 / l.bpm, function(fixedBlob) {
+                    save_file(handle, fixedBlob)
+                });
                 main.removeChild(block);
                 recording = false;
             })
