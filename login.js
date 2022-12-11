@@ -11,7 +11,8 @@ async function StartLogin(){
                 window.location = 'frontpage'
             }
             else{
-                window.alert(JSON.parse(res));
+                window.alert("Incorrect username or password");
+                console.log(res);
             }
         });
     }
