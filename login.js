@@ -1,14 +1,20 @@
 async function StartLogin(){
-    const response = await fetch("/userlogin" + document.getElementById("searchbox").value)
-        .then((res) => {
+    const response = await fetch('/userlogin', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"username":document.getElementById("username"), "password":document.getElementById("password")})
+        }).then((res) => {
+            //console.log(res)
             if (res.ok){
-                console.log("OKAY");
+                console.log("Deleted post");
             }
             else{
-                console.log("NOT OKAY");
+                window.alert("Error Deleting");
             }
         });
-}
+    }
 
 
 
