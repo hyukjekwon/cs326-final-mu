@@ -432,7 +432,7 @@ function render_note_control(layer, l_num, i_num) {
     note_input.addEventListener("input", () => {
         note.note = note_input.value;
         if (layer.sample === 'synth.wav') {
-            const itvl = document.getElementById(`seq${l_num}`).childNodes[i_num];
+            const itvl = document.getElementById(`seq-${l_num}`).childNodes[i_num];
             last_note_used = notes.indexOf(note.note);
             render_synth_note(itvl, note.note);
         }
