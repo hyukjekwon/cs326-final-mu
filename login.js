@@ -8,10 +8,10 @@ async function StartLogin(){
         }).then((res) => {
             //console.log(res)
             if (res.ok){
-                console.log("Deleted post");
+                window.location = 'frontpage'
             }
             else{
-                window.alert(res);
+                window.alert(JSON.parse(res));
             }
         });
     }
