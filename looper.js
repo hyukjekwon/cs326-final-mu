@@ -204,7 +204,7 @@ function init_buttons(l) {
                 main.removeChild(block);
                 recording = false;
             })
-        }, 990000 / l.bpm)  // record 2 measures
+        }, 960000 / l.bpm)  // record 2 measures
     })
 }
 
