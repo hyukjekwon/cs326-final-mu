@@ -1,9 +1,16 @@
 <html>
-	<!--registration from to /registeruser-->
+	<head>
+		<link href="bootstrap-5.2.2-dist\css\bootstrap.css" rel="stylesheet" />
+		<link rel="stylesheet" href="forumstyle.css" />
+		<script type = 'module' src="login.js"></script>
+	</head>
 	<body>
-		<form action="/userregister" method="post">
-			<input type="text" name="username" placeholder="username">
-			<input type="password" name="password" placeholder="password">
-			<input type="submit" value="register">
+		<!--registration from to /registeruser-->
+		<form>
+			<input type="text" id="username" placeholder="username">
+			<input type="password" id="password" placeholder="password">
+			<button id = "submit" type="button" class="headerbuttons btn btn-secondary">Submit</button>
 		</form>
+		<script src="bootstrap-5.2.2-dist\js\bootstrap.js" ></script>
+	</body>
 </html>
