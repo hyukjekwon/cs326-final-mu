@@ -10,6 +10,7 @@ const sample_lookup = {
     "snare.wav": "A3"
 };
 let recording = false;
+let last_note_used = 'C4';
 
 class Looper {
     constructor() {
@@ -284,7 +285,7 @@ function render_sequences(l) {
                         interval.classList.remove("itvl-activated");
                         interval.innerHTML = "";
                     } else {
-                        l.layers[i].sequence[j] = l.layers[i].sequence[j]? l.layers[i].sequence[j]: new Note("C4");
+                        l.layers[i].sequence[j] = l.layers[i].sequence[j]? l.layers[i].sequence[j]: new Note(last_note_used);
                         interval.classList.add("itvl-activated");
                         if (l.layers[i].sequence[j]) {
                             render_note_control(l.layers[i], i, j);
@@ -392,6 +393,7 @@ function render_note_control(layer, l_num, i_num) {
         note.note = note_input.value;
         if (layer.sample === 'synth.wav') {
             const itvl = document.getElementById(`seq${l_num}`).childNodes[i_num];
+            last_note_used = note.note;
             render_synth_note(itvl, note.note);
         }
     });
