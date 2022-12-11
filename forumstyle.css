@@ -140,7 +140,9 @@
     font-size:8pt;
     margin-left: 5px;
 }
-
+#thispostTitle {
+    font-size:24pt;
+}
 .postDiag {
     background-color: dimgray;
     color:lightblue;
