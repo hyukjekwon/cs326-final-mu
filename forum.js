@@ -115,7 +115,6 @@ function constructPost(postObject){
     
     postHere.appendChild(newPost);
     postHere.appendChild(document.createElement('br'));
-    //console.log(postObject);
 }
 async function LikeByID(postID){
     console.log("Liking: " + postID.toString());
@@ -126,7 +125,6 @@ async function LikeByID(postID){
         },
         body: JSON.stringify({"PostID":postID})
         }).then((res) => {
-            //console.log(res)
             if (res.ok){
                 console.log("Liked post");
             }
@@ -147,7 +145,6 @@ async function DislikeByID(postID){
         },
         body: JSON.stringify({"PostID":postID})
         }).then((res) => {
-            //console.log(res)
             if (res.ok){
                 console.log("Disliked post");
             }
@@ -170,7 +167,7 @@ async function ReplyHelper(postID){
             window.alert("Missing reply");
         }
         else{
-            //turing all apostrophes into \' so database stuff doesnt get messed up
+            //turning all apostrophes into \' so to avoid SQL injection
             let filteredreply = ""
             for (let i = 0; i < thisreply.value.length; i++){
                 if (thisreply.value[i] === "'"){
@@ -205,9 +202,6 @@ async function ReplyHelper(postID){
 }
 
 async function ViewPostHelper(postID, Username, Title, Body, Replies){
-    // postTitle
-    // ViewpostDialog
-    // Replies
     $("#LookAtPost").modal("show");
     console.log(Title);
     document.getElementById('UserTitle').innerHTML = Username;
@@ -219,7 +213,6 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
         document.getElementById('ViewPostDialog').innerHTML = Body;
     }
     document.getElementById('postID').value = postID;
-    //Simulated 2 replies
     document.getElementById('Replies').innerHTML = "";
     if (Replies.length === 0){
         document.getElementById('Replies').innerHTML = "No one has replied yet";
@@ -263,8 +256,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     await fetch('/posts/getAudioFile?id=' + postID)
         .then((res) => res.json())
             .then((data) => audio = data);
-    //console.log(audio['AudioFile']['postfile']);
-    //console.log(audio['AudioFile']);
+
     var thisAudioFile = new Audio(audio['AudioFile']['postfile']);
     PlayAudio.addEventListener('click', PlayPause);
     BackAudio.addEventListener('click', Back);
@@ -414,12 +406,6 @@ async function loadYourPosts(){
         constructPost(thisPostObject);
     } 
     //CRUD Read operation
-    // document.getElementById("YourPostsButton").innerHTML = "";
-    // const editbutton = document.createElement('button');
-    // editbutton.classList.add("btn", "btn-warning", "likebutton")
-    // editbutton.innerHTML = "Edit";
-    // document.getElementById("YourPostsButton").appendChild(editbutton);
-    // editbutton.addEventListener('click', () => editbyID(document.getElementById("postID").value))
 
     const deletebutton = document.createElement('button');
     deletebutton.classList.add("btn", "btn-danger", "likebutton")
@@ -450,10 +436,6 @@ async function deletebyID(postID){
     window.location.reload();
 }
 
-function editbyID(postID){
-    console.log("editing post " + postID);
-    //CRUD Delete Operation
-}
 
 function createPost(){
     console.log("Creating Post");
@@ -469,9 +451,9 @@ function createPost(){
             window.alert("Wrong File Type");
         } else { window.alert("Missing File Input");}
     }else{
-        //Semd a forum post of format:  
+        //Send a forum post of format:  
         //{Username:"NewUsername", Time:date, Title:title, Body:body, 
-        //Likes:0, Dislikes:0, Replies:[],AudioFile:File}
+        //Likes:0, Dislikes:0, Replies:[],AudioFile:File} 
         const currentdate = new Date();
         const date = 
         (currentdate.getMonth()+1) + "/"
@@ -493,7 +475,7 @@ function createPost(){
         promise.then(function(result) {
             console.log("Uploading to server");
             
-            //Change username to persons username
+            //Backend will change username to persons username or to anon
             const newPost = 
             {"Username":"NewUsername", "Time":date, "Title":postTitle.value, "Body":postBody.value, 
             "Likes":0, "Dislikes":0, "Replies":[],"AudioFile":result};
@@ -505,7 +487,6 @@ function createPost(){
             },
             body: JSON.stringify(newPost)
             }).then((res) => {
-                //console.log(res)
                 if (res.ok){
                     $("#CreatePostModal").modal("hide");
                     $("#postnotif").show();

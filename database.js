@@ -1,9 +1,8 @@
 import pgPromise from 'pg-promise'
 import dotenv from "dotenv"
-//dotenv.config()
-dotenv.config({ path: './test.env'})
+dotenv.config()
+//dotenv.config({ path: './test.env'})
 const pgp = pgPromise({});
-
 
 pgp.pg.defaults.ssl = {
   rejectUnauthorized: false
@@ -42,15 +41,6 @@ async function getAudioFileFromFileDB(postID){
   return r;
 }
 
-
-async function getRepliesFromDB(postID){
-  const c = await db.connect()
-  let newQuery = 'SELECT replies FROM posts WHERE postid = '.concat(postID);
-  const r = await db.any(newQuery);
-  c.done();
-  return r;
-}
-
 async function addReplyToDB(postID, reply){
   db.connect()
     .then(async (obj) => {
@@ -64,7 +54,6 @@ async function addReplyToDB(postID, reply){
     });
 }
 
-//UPDATE posts SET replies = replies::jsonb || '{"a":"b"}'::jsonb WHERE postid = 1668023552011;
 async function getAudioFileFromDB(postID){
   const c = await db.connect()
   let newQuery = 'SELECT audiofile FROM posts WHERE postid = '.concat(postID);
@@ -156,24 +145,3 @@ async function DeletePostByIdDB(postID){
 }
 
 export {getAudioFileFromFileDB, addFileToDB, addPostToDB, getFrontPageFromDB, searchForPosts, getNewestPageFromDB, getAudioFileFromDB, addReplyToDB, getLatestRepliesPageFromDB, getUsernamesPostsFromDB, LikeByIdDB, DislikeByIdDB, DeletePostByIdDB};
-
-// const res = await getFrontPageFromDB()
-// console.log(res);
-
-// import Client from 'pg'
-// const client = new Client({
-//   connectionString: process.env.DATABASE_URL,
-//   ssl: {
-//     rejectUnauthorized: false
-//   }
-// });
-
-// client.connect();
-
-// client.query('SELECT * FROM posts;', (err, res) => {
-//   if (err) throw err;
-//   for (let row of res.rows) {
-//     console.log(JSON.stringify(row));
-//   }
-//   client.end();
-// });

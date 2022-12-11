@@ -92,10 +92,8 @@ function userLogin(req, res) {
   });
 }
 function createPost(req, res) {
-    //console.log(req.body);     
     console.log("Creating New Post");
     const postID = Date.now();               
-    //fs.writeFileSync(path.dirname('') + '/uploads/' + postID.toString() +".txt", req.body.AudioFile, {encoding: 'base64'});                         
     //It stores the post and the path to the base64 audio file in an object with a unique post ID
     const thispost = {"PostID":postID, "Username":req.session.username || 'NewUser', "Time":req.body.Time, 
     "Title":req.body.Title, "Body":req.body.Body, "Likes":req.body.Likes, "Dislikes":req.body.Dislikes, 
@@ -124,7 +122,6 @@ async function frontPageGetPosts(req, res){
   res.writeHead(200, {'Content-Type': 'text/text'});
   let postsObjects = [];
   const getPosts = await getFrontPageFromDB();
-  //console.log(getPosts)
   getPosts.forEach(function (value) {postsObjects.push(value);});
   let frontpageposts = {postsObjects};
   res.write(JSON.stringify(frontpageposts));
@@ -145,7 +142,6 @@ async function newestPageGetPosts(req, res){
   res.writeHead(200, {'Content-Type': 'text/text'});
   let postsObjects = [];
   const getPosts = await getNewestPageFromDB();
-  //console.log(getPosts)
   getPosts.forEach(function (value) {postsObjects.push(value);});
   let frontpageposts = {postsObjects};
   res.write(JSON.stringify(frontpageposts));
@@ -157,7 +153,6 @@ async function latestRepliesPageGetPosts(req, res){
   res.writeHead(200, {'Content-Type': 'text/text'});
   let postsObjects = [];
   const getPosts = await getLatestRepliesPageFromDB();
-  //console.log(getPosts)
   getPosts.forEach(function (value) {postsObjects.push(value);});
   let frontpageposts = {postsObjects};
   res.write(JSON.stringify(frontpageposts));
@@ -169,7 +164,6 @@ async function searchPosts(req, res){
     res.writeHead(200, {'Content-Type': 'text/text'});
     let postsObjects = [];
     const getPosts = await searchForPosts(req.query.Search);
-    //console.log(getPosts)
     getPosts.forEach(function (value) {postsObjects.push(value);});
     let frontpageposts = {postsObjects};
     res.write(JSON.stringify(frontpageposts));
@@ -185,7 +179,6 @@ async function yourPostsPageGetPosts(req, res){
     getPosts = await getUsernamesPostsFromDB(req.session.username);
     getPosts.forEach(function (value) {postsObjects.push(value);});
   }
-  //console.log(getPosts)
   let frontpageposts = {postsObjects};
   res.write(JSON.stringify(frontpageposts));
   res.end();
@@ -239,7 +232,6 @@ async function getAudio(req, res){
   res.writeHead(200, {'Content-Type': 'application/json'});
   const aud = await getAudioFileFromDB(req.query.id);
   console.log("Getting file: " + aud[0]["audiofile"] + " from File DB");
-  //const contents = fs.readFileSync(aud[0]["audiofile"], {encoding: 'base64'});
   const contents = await getAudioFileFromFileDB( aud[0]["audiofile"]);
   res.write(JSON.stringify({"AudioFile":contents}));
   res.end();   
