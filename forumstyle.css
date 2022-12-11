@@ -155,3 +155,6 @@
 .RoundedEdge {
     border-radius: 5px;
 }
+.PostHeader{
+    border-bottom: 1px dashed white;
+}
