@@ -1,5 +1,4 @@
 async function StartLogin(){
-    data = {};
     const response = await fetch("/userlogin" + document.getElementById("searchbox").value)
         .then((res) => {
             if (res.ok){
