@@ -138,10 +138,11 @@
 }
 #UserTitle{
     font-size:8pt;
+    margin-top: 0px;
     margin-left: 5px;
 }
 #thispostTitle {
-    font-size:24pt;
+    font-size:20pt;
 }
 .postDiag {
     background-color: dimgray;
