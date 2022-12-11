@@ -259,7 +259,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     await fetch('/posts/getAudioFile?id=' + postID)
         .then((res) => res.json())
             .then((data) => audio = data);
-    console.log(audio);
+    console.log(audio['AudioFile']['postfile']);
     //console.log(audio['AudioFile']);
     var thisAudioFile = new Audio("data:audio/mp3;base64," + audio['AudioFile']['postfile'])
     PlayAudio.addEventListener('click', PlayPause);
