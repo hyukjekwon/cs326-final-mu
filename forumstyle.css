@@ -15,19 +15,23 @@
 .body {
     border: 1px solid white;
 }
+
 .forumpage {
     background-color: dimgray;
     color:lightblue;
     text-align: center;
     vertical-align: middle;
 }
+
 .divrow{
     border-top: 1px solid white;
     border-bottom: 1px solid white;
 }
+
 .rad {
     border-radius: 20px;
 }
+
 .headerbuttons {
     text-align: center;
     font-size:small;
@@ -44,6 +48,7 @@
     margin-right: 10px;
     margin-left: 10px;
 }
+
 .searchbar {
     border-radius: 5px;
     font-size:small;
@@ -59,22 +64,26 @@
     font-size:small;
     margin: 10px;
 }
+
 .smalltext {
     text-align: center;
     font-size:8pt;
     margin: 10px;
 }
+
 .likebutton {
     text-align: center;
     font-size:small;
     margin: 10px;
 }
+
 .post {
     background-color: dimgray;
     margin: 10px;
     text-align: center;
     vertical-align: middle;
 }
+
 .post:hover {
     background-color: gray;
     margin: 10px;
@@ -89,7 +98,7 @@
 }
 
 #postTitle { 
-    resize:none; 
+    resize: none; 
 }
 
 #postDialog { 
@@ -116,47 +125,59 @@
     font-size:7pt;
     margin-left: 8px;
 }
+
 .replyHelper{
     margin-left: 4px;
 }
+
 .singleReply {
     border-top: 1px solid white;
     border-left: 1px solid white;
     border-right: 1px solid white;
 }
+
 .nav-item:hover {
     background-color: gray;
 }
 
+
 .active{
     background-color: gray;
 }
+
 .timestamp {
     margin: 10px;
     text-align: center;
     vertical-align: middle;
 }
+
 #UserTitle{
     font-size:8pt;
     margin-bottom: 10px;
 }
+
 #thispostTitle {
     font-size:20pt;
 }
+
 .postDiag {
     background-color: dimgray;
     color:lightblue;
 }
+
 #ViewPostDialog {
  margin-top: 5px;
 }
+
 #Replies {
     border-color: white;
     border-radius: 5px;
 }
+
 .RoundedEdge {
     border-radius: 5px;
 }
+
 .PostHeader{
     margin-bottom: 5px;
     border-bottom: 2px dashed white;
