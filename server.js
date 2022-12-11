@@ -29,10 +29,12 @@ function userRegister(req, res) {
   client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
     if (err) {
       console.error(err.stack);
+      res.writeHead(500);
       res.end('error1');
       return;
     }
     if (result.rows.length) {
+      res.writeHead(500);
       res.end("Username already taken");
       return;
     }
@@ -46,6 +48,7 @@ function userRegister(req, res) {
     client.query('INSERT INTO users (username, salt, hash) VALUES ($1, $2, $3)', [username, salt, hash], (err, result) => {
       if (err) {
         console.error(err.stack);
+        res.writeHead(500);
         res.end('erro2');
         return
       }
@@ -65,10 +68,12 @@ function userLogin(req, res) {
   client.query('SELECT * FROM users WHERE username = $1', [username], (err, result) => {
     if (err) {
       console.error(err.stack);
+      res.writeHead(500);
       res.end('error1');
       return;
     }
     if (!result.rows.length) {
+      res.writeHead(500);
       res.end("Username not found");
       return;
     }
@@ -78,9 +83,11 @@ function userLogin(req, res) {
     const hash2 = crypto.createHash('sha256').update(salt + password).digest('ascii');
     if (hash == hash2) {
       req.session.username = username;
+      res.writeHead(200);
       res.end("logged in as " + username + ', do session stuff');
       return;
     }
+    res.writeHead(500);
     res.end("incorrect password");
   });
 }
