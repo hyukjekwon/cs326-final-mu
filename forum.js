@@ -458,18 +458,12 @@ function createPost(){
     const postTitle = document.getElementById("postTitle"); //Value in the post title box
     const postBody = document.getElementById("postDialog"); //Value in the post body box
     const uploadedFile = document.getElementById("FileUpload"); //Value in the post file input
-    console.log(uploadedFile.files[0].type);
-    console.log(uploadedFile.files[0].type.toString());
-    console.log(uploadedFile.files[0].type === "audio/wav");
-    console.log(uploadedFile.files[0].type.toString() === "audio/wav");
-    console.log(uploadedFile.files[0].type == "audio/wav");
-    console.log(uploadedFile.files[0].type.toString() == "audio/wav");
-    if(postTitle.value === "" || uploadedFile.files.length == 0 || (uploadedFile.files[0].type.toString() != "audio/wav" || uploadedFile.files[0].type.toString() !== "audio/mpeg"|| uploadedFile.files[0].type.toString() !== "video/webm")){ //If there's no title or file, or file is mp3, then it doesn't actually create a post (body text is optional)
+    if(postTitle.value === "" || uploadedFile.files.length == 0 || !(uploadedFile.files[0].type.toString() === "audio/wav" || uploadedFile.files[0].type.toString() === "audio/mpeg"|| uploadedFile.files[0].type.toString() === "video/webm")){ //If there's no title or file, or file is mp3, then it doesn't actually create a post (body text is optional)
         if (postTitle.value === "" && uploadedFile.files.length == 0){
             window.alert("Missing Title and File Input")
         } else if (postTitle.value === ""){
             window.alert("Missing Title");
-        } else if (uploadedFile.files[0].type.toString() !== "audio/wav" || uploadedFile.files[0].type.toString() !== "audio/mpeg"|| uploadedFile.files[0].type.toString() !== "video/webm"){
+        } else if (!(uploadedFile.files[0].type.toString() === "audio/wav" || uploadedFile.files[0].type.toString() === "audio/mpeg"|| uploadedFile.files[0].type.toString() === "video/webm")){
             window.alert("Wrong File Type");
         } else { window.alert("Missing File Input");}
     }else{
