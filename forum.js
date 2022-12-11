@@ -255,9 +255,11 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     let timeControl = document.getElementById("time-control");
     let AudioTimeStamp = document.getElementById("audiotimestamp");
     let audio = {}
+    console.log('Getting file');
     await fetch('/posts/getAudioFile?id=' + postID)
         .then((res) => res.json())
             .then((data) => audio = data);
+    console.log(audio);
     //console.log(audio['AudioFile']);
     var thisAudioFile = new Audio("data:audio/mp3;base64," + audio['AudioFile'])
     PlayAudio.addEventListener('click', PlayPause);
