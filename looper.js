@@ -9,6 +9,7 @@ const sample_lookup = {
     "hihat.wav": "A2",
     "snare.wav": "A3"
 };
+let recording = false;
 
 class Looper {
     constructor() {
@@ -107,7 +108,7 @@ class Looper {
 
 function init_key_presses(l) {
     document.addEventListener("keyup", async e => {
-        if (e.code === "Space") {
+        if (e.code === "Space" && !recording) {
             l.play_pause();
         }
     });
@@ -118,7 +119,9 @@ function init_key_presses(l) {
 function init_buttons(l) {
     console.log('init_buttons')
     document.getElementById("play").addEventListener("mouseup", async () => {
-        l.play_pause();
+        if (!recording) {
+            l.play_pause();
+        }
     })
     document.getElementById("add-button").addEventListener("click", () => {
         l.add_layer("kick.wav");
@@ -155,8 +158,60 @@ function init_buttons(l) {
             metro_btn.classList.remove("btn-danger")
             metronome_playing = false;
         }
-        l.set_metronome()
+        l.set_metronome();
     });
+    const save_btn = document.getElementById("save");
+    save_btn.addEventListener("click", (e) => {
+        recording = true;
+        const main = document.getElementById("main");
+        const loading = document.getElementById("loading");
+        loading.innerHTML = '<img src="https://i.gifer.com/origin/34/34338d26023e5515f6cc8969aa027bca_w200.gif">'
+        loading.innerHTML += '<div>Your project is recording...<\div>'
+        const block = document.createElement("div");
+        block.id = "block";
+        main.appendChild(block);
+        const recorder = new Tone.Recorder();
+        Tone.Destination.connect(recorder);
+        if (l.playing) {
+            l.play_pause();
+        }
+        l.play_pause();
+        recorder.start();
+        setTimeout(async () => {
+            const blob = await recorder.stop();
+            const options = {
+                suggestedName: 'weblooper_proj.webm',
+                types: [{
+                    description: 'Web Media Audio file',
+                    accept: {
+                        'audio/webm': ['.webm']
+                    }
+                }]
+            }
+            l.play_pause();
+            loading.innerHTML = '';
+            const download_btn = document.createElement("button");
+            download_btn.classList.add("btn");
+            download_btn.classList.add("btn-success");
+            download_btn.classList.add("btn-lg");
+            download_btn.id = "download-btn";
+            download_btn.innerText = "Download your project!";
+            download_btn.type = "submit";
+            block.appendChild(download_btn);
+            download_btn.addEventListener('click', async () => {
+                const handle = await window.showSaveFilePicker(options);
+                save_file(handle, blob)
+                main.removeChild(block);
+                recording = false;
+            })
+        }, 990000 / l.bpm)  // record 2 measures
+    })
+}
+
+async function save_file(handle, data) {
+    const writable = await handle.createWritable();
+    await writable.write(data)
+    await writable.close();
 }
 
 function init_active_layer(i, l) {
