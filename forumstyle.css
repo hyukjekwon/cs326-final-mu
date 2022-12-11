@@ -83,7 +83,7 @@
 }
 
 .createpostmodal {
-    background-color: dimgray;
+    background-color: #4d4d4d;
     color:lightblue;
     vertical-align: middle;
 }
@@ -139,4 +139,9 @@
 #UserTitle{
     font-size:8pt;
     margin-left: 5px;
+}
+
+.postDiag {
+    background-color: dimgray;
+    color:lightblue;
 }
