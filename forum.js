@@ -261,7 +261,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
             .then((data) => audio = data);
     console.log(audio['AudioFile']['postfile']);
     //console.log(audio['AudioFile']);
-    var thisAudioFile = new Audio("data:audio/mp3;base64," + audio['AudioFile']['postfile'])
+    var thisAudioFile = new Audio("data:audio/mpeg;base64," + audio['AudioFile']['postfile'])
     PlayAudio.addEventListener('click', PlayPause);
     BackAudio.addEventListener('click', Back);
     ForwardAudio.addEventListener('click', Forward);
