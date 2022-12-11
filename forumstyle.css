@@ -138,8 +138,7 @@
 }
 #UserTitle{
     font-size:8pt;
-    margin-top: 0px;
-    margin-left: 5px;
+    margin-bottom: 10px;
 }
 #thispostTitle {
     font-size:20pt;
@@ -147,6 +146,9 @@
 .postDiag {
     background-color: dimgray;
     color:lightblue;
+}
+#ViewPostDialog {
+ margin-top: 5px;
 }
 #Replies {
     border-color: white;
