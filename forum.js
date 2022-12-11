@@ -320,6 +320,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     }
     function TimeUpdate(){
         timeControl.value = thisAudioFile.currentTime;
+        let TimeString = Math.floor(thisAudioFile.currentTime % 60).toString();
         AudioTimeStamp.innerHTML = Math.floor(thisAudioFile.currentTime/60).toString() + ":" + Math.floor(thisAudioFile.currentTime % 60).toString();
         if(thisAudioFile.currentTime === thisAudioFile.duration){
             PlayAudio.innerHTML = "Play"
