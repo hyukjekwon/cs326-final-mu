@@ -4,14 +4,14 @@ async function StartLogin(){
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({"username":document.getElementById("username"), "password":document.getElementById("password")})
+        body: JSON.stringify({"username":document.getElementById("username").value, "password":document.getElementById("password").value})
         }).then((res) => {
             //console.log(res)
             if (res.ok){
                 console.log("Deleted post");
             }
             else{
-                window.alert("Error Deleting");
+                window.alert(res);
             }
         });
     }
