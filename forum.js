@@ -334,7 +334,9 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
         }
         AudioTimeStamp.innerHTML = TimeString + ":" + TimeString2;
         if(thisAudioFile.currentTime === thisAudioFile.duration){
-            PlayAudio.innerHTML = "Play"
+            PlayAudio.innerHTML = "Pause"
+            PlayAudio.currentTime = 0;
+            PlayAudio.play();
         }
     }
     $("#LookAtPost").on("hidden.bs.modal", function () {
