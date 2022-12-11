@@ -320,11 +320,15 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     }
     function TimeUpdate(){
         timeControl.value = thisAudioFile.currentTime;
-        let TimeString = Math.floor(thisAudioFile.currentTime % 60).toString();
+        let TimeString = Math.floor(thisAudioFile.currentTime/60).toString();
         if (TimeString.length <2){
             TimeString = '0'+TimeString;
         }
-        AudioTimeStamp.innerHTML = Math.floor(thisAudioFile.currentTime/60).toString() + ":" + Math.floor(thisAudioFile.currentTime % 60).toString();
+        let TimeString2 = Math.floor(thisAudioFile.currentTime % 60).toString();
+        if (TimeString2.length <2){
+            TimeString2 = '0'+TimeString2;
+        }
+        AudioTimeStamp.innerHTML = TimeString + ":" + TimeString2;
         if(thisAudioFile.currentTime === thisAudioFile.duration){
             PlayAudio.innerHTML = "Play"
         }
