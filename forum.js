@@ -122,7 +122,7 @@ async function LikeByID(postID){
         },
         body: JSON.stringify({"PostID":postID})
         }).then((res) => {
-            console.log(res)
+            //console.log(res)
             if (res.ok){
                 console.log("Liked post");
             }
@@ -143,7 +143,7 @@ async function DislikeByID(postID){
         },
         body: JSON.stringify({"PostID":postID})
         }).then((res) => {
-            console.log(res)
+            //console.log(res)
             if (res.ok){
                 console.log("Disliked post");
             }
@@ -183,7 +183,7 @@ async function ReplyHelper(postID){
                 },
                 body: JSON.stringify({"PostID":postID, "Reply":filteredreply, "time":Date.now()})
                 }).then((res) => {
-                    console.log(res)
+                    //console.log(res)
                     if (res.ok){
                         console.log("Replied to post");
                         $("#ReplyModal").modal("hide");
@@ -259,7 +259,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     await fetch('/posts/getAudioFile?id=' + postID)
         .then((res) => res.json())
             .then((data) => audio = data);
-    console.log(audio['AudioFile']['postfile']);
+    //console.log(audio['AudioFile']['postfile']);
     //console.log(audio['AudioFile']);
     var thisAudioFile = new Audio(audio['AudioFile']['postfile']);
     PlayAudio.addEventListener('click', PlayPause);
@@ -270,23 +270,6 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     timeControl.addEventListener("mousedown", Pause);
     timeControl.addEventListener("mouseup", Play);
     thisAudioFile.addEventListener("timeupdate", TimeUpdate);
-
-
-
-    let x = new Audio("data:audio/mp3;base64," + audio['AudioFile']['postfile']);
-    x.play();
-    let y = new Audio("data:audio/mp3;base64," + audio['AudioFile']['postfile']);
-    y.play();
-    let z = new Audio("data:audio/mp3;base64," + audio['AudioFile']['postfile']);
-    z.play();
-    let i = new Audio("data:audio/mp3;base64," + audio['AudioFile']['postfile']);
-    i.play();
-    let j = new Audio("data:audio/mp3;base64," + audio['AudioFile']['postfile']);
-    j.play();
-    let k = new Audio("data:audio/mp3;base64," + audio['AudioFile']['postfile']);
-    k.play();
-
-
 
     function PlayPause(){
         if (PlayAudio.innerHTML === "Play"){
@@ -325,13 +308,10 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     }
     function changeVolume() {
         thisAudioFile.volume = volumeControl.value / 100;
-        console.log(thisAudioFile.volume);
     }
     
     thisAudioFile.onloadedmetadata = function() {
         timeControl.max = Math.floor(thisAudioFile.duration);
-        console.log(timeControl.max);
-        console.log(thisAudioFile.duration);
     };
     timeControl.value = 0;
     AudioTimeStamp.innerHTML = '0:0';
@@ -444,7 +424,7 @@ async function deletebyID(postID){
         },
         body: JSON.stringify({"PostID":postID})
         }).then((res) => {
-            console.log(res)
+            //console.log(res)
             if (res.ok){
                 console.log("Deleted post");
             }
@@ -510,7 +490,7 @@ function createPost(){
             },
             body: JSON.stringify(newPost)
             }).then((res) => {
-                console.log(res)
+                //console.log(res)
                 if (res.ok){
                     $("#CreatePostModal").modal("hide");
                     $("#postnotif").show();
