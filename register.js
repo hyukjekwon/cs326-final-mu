@@ -1,4 +1,4 @@
-async function StartLogin(){
+async function StartRegister(){
     const response = await fetch('/userregister', {
         method: 'POST',
         headers: {
@@ -21,6 +21,6 @@ async function StartLogin(){
 
 function init() {
     console.log("Welcome!");
-    document.getElementById("submit").addEventListener("click", StartLogin);  
+    document.getElementById("submit").addEventListener("click", StartRegister);  
 }
 window.onload = init;
