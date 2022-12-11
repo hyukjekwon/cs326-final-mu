@@ -8,8 +8,10 @@ function setActive(elementId){
     if (document.getElementById("LatestReplies").classList.contains("active")){
         document.getElementById("LatestReplies").classList.remove("active");
     }
-    if (document.getElementById("YourPosts").classList.contains("active")){
-        document.getElementById("YourPosts").classList.remove("active");
+    if (document.getElementById("YourPosts") !== null){
+        if (document.getElementById("YourPosts").classList.contains("active")){
+            document.getElementById("YourPosts").classList.remove("active");
+        }
     }
     document.getElementById(elementId).classList.add("active");
 }
