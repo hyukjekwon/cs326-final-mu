@@ -261,7 +261,7 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
             .then((data) => audio = data);
     console.log(audio['AudioFile']['postfile']);
     //console.log(audio['AudioFile']);
-    var thisAudioFile = new Audio("data:audio/mpeg;base64," + audio['AudioFile']['postfile'])
+    var thisAudioFile = new Audio(audio['AudioFile']['postfile']);
     PlayAudio.addEventListener('click', PlayPause);
     BackAudio.addEventListener('click', Back);
     ForwardAudio.addEventListener('click', Forward);
@@ -270,6 +270,23 @@ async function ViewPostHelper(postID, Username, Title, Body, Replies){
     timeControl.addEventListener("mousedown", Pause);
     timeControl.addEventListener("mouseup", Play);
     thisAudioFile.addEventListener("timeupdate", TimeUpdate);
+
+
+
+    let x = new Audio("data:audio/mp3;base64," + audio['AudioFile']['postfile']);
+    x.play();
+    let y = new Audio("data:audio/mp3;base64," + audio['AudioFile']['postfile']);
+    y.play();
+    let z = new Audio("data:audio/mp3;base64," + audio['AudioFile']['postfile']);
+    z.play();
+    let i = new Audio("data:audio/mp3;base64," + audio['AudioFile']['postfile']);
+    i.play();
+    let j = new Audio("data:audio/mp3;base64," + audio['AudioFile']['postfile']);
+    j.play();
+    let k = new Audio("data:audio/mp3;base64," + audio['AudioFile']['postfile']);
+    k.play();
+
+
 
     function PlayPause(){
         if (PlayAudio.innerHTML === "Play"){
