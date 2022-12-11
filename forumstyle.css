@@ -145,3 +145,7 @@
     background-color: dimgray;
     color:lightblue;
 }
+#Replies {
+    border-color: white;
+    border-radius: 5px;
+}
