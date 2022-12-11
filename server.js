@@ -94,6 +94,7 @@ function createPost(req, res) {
     "Title":req.body.Title, "Body":req.body.Body, "Likes":req.body.Likes, "Dislikes":req.body.Dislikes, 
     "Replies":[],"AudioFile":path.dirname('') + '/uploads/' + postID.toString()};      
     addPostToDB(thispost);
+    console.log("Creating post to File DB" + postID.toString());
     addFileToDB({"PostID":postID.toString(), "postfile":req.body.AudioFile});
     res.writeHead(200, {'Content-Type': 'text/text'});
     res.write("Got new post");
@@ -230,7 +231,7 @@ async function getAudio(req, res){
   console.log("Getting audio file from post ID: " + req.query.id);
   res.writeHead(200, {'Content-Type': 'application/json'});
   const aud = await getAudioFileFromDB(req.query.id);
-  console.log("Getting file: " + aud[0]["audiofile"]);
+  console.log("Getting file: " + aud[0]["audiofile"] + " from File DB");
   //const contents = fs.readFileSync(aud[0]["audiofile"], {encoding: 'base64'});
   const contents = await getAudioFileFromFileDB( aud[0]["audiofile"]);
   res.write(JSON.stringify({"AudioFile":contents}));
