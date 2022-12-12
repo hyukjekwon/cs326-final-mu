@@ -1,15 +1,10 @@
-import { parse } from 'url';
 import path from 'path';
-import http, { request } from 'http'; 
 import express from 'express'
-import fs, { read } from 'fs'
 import {getAudioFileFromFileDB, addFileToDB, addPostToDB, getFrontPageFromDB, getNewestPageFromDB, searchForPosts, getAudioFileFromDB, getLatestRepliesPageFromDB, addReplyToDB, getUsernamesPostsFromDB, LikeByIdDB, DislikeByIdDB, DeletePostByIdDB} from './database.js'
-import cookieParser from 'cookie-parser';
 import pg from 'pg';
 import crypto from 'crypto';
 import session from 'express-session';
 import connectPg from 'connect-pg-simple';
-import ejs from 'ejs';
 const pgSession = connectPg(session);
 
 function getSecret(key) {

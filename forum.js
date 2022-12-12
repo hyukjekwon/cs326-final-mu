@@ -19,7 +19,7 @@ function setActive(elementId){
 async function search(){
     const search = document.getElementById("searchbox")
 
-    console.log("Searching for: " + document.getElementById("searchbox").value);
+    console.log("Searching for: " + search.value);
     if (document.getElementById("FrontPage").classList.contains("active")){
         document.getElementById("FrontPage").classList.remove("active");
     }
@@ -37,7 +37,7 @@ async function search(){
     const postHere = document.getElementById('postHere');
     postHere.innerHTML = "";
     let posts = [];
-    const response = await fetch("/posts/searchPosts?Search=" + document.getElementById("searchbox").value)
+    await fetch("/posts/searchPosts?Search=" + document.getElementById("searchbox").value)
         .then((response) => response.json())
             .then((data) => posts = data);
     for (let i = 0; i< posts['postsObjects'].length; i++){
@@ -118,7 +118,7 @@ function constructPost(postObject){
 }
 async function LikeByID(postID){
     console.log("Liking: " + postID.toString());
-    const response = await fetch('/posts/likepost', {
+    await fetch('/posts/likepost', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -138,7 +138,7 @@ async function LikeByID(postID){
 
 async function DislikeByID(postID){
     console.log("Disliking: " + postID.toString());
-    const response = await fetch('/posts/dislikepost', {
+    await fetch('/posts/dislikepost', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -177,7 +177,7 @@ async function ReplyHelper(postID){
                     filteredreply += thisreply.value[i];
                 }
             }
-            const response = await fetch('/posts/reply', {
+            await fetch('/posts/reply', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -350,7 +350,7 @@ async function loadFrontPage(){
     postHere.innerHTML = "";
     console.log("Loading Front Page");
     let posts = [];
-    const response = await fetch("/frontpage/posts/getPosts")
+    await fetch("/frontpage/posts/getPosts")
         .then((response) => response.json())
             .then((data) => posts = data);
     for (let i = 0; i< posts['postsObjects'].length; i++){
@@ -366,7 +366,7 @@ async function loadNew(){
     postHere.innerHTML = "";
     console.log("Loading New Posts");
     let posts = [];
-    const response = await fetch("/newest/posts/getPosts")
+    await fetch("/newest/posts/getPosts")
         .then((response) => response.json())
             .then((data) => posts = data);
     for (let i = 0; i< posts['postsObjects'].length; i++){
@@ -382,7 +382,7 @@ async function loadReplies(){
     postHere.innerHTML = "";
     console.log("Loading Latest Replies");
     let posts = [];
-    const response = await fetch("/latestreplies/posts/getPosts")
+    await fetch("/latestreplies/posts/getPosts")
         .then((response) => response.json())
             .then((data) => posts = data);
     for (let i = 0; i< posts['postsObjects'].length; i++){
@@ -398,7 +398,7 @@ async function loadYourPosts(){
     console.log("Loading Your Posts");
     let posts = [];
     const username = "NewUsername"
-    const response = await fetch("/yourPosts/posts/getPosts?username=" + username)
+    await fetch("/yourPosts/posts/getPosts?username=" + username)
         .then((response) => response.json())
             .then((data) => posts = data);
     for (let i = 0; i< posts['postsObjects'].length; i++){
@@ -417,7 +417,7 @@ async function loadYourPosts(){
 
 async function deletebyID(postID){
     console.log("deleting post " + postID);
-    const response = await fetch('/posts/delete', {
+    await fetch('/posts/delete', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -478,9 +478,9 @@ function createPost(){
             //Backend will change username to persons username or to anon
             const newPost = 
             {"Username":"NewUsername", "Time":date, "Title":postTitle.value, "Body":postBody.value, 
-            "Likes":0, "Dislikes":0, "Replies":[],"AudioFile":result};
+            "Likes":0, "Dislikes":0, "Replies":[],"AudioFile": result};
             
-            const response = fetch('/posts/createPost', {
+            fetch('/posts/createPost', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

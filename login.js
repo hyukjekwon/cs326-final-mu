@@ -1,5 +1,5 @@
 async function StartLogin(){
-    const response = await fetch('/userlogin', {
+    await fetch('/userlogin', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

@@ -1,5 +1,5 @@
 async function StartRegister(){
-    const response = await fetch('/userregister', {
+    await fetch('/userregister', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

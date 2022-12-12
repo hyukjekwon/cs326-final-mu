@@ -187,7 +187,7 @@ function init_buttons(l) {
         l.set_metronome();
     });
     const save_btn = document.getElementById("save");
-    save_btn.addEventListener("click", (e) => {
+    save_btn.addEventListener("click", () => {
         recording = true;
         const main = document.getElementById("main");
         const loading = document.getElementById("loading");
@@ -409,7 +409,7 @@ function render_layers(l) {
                 });
                 for (const sample of ["kick", "snare", "hihat", "synth"]) {
                     const dropdown_item = document.getElementById(sample+"-"+i);
-                    dropdown_item.addEventListener("click", (e) => {
+                    dropdown_item.addEventListener("click", () => {
                         console.log('dropdown clicked')
                         l.layers[i].change_sample(sample + '.wav');
                         document.getElementById("dropdown-menu-"+i).innerText = sample;

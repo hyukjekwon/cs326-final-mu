@@ -6,7 +6,7 @@ class Layer {
         this.sampler = this.init_sampler()
     }
     init_sequence(num_notes) {
-        return [...Array(num_notes-1)].map(e=>0);
+        return [...Array(num_notes-1)].map(() => 0);
     }
     init_sampler() {
         return new Tone.Sampler({
