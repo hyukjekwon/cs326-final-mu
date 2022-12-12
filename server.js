@@ -123,9 +123,34 @@ async function frontPageGetPosts(req, res){
   res.end();
 }
 
-function renderAccountPage(req, res){
+function renderAccountPage(req, res) {
   if(req.session.username){
-    res.render('account', {username: req.session.username});
+    getUsernamesPostsFromDB(req.session.username).then(function (posts) {
+      const stats = {
+        username: req.session.username,
+        numPosts: posts.length
+      };
+
+      if (stats.numPosts == 0) {
+        stats.avlikes = 'N/A';
+        stats.avdislikes = 'N/A';
+        stats.avcomments = 'N/A';
+      }
+      else {
+        let totalLikes = 0;
+        let totalDislikes = 0;
+        let totalComments = 0;
+        posts.forEach(function (post) {
+          totalLikes += post.likes;
+          totalDislikes += post.dislikes;
+          totalComments += post.replies.length;
+        });
+        stats.avlikes /= stats.numPosts;
+        stats.avdislikes /= stats.numPosts;
+        stats.avcomments /= stats.numPosts;
+      }
+      res.render('account', stats);
+    });
   }
   else{
     res.redirect('/login');
