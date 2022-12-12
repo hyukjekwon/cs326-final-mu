@@ -1,4 +1,13 @@
 <html>
-	<script src="account.js"></script>
-	<p>Welcome <%=username%></p>
+	<head>
+		<script src="account.js" type="module"></script>
+	</html>
+	<p>Welcome, <b><%=username%></b></p>
+	<br>
+	<ul>
+		<li>You've made <%=numposts%> posts</li>
+		<li>You've received on average <%=avlikes%> likes per post</li>
+		<li>You've received on average <%=avdislikes%> dislikes per post</li>
+		<li>You've received on average <%=avcomments%> comments per post</li>
+	</ul>
 </html>
