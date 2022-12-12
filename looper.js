@@ -120,21 +120,21 @@ function init_key_presses(l) {
     document.addEventListener("keyup", async e => {
         if (e.code === "Space" && !recording) {
             l.play_pause();
-            return;
-        }
-        if (e.key === 'ArrowDown') {
-            last_note_used--;
-        } else if(e.key === 'ArrowUp') {
-            last_note_used++;
-        }
-        const selected = document.getElementById("note-selected");
-        if (selected) {
-            const i = parseInt(selected.parentElement.id.split('-')[1])
-            const j = parseInt(selected.classList[1].split('-')[1])
-            l.layers[i].sequence[j].note = notes[last_note_used];
-            render_note_control(l.layers[i], i, j);
-            if (l.layers[i].sample === "synth.wav") {
-                render_synth_note(selected, l.layers[i].sequence[j].note);
+        } else if (['ArrowDown', 'ArrowUp'].includes(e.key)) {            
+            if (e.key === 'ArrowDown') {
+                last_note_used--;
+            } else if(e.key === 'ArrowUp') {
+                last_note_used++;
+            }
+            const selected = document.getElementById("note-selected");
+            if (selected) {
+                const i = parseInt(selected.parentElement.id.split('-')[1])
+                const j = parseInt(selected.classList[1].split('-')[1])
+                l.layers[i].sequence[j].note = notes[last_note_used];
+                render_note_control(l.layers[i], i, j);
+                if (l.layers[i].sample === "synth.wav") {
+                    render_synth_note(selected, l.layers[i].sequence[j].note);
+                }
             }
         }
     });
@@ -450,17 +450,19 @@ function render_synth_note(itvl, note) {
 
 function render_note_control(layer, l_num, i_num) {
     let note = layer.sequence[i_num];
-    console.log('render_note_control')
+    console.log('render_note_control', i_num)
     let html ='Note: <input type="tel" placeholder='+note.note+' value='+note.note+' id="note-input">'
     html += 'Volume: <input type="range" class="form-control-range" min=0 max=100 value='+note.note_volume+' id="note-volume">'
     document.getElementById("note-dash-container").innerHTML = html;
     const note_input = document.getElementById("note-input");
     note_input.addEventListener("input", () => {
-        note.note = note_input.value;
-        if (layer.sample === 'synth.wav') {
-            const itvl = document.getElementById(`seq-${l_num}`).childNodes[i_num];
-            last_note_used = notes.indexOf(note.note);
-            render_synth_note(itvl, note.note);
+        if (/(^[A-G])([b,#])?([0-9]$)/.test(note_input.value)) {
+            note.note = note_input.value;
+            if (layer.sample === 'synth.wav') {
+                const itvl = document.getElementById(`seq-${l_num}`).childNodes[i_num];
+                last_note_used = notes.indexOf(note.note);
+                render_synth_note(itvl, note.note);
+            }
         }
     });
     const volume_slider = document.getElementById("note-volume");
