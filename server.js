@@ -5,6 +5,7 @@ import pg from 'pg';
 import crypto from 'crypto';
 import session from 'express-session';
 import connectPg from 'connect-pg-simple';
+import { stat } from 'fs';
 const pgSession = connectPg(session);
 
 function getSecret(key) {
@@ -124,30 +125,28 @@ async function frontPageGetPosts(req, res){
 }
 
 function renderAccountPage(req, res) {
-  if(req.session.username){
+  if (req.session.username) {
     getUsernamesPostsFromDB(req.session.username).then(function (posts) {
       const stats = {
         username: req.session.username,
-        numPosts: posts.length
+        numposts: posts.length
       };
 
-      if (stats.numPosts == 0) {
+      if (stats.numposts == 0) {
         stats.avlikes = 'N/A';
         stats.avdislikes = 'N/A';
         stats.avcomments = 'N/A';
       }
       else {
-        let totalLikes = 0;
-        let totalDislikes = 0;
-        let totalComments = 0;
+        stats.avlikes = stats.avdislikes = stats.avcomments = 0;
         posts.forEach(function (post) {
-          totalLikes += post.likes;
-          totalDislikes += post.dislikes;
-          totalComments += post.replies.length;
+          stats.avlikes += post.likes;
+          stats.avdislikes += post.dislikes;
+          stats.avcomments += post.replies.length;
         });
-        stats.avlikes /= stats.numPosts;
-        stats.avdislikes /= stats.numPosts;
-        stats.avcomments /= stats.numPosts;
+        stats.avlikes /= stats.numposts;
+        stats.avdislikes /= stats.numposts;
+        stats.avcomments /= stats.numposts;
       }
       res.render('account', stats);
     });
