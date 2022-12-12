@@ -547,6 +547,7 @@ function init() {
     }
     else {
         document.getElementById("Logout").addEventListener('click', Logout);
+        document.getElementById('MyAccount').addEventListener('click', function(){window.location = 'account'});
     }
 }
 
