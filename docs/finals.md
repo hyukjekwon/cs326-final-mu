@@ -9,30 +9,39 @@ Fall 2022
 
 ## User Interface:
 ![](finals_img/forum_logged.png)
+
 This is the basic forum UI for a logged in user.
 
 ![](finals_img/forum_anon.png)
+
 This is the basic forum UI for an anonymous user.
 
 ![](finals_img/post_view.png)
+
 This is the UI for viewing a post.
 
 ![](finals_img/reply.png)
+
 This is the UI for replying to a post.
 
 ![](finals_img/post_create.png)
+
 This is the UI for creating a post.
 
 ![](finals_img/looper.png)
+
 This is the UI for the web-looper component.
 
 ![](finals_img/login.png)
+
 This is the UI for the login page.
 
 ![](finals_img/registration.png)
+
 This is the UI for the account registration page.
 
 ![](finals_img/my_account.png)
+
 This is the UI for the My Account page.
 
 ## APIs
