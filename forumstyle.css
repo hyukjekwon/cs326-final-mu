@@ -182,3 +182,17 @@
     margin-bottom: 5px;
     border-bottom: 2px dashed white;
 }
+
+#login-container {
+    padding: 30px;
+    border-radius: 20px;
+}
+
+#login-title {
+    font-size: 48px;
+    line-height: 125%;
+}
+
+#login-subtitle {
+    font-size: 14px;
+}
