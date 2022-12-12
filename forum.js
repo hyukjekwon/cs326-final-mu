@@ -522,10 +522,6 @@ function Register(){
     window.location='register';
     //CRUD Read operation
 }
-function goToAccount(){
-    console.log("Loading Your Account");
-    window.location='account'
-}
 function init() {
     console.log("Welcome!");
     loadFrontPage();
@@ -551,7 +547,6 @@ function init() {
     }
     else {
         document.getElementById("Logout").addEventListener('click', Logout);
-        document.getElementById("MyAccount").addEventListener('click', goToAccount);
     }
 }
 
