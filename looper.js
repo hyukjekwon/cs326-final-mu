@@ -286,6 +286,18 @@ function init_layers(l) {
             console.log('dropdown clicked')
             l.layers[0].change_sample(sample + '.wav');
             document.getElementById("dropdown-menu-"+0).innerText = sample;
+            const layer = document.getElementById("seq-0");
+            if (sample === "synth") {
+                for (let i  = 0; i < num_notes; i++) {
+                    if (l.layers[0].sequence[i]) {
+                        render_synth_note(layer.childNodes[i], l.layers[0].sequence[i].note);
+                    }
+                }
+            } else {
+                for (let i  = 0; i < num_notes; i++) {
+                    layer.childNodes[i].innerHTML = "";
+                }
+            }
         });
     }
 }
@@ -401,6 +413,18 @@ function render_layers(l) {
                         console.log('dropdown clicked')
                         l.layers[i].change_sample(sample + '.wav');
                         document.getElementById("dropdown-menu-"+i).innerText = sample;
+                        const layer = document.getElementById(`seq-${i}`);
+                        if (sample === "synth") {
+                            for (let j  = 0; j < num_notes; j++) {
+                                if (l.layers[i].sequence[j]) {
+                                    render_synth_note(layer.childNodes[j], l.layers[i].sequence[j].note);
+                                }
+                            }
+                        } else {
+                            for (let j  = 0; j < num_notes; j++) {
+                                layer.childNodes[j].innerHTML = "";
+                            }
+                        }
                     });
                 }
                 const layer_vol_slider = document.getElementById("volume-"+i)
