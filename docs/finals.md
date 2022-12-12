@@ -2,6 +2,9 @@
 ## Web-Looper
 Fall 2022
 
+## Overview
+Designed for musicians and beginners alike, WebLooper is a website with two major components: a looper– a musical tool to compose simple loops– and a forum to share loops with one another. While most applications of this sort are either geared towards meticulous composition/studio recording or for composing while performing, none that we know of have an integrated forum aspect. We believe this sort of application can foster the creativity of a broad and diverse musical community.
+
 ## Team Members
 - Hyuk-Je Kwon - Github: hyukjekwon
 - Austin Bushey - Github: Bushey27
